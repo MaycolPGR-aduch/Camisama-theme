@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" role="img" aria-label="Camiseta con una zona de impresión seleccionada en el editor">
+	<rect width="520" height="520" rx="40" fill="#D3261C"/>
+	<!-- Sombra -->
+	<ellipse cx="260" cy="450" rx="150" ry="14" fill="#A51D15"/>
+	<!-- Camiseta -->
+	<path d="M194 141 Q260 196 326 141 L414 174 L458 251 L392 278.5 V427 H128 V278.5 L62 251 L106 174 Z" fill="#F7F4EE" stroke="#F7F4EE" stroke-width="14" stroke-linejoin="round"/>
+	<path d="M194 141 Q260 196 326 141" fill="none" stroke="#E4DED3" stroke-width="10" stroke-linecap="round"/>
+	<!-- Estampado de ejemplo -->
+	<circle cx="260" cy="262" r="40" fill="#F5B700"/>
+	<path d="M212 300 Q236 284 260 300 T308 300 V338 H212 Z" fill="#26357F"/>
+	<!-- Zona de impresión seleccionada -->
+	<rect x="196" y="210" width="128" height="144" fill="none" stroke="#26357F" stroke-width="3" stroke-dasharray="9 7" rx="4"/>
+	<g fill="#FFFFFF" stroke="#26357F" stroke-width="3">
+		<rect x="189" y="203" width="14" height="14" rx="3"/>
+		<rect x="317" y="203" width="14" height="14" rx="3"/>
+		<rect x="189" y="347" width="14" height="14" rx="3"/>
+		<rect x="317" y="347" width="14" height="14" rx="3"/>
+	</g>
+	<!-- Zona de manga -->
+	<rect x="86" y="208" width="34" height="34" fill="none" stroke="#5F5E66" stroke-width="2.5" stroke-dasharray="6 5" rx="3" transform="rotate(-28 103 225)"/>
+</svg>

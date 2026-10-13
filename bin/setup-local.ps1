@@ -24,10 +24,13 @@
 param(
 	[string] $LaragonRoot = 'C:\laragon',
 	[string] $Site = 'camisama',
-	[string] $Locale = 'es_ES',
+	# es_PE no tiene traducción completa de WordPress ni de WooCommerce; es_MX sí.
+	[string] $Locale = 'es_MX',
 	[string] $DbName = 'camisama',
 	[string] $DbUser = 'root',
-	[string] $DbPassword = ''
+	[string] $DbPassword = '',
+	# No crear los productos de demostración (bin/seed-demo.php).
+	[switch] $SkipDemo
 )
 
 $ErrorActionPreference = 'Stop'
@@ -116,6 +119,8 @@ if (-not (Test-Path (Join-Path $sitePath 'wp-config.php'))) {
 	Invoke-Wp config create --dbname=$DbName --dbuser=$DbUser --dbpass=$DbPassword --dbhost=127.0.0.1 --skip-check
 }
 Invoke-Wp config set WP_ENVIRONMENT_TYPE local --quiet
+# Sin esto WordPress guarda en caché la lista de patrones del tema y no ve los archivos nuevos.
+Invoke-Wp config set WP_DEVELOPMENT_MODE all --quiet
 foreach ($constant in 'WP_DEBUG', 'WP_DEBUG_LOG', 'SCRIPT_DEBUG') {
 	Invoke-Wp config set $constant true --raw --quiet
 }
@@ -146,6 +151,10 @@ if (Test-Wp core is-installed) {
 } else {
 	$password = New-Password
 	Invoke-Wp core install --url=$siteUrl --title=Camisama --admin_user=admin --admin_password=$password --admin_email="admin@$Site.test" --skip-email
+	# Contenido de ejemplo de WordPress ("Hello world!", "Sample Page").
+	Invoke-Wp post delete 1 2 --force --quiet
+	# WordPress crea la página de privacidad (ID 3) antes de que esté instalado el idioma.
+	Invoke-Wp post update 3 --post_title='Política de privacidad' --post_name=politica-de-privacidad --quiet
 	@"
 # Credenciales del sitio local (generadas por bin/setup-local.ps1, no se versionan).
 WP_URL=$siteUrl
@@ -159,6 +168,9 @@ if (-not (Test-Wp language core is-installed $Locale)) {
 	Invoke-Wp language core install $Locale
 }
 Invoke-Wp site switch-language $Locale --quiet
+Invoke-Wp option update blogdescription 'Tu diseño, tu ley.' --quiet
+Invoke-Wp option update timezone_string America/Lima --quiet
+Invoke-Wp option update date_format 'd/m/Y' --quiet
 
 # --- 4. Enlaces al repositorio ---------------------------------------------------
 Write-Step 'Enlazando tema y plugin'
@@ -175,15 +187,41 @@ Write-Step 'WooCommerce, tema y plugin'
 if (-not (Test-Wp plugin is-installed woocommerce)) {
 	Invoke-Wp plugin install woocommerce
 }
-Invoke-Wp plugin activate woocommerce camisama-customizer
-Invoke-Wp theme activate camisama
+# La traducción va antes de activar: WooCommerce crea sus páginas (Tienda, Carrito…) al activarse.
 if (-not (Test-Wp language plugin install woocommerce $Locale)) {
 	Write-Host "    (no hay traducción de WooCommerce para $Locale)"
 }
+Invoke-Wp plugin activate woocommerce camisama-customizer
+Invoke-Wp theme activate camisama
 
 # Tienda visible sin iniciar sesión y sin el asistente de configuración inicial.
 Invoke-Wp option update woocommerce_coming_soon no --quiet
 Invoke-Wp option update woocommerce_onboarding_profile '{"skipped":true}' --format=json --quiet
+
+# Perú: soles con el formato "S/ 1,234.50", tienda en Lima.
+$storeOptions = [ordered]@{
+	woocommerce_default_country      = 'PE:LMA'
+	woocommerce_currency             = 'PEN'
+	woocommerce_currency_pos         = 'left_space'
+	woocommerce_price_thousand_sep   = ','
+	woocommerce_price_decimal_sep    = '.'
+	woocommerce_price_num_decimals   = '2'
+	woocommerce_allowed_countries    = 'specific'
+	woocommerce_ship_to_countries    = 'specific'
+	woocommerce_weight_unit          = 'kg'
+	woocommerce_dimension_unit       = 'cm'
+}
+foreach ($option in $storeOptions.GetEnumerator()) {
+	Invoke-Wp option update $option.Key $option.Value --quiet
+}
+Invoke-Wp option update woocommerce_specific_allowed_countries '["PE"]' --format=json --quiet
+Invoke-Wp option update woocommerce_specific_ship_to_countries '["PE"]' --format=json --quiet
+Invoke-Wp option update woocommerce_permalinks '{"product_base":"/producto","category_base":"categoria-producto","tag_base":"etiqueta-producto","attribute_base":"","use_verbose_page_rules":false}' --format=json --quiet
+
+if (-not $SkipDemo) {
+	Write-Step 'Productos de demostración'
+	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include
+}
 
 Invoke-Wp rewrite structure '/%postname%/' --hard --quiet
 

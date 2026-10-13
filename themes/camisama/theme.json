@@ -44,12 +44,37 @@
 				{
 					"slug": "display",
 					"name": "Bricolage Grotesque",
-					"fontFamily": "\"Bricolage Grotesque\", ui-sans-serif, system-ui, sans-serif"
+					"fontFamily": "\"Bricolage Grotesque\", ui-sans-serif, system-ui, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Bricolage Grotesque",
+							"fontStyle": "normal",
+							"fontWeight": "200 800",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/bricolage-grotesque/bricolage-grotesque-latin-wght-normal.woff2" ]
+						}
+					]
 				},
 				{
 					"slug": "body",
 					"name": "Inter",
-					"fontFamily": "Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif"
+					"fontFamily": "Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Inter",
+							"fontStyle": "normal",
+							"fontWeight": "100 900",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/inter/inter-latin-wght-normal.woff2" ]
+						},
+						{
+							"fontFamily": "Inter",
+							"fontStyle": "italic",
+							"fontWeight": "100 900",
+							"fontDisplay": "swap",
+							"src": [ "file:./assets/fonts/inter/inter-latin-wght-italic.woff2" ]
+						}
+					]
 				}
 			],
 			"fontSizes": [
@@ -116,6 +141,32 @@
 			}
 		},
 		"blocks": {
+			"core/post-title": {
+				"elements": {
+					"link": {
+						"color": { "text": "var:preset|color|contrast" },
+						"typography": { "textDecoration": "none" },
+						":hover": { "color": { "text": "var:preset|color|primary" } }
+					}
+				}
+			},
+			"core/navigation": {
+				"typography": { "fontSize": "var:preset|font-size|small", "fontWeight": "500" },
+				"elements": {
+					"link": {
+						"color": { "text": "var:preset|color|contrast" },
+						"typography": { "textDecoration": "none" },
+						":hover": { "color": { "text": "var:preset|color|primary" } }
+					}
+				}
+			},
+			"woocommerce/product-price": {
+				"typography": { "fontWeight": "600" }
+			},
+			"woocommerce/breadcrumbs": {
+				"color": { "text": "var:preset|color|muted" },
+				"typography": { "fontSize": "var:preset|font-size|small" }
+			},
 			"core/site-title": {
 				"typography": {
 					"fontFamily": "var:preset|font-family|display",
@@ -134,6 +185,7 @@
 	},
 	"templateParts": [
 		{ "name": "header", "title": "Cabecera", "area": "header" },
+		{ "name": "checkout-header", "title": "Cabecera del checkout", "area": "header" },
 		{ "name": "footer", "title": "Pie de página", "area": "footer" }
 	]
 }

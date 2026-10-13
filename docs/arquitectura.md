@@ -11,6 +11,28 @@
 El personalizador vive en el plugin para que un cambio de tema no rompa la tienda ni los pedidos ya
 hechos. El plugin expone el bloque `camisama/customizer`, que el tema coloca en la ficha de producto.
 
+## Tema
+
+```
+themes/camisama/
+├── theme.json        # paleta, tipografías (con @font-face local), espaciados, estilos de bloques
+├── style.css         # solo lo que theme.json no expresa (estilos de listas, tarjetas de producto)
+├── templates/        # portada, tienda, producto, carrito, checkout, página, entrada, 404
+├── parts/            # cabecera, cabecera del checkout, pie (cada uno carga su patrón)
+├── patterns/         # secciones en PHP: permiten traducir textos y generar URLs
+└── assets/           # fuentes e imágenes
+```
+
+Las secciones viven en `patterns/*.php` y no en HTML estático para poder usar `__()` y las URLs
+reales de WooCommerce (`camisama_wc_page_url()`). El checkout usa una cabecera mínima, sin menú, para
+que el cliente no se distraiga al pagar.
+
+## Idioma y país
+
+La tienda vende en Perú, en soles. WordPress y WooCommerce no tienen traducción completa para
+`es_PE`, así que se usa `es_MX` (español latinoamericano, completa y al día). Si algún término no
+encaja en Perú (por ejemplo "colonia" en la dirección), se ajustará con un filtro de traducción.
+
 ## Plugin
 
 ```
@@ -55,7 +77,7 @@ Ver [producción e impresión](produccion-e-impresion.md) y [modelo de precios](
 | Fase | Entregable | Estado |
 |---|---|---|
 | 0. Entorno | Repositorio, sitio local, WooCommerce, tema y plugin base, linters, pruebas, CI | ✅ |
-| 1. Tema | Fuentes, portada, catálogo, ficha de producto, carrito y checkout con diseño propio | |
+| 1. Tema | Fuentes, portada, catálogo, ficha de producto, carrito y checkout con diseño propio; tienda configurada para Perú (PEN, `es_MX`) | ✅ |
 | 2. Datos y administración | Vistas y zonas por producto, catálogo de estampados, reglas de precio | |
 | 3. Personalizador básico | Elegir modelo y color, colocar estampados, texto e imágenes, precio en vivo | |
 | 4. Pedido | Diseño en carrito, correos y administración; archivos de producción | |

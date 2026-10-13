@@ -38,8 +38,9 @@ acento es Mostaza o Papel.
 | Títulos y logotipo | **Bricolage Grotesque** (700–800) | Grotesca con carácter, de aire editorial y urbano. Variable, licencia OFL |
 | Texto e interfaz | **Inter** (400–600) | Muy legible en pantalla y en tamaños pequeños (precios, tallas) |
 
-Las dos son libres (OFL) y se alojarán dentro del tema (fase 1), sin cargarlas desde Google, por
-rendimiento y privacidad. Hasta entonces el tema usa las fuentes del sistema.
+Las dos son libres (OFL) y van alojadas dentro del tema (`themes/camisama/assets/fonts`, versiones
+variables con el subconjunto latino, ~140 KB en total), sin cargarlas desde Google, por rendimiento y
+privacidad.
 
 ## Logotipo
 

@@ -5,7 +5,7 @@ Author: Camisama
 Description: Tema de bloques para la tienda de prendas personalizables Camisama. Pensado para WooCommerce y el plugin Camisama Customizer.
 Requires at least: 6.7
 Requires PHP: 8.2
-Version: 0.1.0
+Version: 0.2.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: camisama
@@ -17,7 +17,122 @@ Tags: e-commerce, full-site-editing, block-patterns, wide-blocks, custom-colors
  * Aquí solo va lo que theme.json todavía no puede expresar.
  */
 
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	html {
+		scroll-behavior: auto;
+	}
+}
+
 :where(.wp-site-blocks) :focus-visible {
 	outline: 2px solid var(--wp--preset--color--secondary);
 	outline-offset: 2px;
+}
+
+/* Botón con borde: usa el color del texto en lugar del rojo de relleno. */
+.wp-block-button.is-style-outline > .wp-block-button__link {
+	border: 2px solid currentcolor;
+	background: transparent;
+	color: inherit;
+}
+
+.wp-block-button.is-style-outline > .wp-block-button__link:hover {
+	background: var(--wp--preset--color--contrast);
+	border-color: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+/* --- Listas --- */
+
+.wp-block-list.is-style-camisama-plain,
+.wp-block-list.is-style-camisama-checks,
+.wp-block-list.is-style-camisama-zones {
+	padding-left: 0;
+	list-style: none;
+}
+
+.wp-block-list.is-style-camisama-plain li + li {
+	margin-top: 0.5em;
+}
+
+.wp-block-list.is-style-camisama-plain a {
+	text-decoration: none;
+}
+
+.wp-block-list.is-style-camisama-checks li {
+	position: relative;
+	padding-left: 1.75em;
+}
+
+.wp-block-list.is-style-camisama-checks li + li {
+	margin-top: 0.4em;
+}
+
+.wp-block-list.is-style-camisama-checks li::before {
+	position: absolute;
+	top: 0.35em;
+	left: 0;
+	width: 1.05em;
+	height: 1.05em;
+	border-radius: 4px;
+	background: var(--wp--preset--color--primary);
+	content: "";
+	mask: url(assets/images/check.svg) center / contain no-repeat;
+}
+
+.wp-block-list.is-style-camisama-zones li {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.25em 1em;
+	padding: 0.9em 0;
+	border-bottom: 1px dashed color-mix(in srgb, currentcolor 35%, transparent);
+}
+
+.wp-block-list.is-style-camisama-zones strong {
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--large);
+}
+
+/* --- WooCommerce --- */
+
+/* Tarjetas de producto: imagen sobre fondo blanco con esquinas redondeadas. */
+.wc-block-product .wc-block-components-product-image,
+.wc-block-product .wc-block-components-product-image img {
+	border-radius: 20px;
+}
+
+.wc-block-product .wc-block-components-product-image {
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.wc-block-product .wc-block-components-product-image img {
+	transition: transform 0.3s ease;
+}
+
+.wc-block-product:hover .wc-block-components-product-image img {
+	transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.wc-block-product .wc-block-components-product-image img {
+		transition: none;
+	}
+}
+
+.wc-block-product .wp-block-post-title {
+	margin-top: var(--wp--preset--spacing--40);
+	margin-bottom: 0.25em;
+}
+
+/* Galería del producto. */
+.wp-block-woocommerce-product-image-gallery img {
+	border-radius: 24px;
+	background: var(--wp--preset--color--surface);
 }

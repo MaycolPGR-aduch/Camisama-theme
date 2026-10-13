@@ -20,7 +20,15 @@
 <!-- wp:site-title {"level":0} /--></div>
 <!-- /wp:group -->
 
-<!-- wp:navigation {"overlayMenu":"mobile","metadata":{"ignoredHookedBlocks":["woocommerce/customer-account","woocommerce/mini-cart"]}} /-->
+<!-- wp:navigation {"overlayMenu":"mobile","metadata":{"ignoredHookedBlocks":["woocommerce/customer-account","woocommerce/mini-cart"]}} -->
+<!-- wp:navigation-link {"label":"<?php echo esc_attr__( 'Tienda', 'camisama' ); ?>","url":"<?php echo esc_url( camisama_wc_page_url( 'shop' ) ); ?>","kind":"custom"} /-->
+
+<!-- wp:navigation-link {"label":"<?php echo esc_attr__( 'Camisetas', 'camisama' ); ?>","url":"<?php echo esc_url( camisama_product_category_url( 'camisetas' ) ); ?>","kind":"custom"} /-->
+
+<!-- wp:navigation-link {"label":"<?php echo esc_attr__( 'Niños', 'camisama' ); ?>","url":"<?php echo esc_url( camisama_product_category_url( 'ninos' ) ); ?>","kind":"custom"} /-->
+
+<!-- wp:navigation-link {"label":"<?php echo esc_attr__( 'Cómo funciona', 'camisama' ); ?>","url":"<?php echo esc_url( home_url( '/#como-funciona' ) ); ?>","kind":"custom"} /-->
+<!-- /wp:navigation -->
 
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 <div class="wp-block-group"><!-- wp:woocommerce/customer-account {"displayStyle":"icon_only"} /-->

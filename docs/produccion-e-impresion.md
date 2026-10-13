@@ -64,10 +64,19 @@ contener código malicioso. El texto se convierte en imagen al generar el PNG, a
 necesita tener instaladas las fuentes; solo se ofrecen fuentes con licencia libre (OFL) que permite
 este uso comercial.
 
-## Lo que conviene confirmar con el taller
+## Decisión: impresión DTF propia
 
-- ¿Imprimen ustedes el DTF o compran los transfers a un proveedor? Si es un proveedor, preguntarle
-  qué formato pide y si quiere los diseños ya montados en un **gang sheet** (varios diseños en una
-  hoja de film de 58 o 60 cm de ancho). Es una función que se puede añadir más adelante.
-- Ancho útil del film de su impresora y el tamaño máximo que ponen en el frente.
-- Si quieren un margen de sangrado o líneas de corte.
+Camisama imprime sus propios transfers (impresora DTF + polvo + horno + plancha térmica). Flujo en el taller:
+
+1. Descargar los PNG del pedido (o de varios pedidos) desde WooCommerce.
+2. Abrirlos en el software RIP de la impresora, que aplica el espejo, la capa de tinta blanca y el
+   perfil de color. La tienda **no** entrega los archivos en espejo ni con capa blanca.
+3. Acomodar varias piezas en el ancho del film para no desperdiciarlo. La mayoría de los RIP lo hacen
+   (*nesting*); si el suyo no, la tienda puede generar la hoja ya acomodada (función opcional).
+4. Imprimir, aplicar el polvo, curar y planchar siguiendo la hoja de producción.
+
+Cuando tengan el equipo, conviene anotar aquí:
+
+- Modelo de impresora y software RIP (para comprobar que acepta PNG de 300 DPI con transparencia).
+- Ancho útil del film (30 o 60 cm) y tamaño máximo real que imprimen en el frente.
+- Temperatura, presión y tiempo de planchado por tipo de tela, para incluirlos en la hoja de producción.

@@ -39,8 +39,11 @@ pwsh bin/setup-local.ps1
 ```
 
 El script descarga WordPress en `C:\laragon\www\camisama`, crea la base de datos, instala WordPress
-y WooCommerce, enlaza el tema y el plugin del repositorio dentro de `wp-content` y los activa. Se puede
-volver a ejecutar sin problema. Las credenciales del administrador quedan en `.env.local` (no se versiona).
+y WooCommerce en español (`es_MX`), enlaza el tema y el plugin del repositorio dentro de `wp-content`
+y los activa. También configura la tienda para Perú (soles, `S/ 49.90`, envíos solo a Perú, hora de
+Lima) y crea 4 productos de demostración con colores, tallas e imágenes (`bin/seed-demo.php`; se omite
+con `-SkipDemo`). Se puede volver a ejecutar sin problema: deja la configuración del entorno local
+como indica el script. Las credenciales del administrador quedan en `.env.local` (no se versiona).
 
 Si Laragon ya estaba iniciado antes de crear la carpeta, pulsa **Recargar** en Laragon para que cree
 el host `camisama.test`.
