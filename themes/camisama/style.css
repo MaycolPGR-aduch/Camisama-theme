@@ -1,0 +1,23 @@
+/*
+Theme Name: Camisama
+Theme URI: https://github.com/MaycolPGR-aduch/Camisama-theme
+Author: Camisama
+Description: Tema de bloques para la tienda de prendas personalizables Camisama. Pensado para WooCommerce y el plugin Camisama Customizer.
+Requires at least: 6.7
+Requires PHP: 8.2
+Version: 0.1.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: camisama
+Tags: e-commerce, full-site-editing, block-patterns, wide-blocks, custom-colors
+*/
+
+/*
+ * Los colores, tipografías y espaciados viven en theme.json.
+ * Aquí solo va lo que theme.json todavía no puede expresar.
+ */
+
+:where(.wp-site-blocks) :focus-visible {
+	outline: 2px solid var(--wp--preset--color--secondary);
+	outline-offset: 2px;
+}

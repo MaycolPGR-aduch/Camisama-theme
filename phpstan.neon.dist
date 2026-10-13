@@ -1,0 +1,14 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 6
+	phpVersion: 80200
+	paths:
+		- plugins/camisama-customizer/camisama-customizer.php
+		- plugins/camisama-customizer/src
+		- plugins/camisama-customizer/client
+		- plugins/camisama-customizer/tests
+		- themes/camisama
+	scanFiles:
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php

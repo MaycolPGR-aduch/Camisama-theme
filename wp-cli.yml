@@ -1,0 +1,5 @@
+# Configuración compartida de WP-CLI.
+# La ruta y la URL del sitio de cada máquina van en wp-cli.local.yml (ignorado por git),
+# que crea bin/setup-local.ps1 y que hereda este archivo.
+apache_modules:
+  - mod_rewrite

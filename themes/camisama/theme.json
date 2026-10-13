@@ -1,0 +1,139 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": true,
+		"useRootPaddingAwareAlignments": true,
+		"color": {
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"palette": [
+				{ "slug": "base", "name": "Papel", "color": "#F7F4EE" },
+				{ "slug": "surface", "name": "Blanco", "color": "#FFFFFF" },
+				{ "slug": "border", "name": "Lino", "color": "#E4DED3" },
+				{ "slug": "muted", "name": "Grafito", "color": "#5F5E66" },
+				{ "slug": "contrast", "name": "Tinta", "color": "#16161A" },
+				{ "slug": "primary", "name": "Rojo sello", "color": "#D3261C" },
+				{ "slug": "primary-dark", "name": "Rojo sello oscuro", "color": "#A51D15" },
+				{ "slug": "secondary", "name": "Índigo", "color": "#26357F" },
+				{ "slug": "accent", "name": "Mostaza", "color": "#F5B700" }
+			]
+		},
+		"layout": {
+			"contentSize": "760px",
+			"wideSize": "1280px"
+		},
+		"spacing": {
+			"units": [ "px", "rem", "%", "vh", "vw" ],
+			"defaultSpacingSizes": false,
+			"spacingSizes": [
+				{ "slug": "20", "name": "2XS", "size": "0.5rem" },
+				{ "slug": "30", "name": "XS", "size": "0.75rem" },
+				{ "slug": "40", "name": "S", "size": "1rem" },
+				{ "slug": "50", "name": "M", "size": "clamp(1.25rem, 2.5vw, 1.5rem)" },
+				{ "slug": "60", "name": "L", "size": "clamp(1.5rem, 4vw, 2.5rem)" },
+				{ "slug": "70", "name": "XL", "size": "clamp(2.5rem, 6vw, 4rem)" },
+				{ "slug": "80", "name": "2XL", "size": "clamp(3.5rem, 9vw, 6.5rem)" }
+			]
+		},
+		"typography": {
+			"defaultFontSizes": false,
+			"fluid": true,
+			"fontFamilies": [
+				{
+					"slug": "display",
+					"name": "Bricolage Grotesque",
+					"fontFamily": "\"Bricolage Grotesque\", ui-sans-serif, system-ui, sans-serif"
+				},
+				{
+					"slug": "body",
+					"name": "Inter",
+					"fontFamily": "Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif"
+				}
+			],
+			"fontSizes": [
+				{ "slug": "small", "name": "Pequeño", "size": "0.875rem", "fluid": false },
+				{ "slug": "medium", "name": "Mediano", "size": "1rem", "fluid": false },
+				{ "slug": "large", "name": "Grande", "size": "1.25rem", "fluid": { "min": "1.125rem", "max": "1.25rem" } },
+				{ "slug": "x-large", "name": "Muy grande", "size": "2rem", "fluid": { "min": "1.5rem", "max": "2rem" } },
+				{ "slug": "xx-large", "name": "Titular", "size": "3.5rem", "fluid": { "min": "2.25rem", "max": "3.5rem" } },
+				{ "slug": "display", "name": "Display", "size": "5.5rem", "fluid": { "min": "3rem", "max": "5.5rem" } }
+			]
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var:preset|color|base",
+			"text": "var:preset|color|contrast"
+		},
+		"typography": {
+			"fontFamily": "var:preset|font-family|body",
+			"fontSize": "var:preset|font-size|medium",
+			"lineHeight": "1.6"
+		},
+		"spacing": {
+			"blockGap": "var:preset|spacing|40",
+			"padding": {
+				"left": "var:preset|spacing|50",
+				"right": "var:preset|spacing|50"
+			}
+		},
+		"elements": {
+			"heading": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|display",
+					"fontWeight": "700",
+					"lineHeight": "1.1",
+					"letterSpacing": "-0.02em"
+				}
+			},
+			"h1": { "typography": { "fontSize": "var:preset|font-size|xx-large" } },
+			"h2": { "typography": { "fontSize": "var:preset|font-size|x-large" } },
+			"h3": { "typography": { "fontSize": "var:preset|font-size|large" } },
+			"link": {
+				"color": { "text": "var:preset|color|secondary" },
+				":hover": { "color": { "text": "var:preset|color|primary" } }
+			},
+			"button": {
+				"color": {
+					"background": "var:preset|color|primary",
+					"text": "var:preset|color|surface"
+				},
+				"border": { "radius": "999px" },
+				"typography": { "fontWeight": "600" },
+				"spacing": {
+					"padding": {
+						"top": "0.8em",
+						"bottom": "0.8em",
+						"left": "1.6em",
+						"right": "1.6em"
+					}
+				},
+				":hover": {
+					"color": { "background": "var:preset|color|primary-dark" }
+				}
+			}
+		},
+		"blocks": {
+			"core/site-title": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|display",
+					"fontSize": "var:preset|font-size|large",
+					"fontWeight": "800",
+					"letterSpacing": "-0.03em"
+				},
+				"elements": {
+					"link": {
+						"color": { "text": "var:preset|color|contrast" },
+						"typography": { "textDecoration": "none" }
+					}
+				}
+			}
+		}
+	},
+	"templateParts": [
+		{ "name": "header", "title": "Cabecera", "area": "header" },
+		{ "name": "footer", "title": "Pie de página", "area": "footer" }
+	]
+}

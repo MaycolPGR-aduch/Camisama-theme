@@ -1,0 +1,26 @@
+{
+	"name": "camisama/camisama-customizer",
+	"description": "Personalizador de prendas para WooCommerce.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Camisama\\Customizer\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Camisama\\Customizer\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "8.2.0"
+		},
+		"sort-packages": true
+	}
+}

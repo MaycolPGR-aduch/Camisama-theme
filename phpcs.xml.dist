@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ruleset name="Camisama">
+	<description>Estándar de código de Camisama: WordPress Coding Standards + compatibilidad PHP 8.2+.</description>
+
+	<file>./themes/camisama</file>
+	<file>./plugins/camisama-customizer</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="cache" value=".phpcs-cache"/>
+	<arg value="sp"/>
+
+	<config name="minimum_wp_version" value="6.7"/>
+	<config name="testVersion" value="8.2-"/>
+
+	<rule ref="WordPress"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="camisama"/>
+				<element value="camisama-customizer"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="camisama"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Las clases siguen PSR-4 (Plugin.php), no class-plugin.php. -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>*/plugins/camisama-customizer/src/*</exclude-pattern>
+		<exclude-pattern>*/plugins/camisama-customizer/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Pruebas: nombres de clase PSR-4 y sin docblock obligatorio por método. -->
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+</ruleset>

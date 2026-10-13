@@ -1,0 +1,29 @@
+# Dependencias
+/vendor/
+/node_modules/
+/plugins/*/vendor/
+
+# Archivos compilados
+/plugins/*/build/
+/themes/*/build/
+
+# Entorno local (credenciales y rutas de cada máquina)
+.env
+.env.*
+!.env.example
+wp-cli.local.yml
+
+# Cachés de herramientas
+/.phpunit.cache/
+.phpcs-cache
+
+# Ajustes personales de Claude Code
+/.claude/settings.local.json
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
