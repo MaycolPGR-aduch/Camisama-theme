@@ -10,13 +10,23 @@ declare( strict_types=1 );
 namespace Camisama\Customizer;
 
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use Camisama\Customizer\Admin\PriceSettingsPage;
+use Camisama\Customizer\Admin\ProductConfigMetaBox;
+use Camisama\Customizer\Config\ProductConfigRepository;
+use Camisama\Customizer\Designs\DesignPostType;
+use Camisama\Customizer\Designs\DesignRepository;
+use Camisama\Customizer\Media\SvgSupport;
+use Camisama\Customizer\Pricing\PriceTableRepository;
+use Camisama\Customizer\Rest\CatalogController;
+use Camisama\Customizer\Rest\ProductCustomizerController;
+use Camisama\Customizer\Security\SvgSanitizer;
 
 /**
  * Registra los hooks del plugin. Se inicializa una sola vez desde el archivo principal.
  */
 final class Plugin {
 
-	public const VERSION = '0.1.0';
+	public const VERSION = '0.2.0';
 
 	/**
 	 * Instancia única.
@@ -56,11 +66,40 @@ final class Plugin {
 	}
 
 	/**
+	 * URL dentro del plugin.
+	 *
+	 * @param string $relative Ruta relativa a la carpeta del plugin.
+	 */
+	public function url( string $relative = '' ): string {
+		return plugins_url( ltrim( $relative, '/\\' ), $this->file );
+	}
+
+	/**
 	 * Engancha los servicios del plugin a WordPress y WooCommerce.
 	 */
 	private function register_hooks(): void {
 		add_action( 'before_woocommerce_init', array( $this, 'declare_woocommerce_compatibility' ) );
 		add_action( 'init', array( $this, 'register_blocks' ) );
+
+		$configs = new ProductConfigRepository();
+		$prices  = new PriceTableRepository();
+		$designs = new DesignRepository();
+
+		( new DesignPostType() )->register();
+		( new SvgSupport( new SvgSanitizer() ) )->register();
+
+		if ( is_admin() ) {
+			( new PriceSettingsPage( $prices ) )->register();
+			( new ProductConfigMetaBox( $this, $configs, $prices ) )->register();
+		}
+
+		add_action(
+			'rest_api_init',
+			static function () use ( $configs, $prices, $designs ): void {
+				( new CatalogController( $designs ) )->register_routes();
+				( new ProductCustomizerController( $configs, $prices ) )->register_routes();
+			}
+		);
 	}
 
 	/**

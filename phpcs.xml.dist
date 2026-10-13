@@ -38,6 +38,29 @@
 		</properties>
 	</rule>
 
+	<!-- Capacidades que registra WooCommerce. -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="manage_woocommerce"/>
+				<element value="manage_product_terms"/>
+				<element value="edit_product_terms"/>
+				<element value="delete_product_terms"/>
+				<element value="assign_product_terms"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Los mensajes de excepción del dominio se escapan donde se muestran (esc_html), no al lanzarlos. -->
+	<rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+		<exclude-pattern>*/plugins/camisama-customizer/src/*</exclude-pattern>
+	</rule>
+
+	<!-- El sniff no entiende tipos genéricos de PHPDoc (list<Zone>); PHPStan sí los comprueba. -->
+	<rule ref="Squiz.Commenting.FunctionComment.IncorrectTypeHint">
+		<severity>0</severity>
+	</rule>
+
 	<!-- Las clases siguen PSR-4 (Plugin.php), no class-plugin.php. -->
 	<rule ref="WordPress.Files.FileName">
 		<exclude-pattern>*/plugins/camisama-customizer/src/*</exclude-pattern>

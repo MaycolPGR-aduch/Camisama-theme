@@ -3,7 +3,7 @@
  * Plugin Name:       Camisama Customizer
  * Plugin URI:        https://github.com/MaycolPGR-aduch/Camisama-theme
  * Description:       Personalizador de prendas para WooCommerce: modelos, zonas de impresión, estampados del catálogo, texto e imágenes propias.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 6.7
  * Requires PHP:      8.2
  * Requires Plugins:  woocommerce

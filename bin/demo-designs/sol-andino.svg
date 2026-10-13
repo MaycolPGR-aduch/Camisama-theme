@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+	<g fill="#F5B700">
+		<circle cx="100" cy="100" r="44"/>
+		<g id="rayos">
+			<path d="M100 8 L110 40 L90 40 Z"/>
+			<path d="M100 192 L90 160 L110 160 Z"/>
+			<path d="M8 100 L40 90 L40 110 Z"/>
+			<path d="M192 100 L160 110 L160 90 Z"/>
+		</g>
+		<g transform="rotate(45 100 100)">
+			<path d="M100 8 L110 40 L90 40 Z"/>
+			<path d="M100 192 L90 160 L110 160 Z"/>
+			<path d="M8 100 L40 90 L40 110 Z"/>
+			<path d="M192 100 L160 110 L160 90 Z"/>
+		</g>
+	</g>
+	<g fill="#D3261C">
+		<circle cx="84" cy="94" r="6"/>
+		<circle cx="116" cy="94" r="6"/>
+		<path d="M80 114 Q100 132 120 114 Q100 122 80 114 Z"/>
+	</g>
+	<circle cx="100" cy="100" r="44" fill="none" stroke="#D3261C" stroke-width="5"/>
+</svg>

@@ -1,0 +1,136 @@
+.camisama-product-config {
+	display: grid;
+	gap: 16px;
+	container-type: inline-size;
+
+	&__toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__preset,
+	&__colors,
+	&__actions,
+	&__tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__tabs {
+		padding-bottom: 8px;
+		border-bottom: 1px solid #dcdcde;
+	}
+
+	&__body {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 24px;
+
+		// La caja puede ser estrecha aunque la ventana sea ancha.
+		@container (min-width: 720px) {
+			grid-template-columns: minmax(0, 1fr) 280px;
+		}
+	}
+
+	&__stage,
+	&__side {
+		display: grid;
+		gap: 12px;
+		align-content: start;
+	}
+}
+
+.camisama-zone-canvas {
+	position: relative;
+	max-width: 560px;
+	overflow: hidden;
+	border-radius: 8px;
+	background: #f0f0f1;
+	user-select: none;
+	touch-action: none;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	&__empty {
+		display: grid;
+		place-items: center;
+		aspect-ratio: 1;
+		padding: 24px;
+		color: #646970;
+		text-align: center;
+	}
+}
+
+.camisama-zone {
+	position: absolute;
+	box-sizing: border-box;
+	border: 2px dashed #26357f;
+	background: rgba(38, 53, 127, 0.12);
+	cursor: move;
+
+	&:focus {
+		outline: none;
+	}
+
+	&.is-selected,
+	&:focus-visible {
+		border-style: solid;
+		background: rgba(211, 38, 28, 0.15);
+		border-color: #d3261c;
+	}
+
+	&__label {
+		position: absolute;
+		top: 2px;
+		left: 4px;
+		max-width: calc(100% - 8px);
+		overflow: hidden;
+		color: #16161a;
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 1.2;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		pointer-events: none;
+	}
+
+	&__handle {
+		position: absolute;
+		right: -7px;
+		bottom: -7px;
+		width: 12px;
+		height: 12px;
+		border: 2px solid #d3261c;
+		border-radius: 3px;
+		background: #fff;
+		cursor: nwse-resize;
+	}
+}
+
+.camisama-zone-panel {
+	display: grid;
+	gap: 12px;
+
+	&__size {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+	}
+
+	&__tiers ul {
+		margin: 4px 0 8px;
+	}
+
+	&__hint {
+		color: #646970;
+	}
+}

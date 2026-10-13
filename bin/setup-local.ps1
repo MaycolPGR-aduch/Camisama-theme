@@ -220,7 +220,7 @@ Invoke-Wp option update woocommerce_permalinks '{"product_base":"/producto","cat
 
 if (-not $SkipDemo) {
 	Write-Step 'Productos de demostración'
-	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include
+	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include --user=admin
 }
 
 Invoke-Wp rewrite structure '/%postname%/' --hard --quiet

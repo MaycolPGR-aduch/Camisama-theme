@@ -39,28 +39,63 @@ encaja en Perú (por ejemplo "colonia" en la dirección), se ajustará con un fi
 plugins/camisama-customizer/
 ├── camisama-customizer.php   # cabecera del plugin y arranque
 ├── src/                      # PHP con PSR-4: Camisama\Customizer\…
-├── client/                   # JS/SCSS (React + Fabric.js), compilado con @wordpress/scripts
-│   └── blocks/customizer/    # block.json, editor (index.js), tienda (view.js), render.php
+│   ├── Config/               # vistas, zonas, plantillas (dominio puro) y su repositorio
+│   ├── Pricing/              # escalones de precio, importes en céntimos
+│   ├── Designs/              # catálogo de estampados (tipo de contenido y consultas)
+│   ├── Security/, Media/     # saneado de SVG y su soporte en la biblioteca de medios
+│   ├── Admin/                # caja "Personalizador" del producto y ajustes de precios
+│   ├── Rest/                 # API camisama/v1 (solo lectura)
+│   └── Production/           # conversión cm ↔ px para archivos de impresión
+├── client/                   # JS/SCSS (React), compilado con @wordpress/scripts (webpack.config.js)
+│   ├── blocks/customizer/    # bloque del personalizador en la tienda
+│   └── admin/product-config/ # editor visual de vistas y zonas
 ├── build/                    # salida de la compilación (no se versiona)
-└── tests/                    # PHPUnit
+└── tests/                    # PHPUnit (las pruebas JS van junto al código: *.test.js)
 ```
 
 - PHP 8.2+, `declare(strict_types=1)`, WordPress Coding Standards, PHPStan nivel 6.
 - Compatible con HPOS y con el carrito/checkout de bloques (declarado en `Plugin::declare_woocommerce_compatibility`).
 - `Requires Plugins: woocommerce`: WordPress no deja activarlo sin WooCommerce.
+- La lógica de dominio (`Config`, `Pricing`, `Security`, `Production`) no depende de WordPress y
+  tiene pruebas unitarias; las clases de integración solo traducen entre WordPress y el dominio.
 
-## Modelo de datos (previsto)
+## Modelo de datos
 
 Pensado como **producto personalizable** genérico; camisetas es solo el primer tipo.
 
-| Concepto | Almacenamiento |
+| Concepto | Almacenamiento | Estado |
+|---|---|---|
+| Modelo (clásica, oversize…) | Producto variable de WooCommerce (atributos globales Color y Talla) | ✅ |
+| Configuración del personalizador | JSON en el meta `_camisama_customizer` del producto (`ProductConfig`) | ✅ |
+| Vistas | Frente, espalda…: una maqueta por color (`View::$mockups`, slug del color → adjunto) | ✅ |
+| Zonas | Rectángulo relativo a la maqueta (0–1) + tamaño real en cm (`Zone`) | ✅ |
+| Precios por tamaño | Opción `camisama_customizer_price_tiers`, importes en céntimos (`PriceTable`) | ✅ |
+| Estampados | Tipo de contenido `camisama_design`: archivo = imagen destacada (SVG o PNG), categorías `camisama_design_cat`, recargo premium en `_camisama_premium` | ✅ |
+| Diseño del cliente | JSON en una tabla propia (guardar, compartir, reimprimir) | fase 3–5 |
+| Pedido | JSON + vistas previas + archivos de producción por zona en el artículo del pedido | fase 4 |
+
+El rectángulo de una zona representa exactamente su tamaño en cm: así el editor sabe a qué escala
+dibujar cada diseño, y el escalón de precio se calcula con el lado mayor de lo que el cliente coloca.
+
+## Administración
+
+- **Productos → editar → caja "Personalizador":** activar, aplicar una plantilla (adulto o niños),
+  elegir la maqueta de cada vista y color desde la biblioteca de medios, y mover/redimensionar las
+  zonas sobre la imagen (también con el teclado: flechas, Mayús para pasos largos). Al cambiar el
+  tamaño en cm, el rectángulo conserva la proporción real. El servidor valida todo al guardar; si algo
+  no es válido, muestra el motivo y conserva la configuración anterior.
+- **Estampados:** listado con miniatura, categorías y recargo premium.
+- **WooCommerce → Personalizador:** tabla de escalones de precio.
+- **SVG:** solo usuarios con `manage_woocommerce` pueden subirlos, y siempre se sanean
+  (`enshrined/svg-sanitize`: sin scripts, eventos ni referencias remotas).
+
+## API REST (`camisama/v1`, pública y de solo lectura)
+
+| Ruta | Devuelve |
 |---|---|
-| Modelo (clásica, oversize…) | Producto variable de WooCommerce (color, talla) + configuración del personalizador en metadatos |
-| Vistas | Frente, espalda, mangas…: una imagen de maqueta por color |
-| Zonas | Rectángulos por vista con tamaño máximo en cm y escalones de precio |
-| Estampados | Tipo de contenido `camisama_design` con taxonomía de categorías |
-| Diseño del cliente | JSON en una tabla propia (guardar, compartir, reimprimir) |
-| Pedido | JSON + vistas previas + archivos de producción por zona en el artículo del pedido |
+| `GET /designs?category=&page=&per_page=` | Estampados con archivo, medidas, categorías y recargo (cabeceras `X-WP-Total`, `X-WP-TotalPages`) |
+| `GET /design-categories` | Categorías con estampados |
+| `GET /products/{id}/customizer` | Colores, vistas con la URL de cada maqueta, zonas con sus escalones alcanzables y moneda. 404 si el producto no es personalizable |
 
 ## Flujo de un pedido
 
@@ -78,7 +113,7 @@ Ver [producción e impresión](produccion-e-impresion.md) y [modelo de precios](
 |---|---|---|
 | 0. Entorno | Repositorio, sitio local, WooCommerce, tema y plugin base, linters, pruebas, CI | ✅ |
 | 1. Tema | Fuentes, portada, catálogo, ficha de producto, carrito y checkout con diseño propio; tienda configurada para Perú (PEN, `es_MX`) | ✅ |
-| 2. Datos y administración | Vistas y zonas por producto, catálogo de estampados, reglas de precio | |
+| 2. Datos y administración | Vistas y zonas por producto con editor visual, catálogo de estampados con SVG seguros, precios por tamaño, API REST | ✅ |
 | 3. Personalizador básico | Elegir modelo y color, colocar estampados, texto e imágenes, precio en vivo | |
 | 4. Pedido | Diseño en carrito, correos y administración; archivos de producción | |
 | 5. Extras | Guardar y compartir diseños, móvil, rendimiento, pruebas de punta a punta | |

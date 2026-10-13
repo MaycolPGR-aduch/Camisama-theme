@@ -12,3 +12,5 @@ parameters:
 		- themes/camisama
 	scanFiles:
 		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+	bootstrapFiles:
+		- plugins/camisama-customizer/vendor/autoload.php

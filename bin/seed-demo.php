@@ -3,7 +3,10 @@
  * Productos de demostración para el sitio local: 4 modelos con colores, tallas e imágenes.
  *
  * Uso (desde la raíz del repositorio):
- *   php vendor/wp-cli/wp-cli/php/boot-fs.php eval-file bin/seed-demo.php --use-include
+ *   php vendor/wp-cli/wp-cli/php/boot-fs.php eval-file bin/seed-demo.php --use-include --user=admin
+ *
+ * Crea 4 modelos con colores, tallas, imágenes de frente y espalda y el personalizador
+ * configurado, y 6 estampados SVG (bin/demo-designs) en 3 categorías.
  *
  * Se puede ejecutar varias veces: los productos se identifican por SKU y las imágenes por clave.
  * Las imágenes son ilustraciones planas generadas con GD, a la espera de las fotos reales.
@@ -13,8 +16,18 @@
 
 declare( strict_types=1 );
 
-if ( ! defined( 'WP_CLI' ) || ! class_exists( 'WooCommerce' ) ) {
-	echo "Ejecuta este archivo con WP-CLI (eval-file) y con WooCommerce activo.\n";
+use Camisama\Customizer\Config\Presets;
+use Camisama\Customizer\Config\ProductConfig;
+use Camisama\Customizer\Config\ProductConfigRepository;
+use Camisama\Customizer\Config\Rect;
+use Camisama\Customizer\Config\View;
+use Camisama\Customizer\Config\Zone;
+use Camisama\Customizer\Designs\DesignPostType;
+use Camisama\Customizer\Media\SvgSupport;
+use Camisama\Customizer\Security\SvgSanitizer;
+
+if ( ! defined( 'WP_CLI' ) || ! class_exists( 'WooCommerce' ) || ! class_exists( Presets::class ) ) {
+	echo "Ejecuta este archivo con WP-CLI (eval-file) y con WooCommerce y Camisama Customizer activos.\n";
 	return;
 }
 
@@ -80,6 +93,93 @@ const CAMISAMA_DEMO_PRODUCTS = array(
 /** Recargo de las tallas grandes, en soles. */
 const CAMISAMA_DEMO_XXL_SURCHARGE = 5.0;
 
+/** Estampados de bin/demo-designs: slug del archivo => datos. El recargo premium va en céntimos. */
+const CAMISAMA_DEMO_DESIGNS = array(
+	'sol-andino' => array(
+		'title'      => 'Sol andino',
+		'categories' => array( 'peru' ),
+		'premium'    => 0,
+	),
+	'llama'      => array(
+		'title'      => 'Llama con manta',
+		'categories' => array( 'peru' ),
+		'premium'    => 500,
+	),
+	'montana'    => array(
+		'title'      => 'Cordillera',
+		'categories' => array( 'peru', 'naturaleza' ),
+		'premium'    => 0,
+	),
+	'ola'        => array(
+		'title'      => 'Ola',
+		'categories' => array( 'naturaleza' ),
+		'premium'    => 0,
+	),
+	'rayo'       => array(
+		'title'      => 'Rayo',
+		'categories' => array( 'iconos' ),
+		'premium'    => 0,
+	),
+	'corazon'    => array(
+		'title'      => 'Corazón',
+		'categories' => array( 'iconos' ),
+		'premium'    => 0,
+	),
+);
+
+/**
+ * Posición de las mangas en cada silueta (las plantillas están calculadas para la clásica).
+ *
+ * @return array<string, Rect>
+ */
+function camisama_demo_sleeves( string $shape ): array {
+	return match ( $shape ) {
+		'oversize' => array(
+			'left-sleeve'  => new Rect( 0.7306, 0.3889, 0.0721, 0.0721 ),
+			'right-sleeve' => new Rect( 0.1972, 0.3889, 0.0721, 0.0721 ),
+		),
+		'long'     => array(
+			'left-sleeve'  => new Rect( 0.7222, 0.3806, 0.0721, 0.0721 ),
+			'right-sleeve' => new Rect( 0.2056, 0.3806, 0.0721, 0.0721 ),
+		),
+		default    => array(),
+	};
+}
+
+/**
+ * Configura el personalizador del producto (vistas Frente/Espalda con una maqueta por color y
+ * zonas de la plantilla) si aún no tiene configuración.
+ *
+ * @param int                  $product_id ID del producto.
+ * @param array<string, mixed> $spec       Datos de CAMISAMA_DEMO_PRODUCTS.
+ */
+function camisama_demo_configure( int $product_id, array $spec ): void {
+	if ( get_post_meta( $product_id, ProductConfigRepository::META_KEY, true ) ) {
+		return;
+	}
+
+	$preset  = Presets::get( 'kids' === $spec['shape'] ? 'kids' : 'adult' );
+	$sleeves = camisama_demo_sleeves( $spec['shape'] );
+	$mockups = array(
+		'front' => array(),
+		'back'  => array(),
+	);
+	foreach ( $spec['colors'] as $color ) {
+		foreach ( array_keys( $mockups ) as $view ) {
+			$mockups[ $view ][ $color ] = camisama_demo_image( $spec['sku'], $spec['shape'], $color, $view );
+		}
+	}
+
+	$config = new ProductConfig(
+		true,
+		array_map( static fn ( View $view ): View => new View( $view->id, $view->label, $mockups[ $view->id ] ?? array() ), $preset->views ),
+		array_map( static fn ( Zone $zone ): Zone => new Zone( $zone->id, $zone->label, $zone->view, $sleeves[ $zone->id ] ?? $zone->rect, $zone->width_cm, $zone->height_cm ), $preset->zones )
+	);
+
+	( new ProductConfigRepository() )->save( $product_id, $config );
+	WP_CLI::log( "  personalizador configurado: {$spec['name']}" );
+}
+
 /**
  * Contornos de las prendas en una cuadrícula de 48 × 48 (como el isotipo).
  * El primer y el segundo punto son los extremos del cuello; el resto, el contorno en sentido horario.
@@ -123,11 +223,15 @@ function camisama_demo_color( \GdImage $image, string $hex, float $darken = 0.0 
 
 /**
  * Dibuja la prenda y devuelve el PNG (800 × 800). Se dibuja al doble y se reduce para suavizar bordes.
+ * La espalda se distingue por un escote menos profundo.
  */
-function camisama_demo_render( string $shape, string $hex ): string {
-	$size   = 1600;
-	$image  = imagecreatetruecolor( $size, $size );
-	$spec   = camisama_demo_shape( $shape );
+function camisama_demo_render( string $shape, string $hex, string $view = 'front' ): string {
+	$size  = 1600;
+	$image = imagecreatetruecolor( $size, $size );
+	$spec  = camisama_demo_shape( $shape );
+	if ( 'back' === $view ) {
+		$spec['neck'][1][1] = $spec['neck'][0][1] + 1.5;
+	}
 	$unit   = $size * 0.8 / 48 * $spec['scale'];
 	$center = $size / 2;
 	$map    = static fn ( array $p ): array => array( $center + ( $p[0] - 24 ) * $unit, $center + ( $p[1] - 25 ) * $unit );
@@ -176,10 +280,10 @@ function camisama_demo_render( string $shape, string $hex ): string {
 }
 
 /**
- * Crea (o reutiliza) la imagen de una prenda en un color y devuelve el ID del adjunto.
+ * Crea (o reutiliza) la imagen de una prenda en un color y una vista, y devuelve el ID del adjunto.
  */
-function camisama_demo_image( string $sku, string $shape, string $color ): int {
-	$key      = strtolower( "{$sku}-{$color}" );
+function camisama_demo_image( string $sku, string $shape, string $color, string $view = 'front' ): int {
+	$key      = strtolower( 'front' === $view ? "{$sku}-{$color}" : "{$sku}-{$color}-{$view}" );
 	$existing = get_posts(
 		array(
 			'post_type'      => 'attachment',
@@ -194,7 +298,7 @@ function camisama_demo_image( string $sku, string $shape, string $color ): int {
 		return (int) $existing[0];
 	}
 
-	$upload = wp_upload_bits( "{$key}.png", null, camisama_demo_render( $shape, CAMISAMA_DEMO_COLORS[ $color ][1] ) );
+	$upload = wp_upload_bits( "{$key}.png", null, camisama_demo_render( $shape, CAMISAMA_DEMO_COLORS[ $color ][1], $view ) );
 	if ( $upload['error'] ) {
 		WP_CLI::error( $upload['error'] );
 	}
@@ -237,13 +341,16 @@ function camisama_demo_attribute( string $slug, string $label, array $terms ): a
 		register_taxonomy( $taxonomy, 'product', array( 'hierarchical' => false ) );
 	}
 
-	$ids = array();
+	$ids   = array();
+	$order = 0;
 	foreach ( $terms as $term_slug => $name ) {
 		$term = term_exists( (string) $term_slug, $taxonomy );
 		if ( ! $term ) {
 			$term = wp_insert_term( $name, $taxonomy, array( 'slug' => (string) $term_slug ) );
 		}
 		$ids[ (string) $term_slug ] = (int) $term['term_id'];
+		// Orden de los términos en la tienda (el mismo que se cambia arrastrando en Productos → Atributos).
+		update_term_meta( (int) $term['term_id'], 'order', $order++ );
 	}
 
 	return $ids;
@@ -276,8 +383,10 @@ $camisama_color_ids = camisama_demo_attribute( 'color', 'Color', array_map( stat
 $camisama_size_ids  = camisama_demo_attribute( 'talla', 'Talla', $camisama_all_sizes );
 
 foreach ( CAMISAMA_DEMO_PRODUCTS as $camisama_order => $camisama_spec ) {
-	if ( wc_get_product_id_by_sku( $camisama_spec['sku'] ) ) {
+	$camisama_existing_id = wc_get_product_id_by_sku( $camisama_spec['sku'] );
+	if ( $camisama_existing_id ) {
 		WP_CLI::log( "Ya existe: {$camisama_spec['name']}" );
+		camisama_demo_configure( $camisama_existing_id, $camisama_spec );
 		continue;
 	}
 
@@ -341,4 +450,73 @@ foreach ( CAMISAMA_DEMO_PRODUCTS as $camisama_order => $camisama_spec ) {
 
 	WC_Product_Variable::sync( $camisama_product_id );
 	WP_CLI::success( "Creado: {$camisama_spec['name']} (#{$camisama_product_id})" );
+	camisama_demo_configure( $camisama_product_id, $camisama_spec );
+}
+
+// --- Catálogo de estampados ---------------------------------------------------------
+
+if ( ! SvgSupport::current_user_can_upload() ) {
+	WP_CLI::error( 'Para importar los estampados SVG ejecuta el script con --user=admin.' );
+}
+
+$camisama_design_categories = array(
+	'peru'       => 'Perú',
+	'naturaleza' => 'Naturaleza',
+	'iconos'     => 'Íconos',
+);
+foreach ( $camisama_design_categories as $camisama_slug => $camisama_name ) {
+	if ( ! term_exists( $camisama_slug, DesignPostType::TAXONOMY ) ) {
+		wp_insert_term( $camisama_name, DesignPostType::TAXONOMY, array( 'slug' => $camisama_slug ) );
+	}
+}
+
+foreach ( CAMISAMA_DEMO_DESIGNS as $camisama_slug => $camisama_design ) {
+	$camisama_found = get_posts(
+		array(
+			'post_type'      => DesignPostType::POST_TYPE,
+			'post_status'    => 'any',
+			'meta_key'       => '_camisama_demo_design', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => $camisama_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+		)
+	);
+	if ( $camisama_found ) {
+		WP_CLI::log( "Ya existe el estampado: {$camisama_design['title']}" );
+		continue;
+	}
+
+	$camisama_svg = ( new SvgSanitizer() )->sanitize( (string) file_get_contents( __DIR__ . "/demo-designs/{$camisama_slug}.svg" ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	if ( null === $camisama_svg ) {
+		WP_CLI::error( "El SVG de demostración {$camisama_slug}.svg no es válido." );
+	}
+
+	$camisama_upload = wp_upload_bits( "{$camisama_slug}.svg", null, $camisama_svg );
+	if ( $camisama_upload['error'] ) {
+		WP_CLI::error( $camisama_upload['error'] );
+	}
+
+	$camisama_file_id = wp_insert_attachment(
+		array(
+			'post_mime_type' => 'image/svg+xml',
+			'post_title'     => $camisama_design['title'],
+			'post_status'    => 'inherit',
+		),
+		$camisama_upload['file']
+	);
+	wp_update_attachment_metadata( $camisama_file_id, wp_generate_attachment_metadata( $camisama_file_id, $camisama_upload['file'] ) );
+
+	$camisama_design_id = wp_insert_post(
+		array(
+			'post_type'   => DesignPostType::POST_TYPE,
+			'post_status' => 'publish',
+			'post_title'  => $camisama_design['title'],
+		)
+	);
+	set_post_thumbnail( $camisama_design_id, $camisama_file_id );
+	wp_set_object_terms( $camisama_design_id, $camisama_design['categories'], DesignPostType::TAXONOMY );
+	update_post_meta( $camisama_design_id, DesignPostType::META_PREMIUM, $camisama_design['premium'] );
+	update_post_meta( $camisama_design_id, '_camisama_demo_design', $camisama_slug );
+
+	WP_CLI::success( "Estampado creado: {$camisama_design['title']}" );
 }

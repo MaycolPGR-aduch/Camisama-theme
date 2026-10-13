@@ -41,8 +41,8 @@ pwsh bin/setup-local.ps1
 El script descarga WordPress en `C:\laragon\www\camisama`, crea la base de datos, instala WordPress
 y WooCommerce en español (`es_MX`), enlaza el tema y el plugin del repositorio dentro de `wp-content`
 y los activa. También configura la tienda para Perú (soles, `S/ 49.90`, envíos solo a Perú, hora de
-Lima) y crea 4 productos de demostración con colores, tallas e imágenes (`bin/seed-demo.php`; se omite
-con `-SkipDemo`). Se puede volver a ejecutar sin problema: deja la configuración del entorno local
+Lima) y crea datos de demostración (`bin/seed-demo.php`; se omite con `-SkipDemo`): 4 modelos con
+colores, tallas, imágenes de frente y espalda y el personalizador configurado, y 6 estampados SVG. Se puede volver a ejecutar sin problema: deja la configuración del entorno local
 como indica el script. Las credenciales del administrador quedan en `.env.local` (no se versiona).
 
 Si Laragon ya estaba iniciado antes de crear la carpeta, pulsa **Recargar** en Laragon para que cree
@@ -58,6 +58,7 @@ el host `camisama.test`.
 | `npm start` | Compila los assets del plugin en modo observación |
 | `npm run build` | Compilación de producción |
 | `npm run lint` | ESLint + Stylelint |
+| `npm run test:js` | Pruebas unitarias de JS (Jest) |
 | `npm run format` | Formatea el JS con Prettier |
 | `composer lint` | WordPress Coding Standards (`composer lint:fix` corrige lo automático) |
 | `composer analyse` | PHPStan |
@@ -76,7 +77,7 @@ Los cambios en `themes/` y `plugins/` se ven al instante en el sitio local, porq
 ## Flujo de trabajo
 
 - `main` siempre estable; cada cambio en una rama (`feature/…`, `fix/…`) con pull request.
-- La CI de GitHub Actions ejecuta estándar de código, PHPStan, PHPUnit, lint y compilación.
+- La CI de GitHub Actions ejecuta estándar de código, PHPStan, PHPUnit, lint, pruebas JS y compilación.
 
 ## Licencia
 
