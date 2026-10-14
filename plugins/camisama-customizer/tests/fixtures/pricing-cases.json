@@ -1,0 +1,91 @@
+{
+	"description": "Casos de precio compartidos por PHP (DesignPricerTest) y JS (pricing.test.js). Medidas en cm, importes en céntimos.",
+	"zones": [
+		{ "id": "front", "label": "Frente", "view": "front", "size_cm": { "w": 30, "h": 40 } },
+		{ "id": "left-sleeve", "label": "Manga izquierda", "view": "front", "size_cm": { "w": 9, "h": 9 } },
+		{ "id": "back", "label": "Espalda", "view": "back", "size_cm": { "w": 30, "h": 40 } },
+		{ "id": "nape", "label": "Nuca", "view": "back", "size_cm": { "w": 8, "h": 5 } }
+	],
+	"tiers": [
+		{ "label": "Pequeño", "max_cm": 10, "amount": 800 },
+		{ "label": "Mediano", "max_cm": 20, "amount": 1400 },
+		{ "label": "Grande", "max_cm": 30, "amount": 2000 },
+		{ "label": "Máximo", "max_cm": 40, "amount": 2500 }
+	],
+	"premiums": { "101": 0, "202": 500 },
+	"cases": [
+		{
+			"name": "sin elementos no suma nada",
+			"elements": [],
+			"expected": { "zones": [], "total": 0 }
+		},
+		{
+			"name": "logo pequeño en el pecho",
+			"elements": [
+				{ "zone": "front", "kind": "design", "design_id": 101, "cx": 20, "cy": 6, "width_cm": 8, "height_cm": 8, "angle": 0 }
+			],
+			"expected": { "zones": [ { "zone": "front", "tier": "Pequeño", "amount": 800 } ], "total": 800 }
+		},
+		{
+			"name": "dos elementos de una zona se miden juntos",
+			"elements": [
+				{ "zone": "front", "kind": "design", "design_id": 101, "cx": 7, "cy": 5, "width_cm": 6, "height_cm": 6, "angle": 0 },
+				{ "zone": "front", "kind": "text", "cx": 22, "cy": 15, "width_cm": 8, "height_cm": 4, "angle": 0 }
+			],
+			"expected": { "zones": [ { "zone": "front", "tier": "Grande", "amount": 2000 } ], "total": 2000 }
+		},
+		{
+			"name": "rotar 45 grados agranda lo que se imprime",
+			"elements": [
+				{ "zone": "front", "kind": "image", "cx": 15, "cy": 20, "width_cm": 10, "height_cm": 10, "angle": 45 }
+			],
+			"expected": { "zones": [ { "zone": "front", "tier": "Mediano", "amount": 1400 } ], "total": 1400 }
+		},
+		{
+			"name": "cada zona suma su escalón",
+			"elements": [
+				{ "zone": "front", "kind": "image", "cx": 15, "cy": 20, "width_cm": 25, "height_cm": 30, "angle": 0 },
+				{ "zone": "back", "kind": "image", "cx": 15, "cy": 20, "width_cm": 20, "height_cm": 35, "angle": 0 },
+				{ "zone": "left-sleeve", "kind": "text", "cx": 4.5, "cy": 4.5, "width_cm": 9, "height_cm": 9, "angle": 0 }
+			],
+			"expected": {
+				"zones": [
+					{ "zone": "front", "tier": "Grande", "amount": 2000 },
+					{ "zone": "left-sleeve", "tier": "Pequeño", "amount": 800 },
+					{ "zone": "back", "tier": "Máximo", "amount": 2500 }
+				],
+				"total": 5300
+			}
+		},
+		{
+			"name": "lo que sobresale de la zona no se cobra",
+			"elements": [
+				{ "zone": "front", "kind": "text", "cx": 28, "cy": 5, "width_cm": 10, "height_cm": 4, "angle": 0 }
+			],
+			"expected": { "zones": [ { "zone": "front", "tier": "Pequeño", "amount": 800 } ], "total": 800 }
+		},
+		{
+			"name": "el recargo premium se cobra una vez por estampado",
+			"elements": [
+				{ "zone": "front", "kind": "design", "design_id": 202, "cx": 15, "cy": 10, "width_cm": 10, "height_cm": 10, "angle": 0 },
+				{ "zone": "back", "kind": "design", "design_id": 202, "cx": 15, "cy": 10, "width_cm": 10, "height_cm": 10, "angle": 0 },
+				{ "zone": "back", "kind": "design", "design_id": 101, "cx": 15, "cy": 18, "width_cm": 4, "height_cm": 4, "angle": 0 }
+			],
+			"expected": {
+				"zones": [
+					{ "zone": "front", "tier": "Pequeño", "amount": 800 },
+					{ "zone": "back", "tier": "Mediano", "amount": 1400 }
+				],
+				"premiums": [ { "design_id": 202, "amount": 500 } ],
+				"total": 2700
+			}
+		},
+		{
+			"name": "una zona que el producto no tiene es un error",
+			"elements": [
+				{ "zone": "pocket", "kind": "text", "cx": 2, "cy": 2, "width_cm": 3, "height_cm": 3, "angle": 0 }
+			],
+			"error": true
+		}
+	]
+}
