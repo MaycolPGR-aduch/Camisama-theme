@@ -17,6 +17,8 @@ use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Designs\DesignRepository;
 use Camisama\Customizer\Media\SvgSupport;
 use Camisama\Customizer\Pricing\PriceTableRepository;
+use Camisama\Customizer\Products\ColorSwatchField;
+use Camisama\Customizer\Products\CustomizerData;
 use Camisama\Customizer\Rest\CatalogController;
 use Camisama\Customizer\Rest\ProductCustomizerController;
 use Camisama\Customizer\Security\SvgSanitizer;
@@ -91,13 +93,14 @@ final class Plugin {
 		if ( is_admin() ) {
 			( new PriceSettingsPage( $prices ) )->register();
 			( new ProductConfigMetaBox( $this, $configs, $prices ) )->register();
+			( new ColorSwatchField() )->register();
 		}
 
 		add_action(
 			'rest_api_init',
 			static function () use ( $configs, $prices, $designs ): void {
 				( new CatalogController( $designs ) )->register_routes();
-				( new ProductCustomizerController( $configs, $prices ) )->register_routes();
+				( new ProductCustomizerController( new CustomizerData( $configs, $prices ) ) )->register_routes();
 			}
 		);
 	}

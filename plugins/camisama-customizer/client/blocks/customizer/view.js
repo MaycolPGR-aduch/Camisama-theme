@@ -1,30 +1,27 @@
 /**
- * Aplicación del personalizador en la tienda.
+ * Monta el personalizador en la ficha del producto.
  *
- * Por ahora solo monta un marcador de posición; el editor con Fabric.js llega en la fase 3.
+ * Los datos vienen incrustados por render.php; mientras carga se ve la galería del producto,
+ * que se oculta en cuanto el editor está listo.
  */
 import { createRoot } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
 
-function CustomizerApp( { productId } ) {
-	return (
-		<p className="wp-block-camisama-customizer__status">
-			{ sprintf(
-				/* translators: %d: ID del producto. */
-				__(
-					'Personalizador en construcción (producto #%d).',
-					'camisama-customizer'
-				),
-				productId
-			) }
-		</p>
-	);
-}
+import App from '../../customizer/App';
 
 document
 	.querySelectorAll( '.wp-block-camisama-customizer' )
 	.forEach( ( node ) => {
-		createRoot( node ).render(
-			<CustomizerApp productId={ Number( node.dataset.productId ) } />
+		const script = node.querySelector(
+			'.wp-block-camisama-customizer__data'
 		);
+		if ( ! script ) {
+			return;
+		}
+
+		const mount = document.createElement( 'div' );
+		node.appendChild( mount );
+		createRoot( mount ).render(
+			<App data={ JSON.parse( script.textContent ) } />
+		);
+		node.classList.add( 'is-ready' );
 	} );

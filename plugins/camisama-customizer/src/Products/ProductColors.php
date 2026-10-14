@@ -22,7 +22,7 @@ final class ProductColors {
 	 * Colores del producto, en el orden del atributo (Productos → Atributos → Color), como en la tienda.
 	 *
 	 * @param int $product_id ID del producto.
-	 * @return list<array{slug: string, name: string}>
+	 * @return list<array{slug: string, name: string, hex: string|null}>
 	 */
 	public static function for_product( int $product_id ): array {
 		$terms = $product_id > 0 && taxonomy_exists( self::TAXONOMY ) ? wc_get_product_terms( $product_id, self::TAXONOMY ) : array();
@@ -33,6 +33,7 @@ final class ProductColors {
 				$colors[] = array(
 					'slug' => $term->slug,
 					'name' => $term->name,
+					'hex'  => ColorSwatchField::hex( $term->term_id ),
 				);
 			}
 		}
@@ -41,6 +42,7 @@ final class ProductColors {
 			$colors[] = array(
 				'slug' => self::DEFAULT,
 				'name' => __( 'Todos los colores', 'camisama-customizer' ),
+				'hex'  => null,
 			);
 		}
 

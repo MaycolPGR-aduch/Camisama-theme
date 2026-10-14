@@ -24,6 +24,7 @@ use Camisama\Customizer\Config\View;
 use Camisama\Customizer\Config\Zone;
 use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Media\SvgSupport;
+use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Security\SvgSanitizer;
 
 if ( ! defined( 'WP_CLI' ) || ! class_exists( 'WooCommerce' ) || ! class_exists( Presets::class ) ) {
@@ -381,6 +382,9 @@ foreach ( CAMISAMA_DEMO_PRODUCTS as $camisama_spec ) {
 }
 $camisama_color_ids = camisama_demo_attribute( 'color', 'Color', array_map( static fn ( array $c ): string => $c[0], CAMISAMA_DEMO_COLORS ) );
 $camisama_size_ids  = camisama_demo_attribute( 'talla', 'Talla', $camisama_all_sizes );
+foreach ( CAMISAMA_DEMO_COLORS as $camisama_slug => $camisama_color ) {
+	update_term_meta( $camisama_color_ids[ $camisama_slug ], ColorSwatchField::META, $camisama_color[1] );
+}
 
 foreach ( CAMISAMA_DEMO_PRODUCTS as $camisama_order => $camisama_spec ) {
 	$camisama_existing_id = wc_get_product_id_by_sku( $camisama_spec['sku'] );

@@ -1,10 +1,179 @@
-.wp-block-camisama-customizer {
-	padding: var(--wp--preset--spacing--50, 1.5rem);
-	border: 2px dashed currentcolor;
-	border-radius: 16px;
+// Personalizador de la tienda. Usa los tokens del tema Camisama,
+// con valores de respaldo para cualquier otro tema.
+$ink: var(--wp--preset--color--contrast, #16161a);
+$paper: var(--wp--preset--color--base, #f7f4ee);
+$surface: var(--wp--preset--color--surface, #fff);
+$line: var(--wp--preset--color--border, #e4ded3);
+$muted: var(--wp--preset--color--muted, #5f5e66);
+$accent: var(--wp--preset--color--primary, #d3261c);
+$focus: var(--wp--preset--color--secondary, #26357f);
+
+.wp-block-camisama-customizer.is-ready {
+
+	.wp-block-camisama-customizer__fallback {
+		display: none;
+	}
 }
 
-.wp-block-camisama-customizer__status {
-	margin: 0;
-	text-align: center;
+.camisama-customizer {
+	display: grid;
+	gap: var(--wp--preset--spacing--40, 1rem);
+
+	button {
+		font: inherit;
+		cursor: pointer;
+	}
+
+	button:focus-visible {
+		outline: 2px solid $focus;
+		outline-offset: 2px;
+	}
+
+	&__views {
+		display: flex;
+		gap: 0.5rem;
+
+		button {
+			padding: 0.45em 1.1em;
+			border: 2px solid $ink;
+			border-radius: 999px;
+			background: transparent;
+			color: $ink;
+			font-weight: 600;
+		}
+
+		button[aria-pressed="true"] {
+			background: $ink;
+			color: $paper;
+		}
+	}
+
+	&__stage {
+		position: relative;
+		overflow: hidden;
+		border-radius: 24px;
+		background: $surface;
+		touch-action: none;
+		user-select: none;
+	}
+
+	&__mockup {
+		display: block;
+		width: 100%;
+		height: auto;
+
+		&.is-empty {
+			aspect-ratio: 1;
+		}
+	}
+
+	// Contorno claro con sombra oscura: se ve sobre prendas de cualquier color.
+	&__zone {
+		position: absolute;
+		padding: 0;
+		border: 1.5px dashed rgba(255, 255, 255, 0.9);
+		border-radius: 4px;
+		background: transparent;
+		box-shadow:
+			0 0 0 1px rgba(22, 22, 26, 0.35),
+			inset 0 0 0 1px rgba(22, 22, 26, 0.35);
+
+		span {
+			position: absolute;
+			bottom: calc(100% + 4px);
+			left: -2px;
+			padding: 0.1em 0.5em;
+			border-radius: 999px;
+			background: rgba(22, 22, 26, 0.6);
+			color: #fff;
+			font-size: 0.7rem;
+			font-weight: 600;
+			line-height: 1.4;
+			white-space: nowrap;
+		}
+
+		&.is-active {
+			border: 2px solid #fff;
+			background: rgba(255, 255, 255, 0.08);
+			box-shadow:
+				0 0 0 2px $ink,
+				inset 0 0 0 1px $ink;
+
+			span {
+				background: $ink;
+			}
+		}
+	}
+
+	&__colors {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+
+		legend {
+			margin-bottom: 0.5rem;
+			font-weight: 600;
+		}
+	}
+
+	&__swatch {
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 2px solid $line;
+		border-radius: 50%;
+		background: var(--swatch);
+		box-shadow: inset 0 0 0 2px $surface;
+
+		&[aria-pressed="true"] {
+			border-color: $ink;
+		}
+	}
+
+	&__summary {
+		padding: var(--wp--preset--spacing--50, 1.25rem);
+		border: 1px solid $line;
+		border-radius: 20px;
+		background: $surface;
+
+		dl {
+			display: grid;
+			gap: 0.35rem;
+			margin: 0;
+		}
+
+		dl > div {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			color: $muted;
+		}
+
+		dd {
+			margin: 0;
+			white-space: nowrap;
+		}
+	}
+
+	&__total {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin: 0.75rem 0 0;
+		padding-top: 0.75rem;
+		border-top: 1px solid $line;
+
+		strong {
+			font-family: var(--wp--preset--font-family--display, inherit);
+			font-size: var(--wp--preset--font-size--x-large, 1.75rem);
+		}
+	}
+
+	&__error {
+		margin: 0.75rem 0 0;
+		color: $accent;
+		font-weight: 600;
+	}
 }
