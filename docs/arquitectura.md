@@ -98,6 +98,29 @@ dibujar cada diseño, y el escalón de precio se calcula con el lado mayor de lo
 | `GET /products/{id}/customizer` | Colores, vistas con la URL de cada maqueta, zonas con sus escalones alcanzables, precio base y moneda. 404 si el producto no es personalizable. El bloque incrusta estos mismos datos en la página |
 | `POST /uploads` (campo `file`) | Sube una imagen del cliente. 201 con `{id, url, width, height, mime}`; 422 si no es válida; 429 si supera el límite |
 
+## Editor de la tienda
+
+El bloque `camisama/customizer` envuelve a la galería en la plantilla del producto. Si el producto
+es personalizable, incrusta sus datos (`CustomizerData`) y `view.js` descarga el editor con
+`import()`: unos 3 KB al cargar la página, y el editor (~30 KB) más Fabric.js (~290 KB) en
+`build/chunks/` con hash en el nombre. Mientras tanto, o si falla, se ve la galería.
+
+- **Fuente de verdad:** una lista de elementos (`design`, `text`, `image`) con centro, tamaño y
+  giro en cm de su zona. El lienzo (Fabric.js) solo la dibuja y devuelve los cambios en cm, así que
+  el tamaño de pantalla no afecta al diseño ni al precio.
+- **Restricciones:** cada objeto queda recortado a su zona; arrastrar lo detiene en el borde, y
+  escalar o girar más allá de la zona vuelve al último estado válido. El tamaño real lo mide el
+  lienzo (un SVG agrupado mide lo que ocupan sus trazos, no su viewBox).
+- **Historial:** deshacer y rehacer (Ctrl+Z / Ctrl+Y); los cambios continuos (arrastrar,
+  deslizadores, escribir) se agrupan en un solo paso.
+- **Accesible sin ratón:** zona activa elegible con botones, lista de capas, tamaño y giro con
+  deslizadores, flechas para mover (Mayús para pasos de 1 cm) y Suprimir para borrar.
+- **Precio en vivo:** `pricing.js`, la misma regla que `DesignPricer` (casos compartidos en
+  `tests/fixtures/pricing-cases.json`), sobre el precio de la variante elegida en WooCommerce.
+- **Color:** sincronizado en los dos sentidos con el desplegable de variaciones (`wc-bridge.js`).
+- **Texto:** 8 fuentes libres para uso comercial (`Design\Fonts`, archivos en `assets/fonts/`).
+- **Imágenes propias:** aviso de calidad según la resolución efectiva (300 / 150 DPI).
+
 ## Imágenes de los clientes
 
 Abierto a visitantes sin cuenta, por eso es la parte con más controles:
@@ -131,6 +154,6 @@ Ver [producción e impresión](produccion-e-impresion.md) y [modelo de precios](
 | 0. Entorno | Repositorio, sitio local, WooCommerce, tema y plugin base, linters, pruebas, CI | ✅ |
 | 1. Tema | Fuentes, portada, catálogo, ficha de producto, carrito y checkout con diseño propio; tienda configurada para Perú (PEN, `es_MX`) | ✅ |
 | 2. Datos y administración | Vistas y zonas por producto con editor visual, catálogo de estampados con SVG seguros, precios por tamaño, API REST | ✅ |
-| 3. Personalizador básico | Elegir modelo y color, colocar estampados, texto e imágenes, precio en vivo | |
+| 3. Personalizador | Editor en la ficha del producto: estampados, texto, imágenes propias seguras, precio en vivo, deshacer, teclado y móvil | ✅ |
 | 4. Pedido | Diseño en carrito, correos y administración; archivos de producción | |
 | 5. Extras | Guardar y compartir diseños, móvil, rendimiento, pruebas de punta a punta | |

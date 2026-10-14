@@ -11,6 +11,7 @@ namespace Camisama\Customizer\Products;
 
 use Camisama\Customizer\Config\ProductConfigRepository;
 use Camisama\Customizer\Config\Zone;
+use Camisama\Customizer\Design\Fonts;
 use Camisama\Customizer\Pricing\PriceTableRepository;
 use Camisama\Customizer\Pricing\PriceTier;
 use Camisama\Customizer\Production\PrintResolution;
@@ -88,6 +89,11 @@ final class CustomizerData {
 				$config->zones
 			),
 			'price_tiers' => $prices->to_array(),
+			'fonts'       => Fonts::for_client(),
+			'api'         => array(
+				'root'  => esc_url_raw( rest_url( 'camisama/v1' ) ),
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+			),
 			'resolution'  => array(
 				'target_dpi' => PrintResolution::TARGET_DPI,
 				'min_dpi'    => PrintResolution::MIN_ACCEPTABLE_DPI,

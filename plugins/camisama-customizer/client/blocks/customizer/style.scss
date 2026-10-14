@@ -7,6 +7,7 @@ $line: var(--wp--preset--color--border, #e4ded3);
 $muted: var(--wp--preset--color--muted, #5f5e66);
 $accent: var(--wp--preset--color--primary, #d3261c);
 $focus: var(--wp--preset--color--secondary, #26357f);
+$warning: #8a5a00;
 
 .wp-block-camisama-customizer.is-ready {
 
@@ -15,38 +16,98 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 	}
 }
 
+// Botón con borde redondeado, base de pestañas, chips y acciones.
+@mixin pill {
+	padding: 0.4em 1em;
+	border: 1.5px solid $ink;
+	border-radius: 999px;
+	background: transparent;
+	color: $ink;
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.3;
+
+	&[aria-pressed="true"],
+	&[aria-selected="true"] {
+		background: $ink;
+		color: $paper;
+	}
+
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+}
+
 .camisama-customizer {
 	display: grid;
 	gap: var(--wp--preset--spacing--40, 1rem);
 
-	button {
+	button,
+	input,
+	select,
+	textarea {
 		font: inherit;
+	}
+
+	button {
 		cursor: pointer;
 	}
 
-	button:focus-visible {
+	:focus-visible {
 		outline: 2px solid $focus;
 		outline-offset: 2px;
 	}
 
-	&__views {
+	h3 {
+		margin: 0 0 0.5rem;
+		font-size: 1rem;
+	}
+
+	&__sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	&__topbar {
 		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
 		gap: 0.5rem;
+	}
+
+	&__views,
+	&__history,
+	&__zone-picker,
+	&__chips,
+	&__actions,
+	&__tabs {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
 
 		button {
-			padding: 0.45em 1.1em;
-			border: 2px solid $ink;
-			border-radius: 999px;
-			background: transparent;
-			color: $ink;
-			font-weight: 600;
-		}
 
-		button[aria-pressed="true"] {
-			background: $ink;
-			color: $paper;
+			@include pill;
 		}
 	}
+
+	&__history button {
+		min-width: 2.5rem;
+		font-size: 1.1rem;
+	}
+
+	&__zone-picker > span {
+		color: $muted;
+		font-size: 0.875rem;
+	}
+
+	// --- Lienzo ---
 
 	&__stage {
 		position: relative;
@@ -55,25 +116,23 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 		background: $surface;
 		touch-action: none;
 		user-select: none;
+
+		canvas {
+			display: block;
+		}
 	}
 
-	&__mockup {
-		display: block;
-		width: 100%;
-		height: auto;
-
-		&.is-empty {
-			aspect-ratio: 1;
-		}
+	&__zones {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
 	}
 
 	// Contorno claro con sombra oscura: se ve sobre prendas de cualquier color.
 	&__zone {
 		position: absolute;
-		padding: 0;
 		border: 1.5px dashed rgba(255, 255, 255, 0.9);
 		border-radius: 4px;
-		background: transparent;
 		box-shadow:
 			0 0 0 1px rgba(22, 22, 26, 0.35),
 			inset 0 0 0 1px rgba(22, 22, 26, 0.35);
@@ -94,7 +153,6 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 
 		&.is-active {
 			border: 2px solid #fff;
-			background: rgba(255, 255, 255, 0.08);
 			box-shadow:
 				0 0 0 2px $ink,
 				inset 0 0 0 1px $ink;
@@ -104,6 +162,8 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 			}
 		}
 	}
+
+	// --- Colores ---
 
 	&__colors {
 		display: flex;
@@ -122,6 +182,7 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 	&__swatch {
 		width: 2.25rem;
 		height: 2.25rem;
+		padding: 0;
 		border: 2px solid $line;
 		border-radius: 50%;
 		background: var(--swatch);
@@ -132,11 +193,222 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 		}
 	}
 
+	// --- Herramientas ---
+
+	&__tools,
+	&__selection,
+	&__layers,
 	&__summary {
 		padding: var(--wp--preset--spacing--50, 1.25rem);
 		border: 1px solid $line;
 		border-radius: 20px;
 		background: $surface;
+	}
+
+	&__tabs {
+		margin-bottom: 1rem;
+	}
+
+	&__panel {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	&__field {
+		display: grid;
+		gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+
+		> span,
+		legend {
+			font-size: 0.875rem;
+			font-weight: 600;
+		}
+
+		textarea,
+		select {
+			width: 100%;
+			padding: 0.5em 0.75em;
+			border: 1.5px solid $line;
+			border-radius: 12px;
+			background: $surface;
+			color: $ink;
+		}
+
+		input[type="range"] {
+			width: 100%;
+			accent-color: $ink;
+		}
+	}
+
+	&__palette {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	&__custom-color input {
+		width: 2.25rem;
+		height: 2.25rem;
+		padding: 0;
+		border: 2px solid $line;
+		border-radius: 50%;
+		background: none;
+		cursor: pointer;
+	}
+
+	&__button {
+
+		@include pill;
+		justify-self: start;
+		border-color: $accent;
+		background: $accent;
+		color: #fff;
+		cursor: pointer;
+	}
+
+	&__designs {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		button {
+			display: grid;
+			gap: 0.25rem;
+			width: 100%;
+			padding: 0.5rem;
+			border: 1.5px solid $line;
+			border-radius: 14px;
+			background: $paper;
+			color: $ink;
+			font-size: 0.75rem;
+			text-align: center;
+
+			&:hover {
+				border-color: $ink;
+			}
+		}
+
+		img {
+			width: 100%;
+			height: 64px;
+			object-fit: contain;
+		}
+
+		small {
+			color: $accent;
+			font-weight: 700;
+		}
+	}
+
+	&__more {
+
+		@include pill;
+		justify-self: center;
+	}
+
+	&__drop {
+		display: grid;
+		justify-items: center;
+		gap: 0.5rem;
+		padding: 1.5rem 1rem;
+		border: 2px dashed $line;
+		border-radius: 16px;
+		text-align: center;
+
+		p {
+			margin: 0;
+			color: $muted;
+			font-size: 0.875rem;
+		}
+
+		&.is-dragging {
+			border-color: $ink;
+			background: $paper;
+		}
+	}
+
+	&__hint {
+		margin: 0;
+		color: $muted;
+		font-size: 0.875rem;
+	}
+
+	&__quality {
+		margin: 0;
+		padding: 0.5em 0.75em;
+		border-radius: 10px;
+		font-size: 0.875rem;
+
+		&.is-optimal {
+			background: #e8f4ec;
+			color: #1d6b3a;
+		}
+
+		&.is-acceptable {
+			background: #fff4d6;
+			color: $warning;
+		}
+
+		&.is-low {
+			background: #fde7e5;
+			color: $accent;
+			font-weight: 600;
+		}
+	}
+
+	&__selection {
+		display: grid;
+		gap: 0.75rem;
+
+		h3 {
+			margin: 0;
+		}
+
+		.is-destructive {
+			border-color: $accent;
+			color: $accent;
+		}
+	}
+
+	&__layers ul {
+		display: grid;
+		gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		button {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			width: 100%;
+			padding: 0.5em 0.75em;
+			border: 1.5px solid $line;
+			border-radius: 12px;
+			background: $surface;
+			color: $ink;
+			text-align: left;
+
+			&[aria-pressed="true"] {
+				border-color: $ink;
+			}
+		}
+
+		small {
+			color: $muted;
+		}
+	}
+
+	// --- Precio ---
+
+	&__summary {
 
 		dl {
 			display: grid;
@@ -172,7 +444,7 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 	}
 
 	&__error {
-		margin: 0.75rem 0 0;
+		margin: 0;
 		color: $accent;
 		font-weight: 600;
 	}

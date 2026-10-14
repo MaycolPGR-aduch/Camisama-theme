@@ -1,25 +1,57 @@
 /**
  * Personalizador de la tienda.
  *
- * El diseño (lista de elementos en cm de cada zona) es la fuente de verdad; el escenario lo
- * dibuja y el resumen lo cotiza con la misma regla que el servidor (pricing.js).
+ * El diseño (lista de elementos en cm de cada zona) es la fuente de verdad y vive en un historial
+ * para deshacer y rehacer; el lienzo lo dibuja y el resumen lo cotiza con la misma regla que el
+ * servidor (pricing.js).
  */
-import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import {
+	useEffect,
+	useMemo,
+	useReducer,
+	useRef,
+	useState,
+} from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 
-import Stage from './Stage';
+import FabricStage from './FabricStage';
 import Summary from './Summary';
+import DesignsPanel from './panels/DesignsPanel';
+import SelectionPanel, { elementLabel } from './panels/SelectionPanel';
+import TextPanel from './panels/TextPanel';
+import UploadPanel from './panels/UploadPanel';
+import {
+	designElement,
+	fitToZone,
+	imageElement,
+	newId,
+	textElement,
+} from './elements';
+import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
 import { connectVariationForm } from './wc-bridge';
 
+const TABS = [
+	{ id: 'designs', label: __( 'Estampados', 'camisama-customizer' ) },
+	{ id: 'text', label: __( 'Texto', 'camisama-customizer' ) },
+	{ id: 'image', label: __( 'Tu imagen', 'camisama-customizer' ) },
+];
+
+const isTyping = ( target ) =>
+	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
+
 export default function App( { data } ) {
+	const [ history, dispatch ] = useReducer( historyReducer, initialHistory );
+	const elements = history.present;
+	const [ selectedId, setSelectedId ] = useState( null );
 	const [ color, setColor ] = useState( data.colors[ 0 ].slug );
 	const [ viewId, setViewId ] = useState( data.views[ 0 ]?.id );
 	const [ activeZoneId, setActiveZoneId ] = useState(
 		data.zones.find( ( zone ) => zone.view === data.views[ 0 ]?.id )?.id
 	);
+	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
-	const [ elements ] = useState( [] );
+	const [ message, setMessage ] = useState( '' );
 	const bridge = useRef( null );
 
 	useEffect( () => {
@@ -30,10 +62,176 @@ export default function App( { data } ) {
 		return () => bridge.current.disconnect();
 	}, [ data.product_id ] );
 
+	const zoneById = ( id ) => data.zones.find( ( zone ) => zone.id === id );
 	const view = data.views.find( ( item ) => item.id === viewId );
-	const viewZones = data.zones.filter( ( zone ) => zone.view === viewId );
+	const viewZones = useMemo(
+		() => data.zones.filter( ( zone ) => zone.view === viewId ),
+		[ data.zones, viewId ]
+	);
+	const viewElements = useMemo(
+		() =>
+			elements.filter( ( element ) =>
+				viewZones.some( ( zone ) => zone.id === element.zone )
+			),
+		[ elements, viewZones ]
+	);
 	const mockup =
 		view?.mockups[ color ] ?? Object.values( view?.mockups ?? {} )[ 0 ];
+	const activeZone = zoneById( activeZoneId ) ?? viewZones[ 0 ];
+	const selected =
+		elements.find( ( element ) => element.id === selectedId ) ?? null;
+
+	// --- Cambios en el diseño ---------------------------------------------------------
+
+	const commit = ( update, options = {} ) =>
+		dispatch( { type: 'set', update, ...options } );
+
+	// `change` puede ser una función del elemento actual: así varios cambios seguidos (p. ej.
+	// pulsaciones de flechas antes de que React vuelva a pintar) parten del último estado.
+	const updateElement = ( id, change, options ) =>
+		commit(
+			( list ) =>
+				list.map( ( element ) =>
+					element.id === id
+						? fitToZone(
+								{
+									...element,
+									...( typeof change === 'function'
+										? change( element )
+										: change ),
+								},
+								zoneById( element.zone )
+							)
+						: element
+				),
+			options
+		);
+
+	const add = ( element ) => {
+		const fitted = fitToZone( element, zoneById( element.zone ) );
+		commit( ( list ) => [ ...list, fitted ] );
+		setSelectedId( fitted.id );
+		setMessage(
+			sprintf(
+				/* translators: 1: elemento, 2: zona. */
+				__( '%1$s añadido en %2$s.', 'camisama-customizer' ),
+				elementLabel( fitted ),
+				activeZone.label
+			)
+		);
+	};
+
+	const remove = ( id ) => {
+		commit( ( list ) => list.filter( ( element ) => element.id !== id ) );
+		setSelectedId( null );
+	};
+
+	const moveLayer = ( id, direction ) =>
+		commit( ( list ) => {
+			const index = list.findIndex( ( element ) => element.id === id );
+			const target = index + direction;
+			if ( target < 0 || target >= list.length ) {
+				return list;
+			}
+			const next = [ ...list ];
+			[ next[ index ], next[ target ] ] = [
+				next[ target ],
+				next[ index ],
+			];
+			return next;
+		} );
+
+	const select = ( id ) => {
+		setSelectedId( id );
+		const element = elements.find( ( item ) => item.id === id );
+		if ( element ) {
+			setActiveZoneId( element.zone );
+			if ( element.kind === 'text' ) {
+				setTab( 'text' );
+			}
+		}
+	};
+
+	const resize = ( element, value ) => {
+		const key = `resize-${ element.id }`;
+		if ( element.kind === 'text' ) {
+			const factor = value / element.font_size_cm;
+			updateElement(
+				element.id,
+				{
+					font_size_cm: value,
+					width_cm: element.width_cm * factor,
+					height_cm: element.height_cm * factor,
+				},
+				{ merge: true, key }
+			);
+			return;
+		}
+		updateElement(
+			element.id,
+			{
+				width_cm: value,
+				height_cm: ( value * element.height_cm ) / element.width_cm,
+			},
+			{ merge: true, key }
+		);
+	};
+
+	// --- Selección de color y vista -----------------------------------------------------
+
+	const chooseColor = ( slug ) => {
+		setColor( slug );
+		bridge.current?.setColor( slug );
+	};
+
+	const chooseView = ( id ) => {
+		setViewId( id );
+		setSelectedId( null );
+		setActiveZoneId(
+			data.zones.find( ( zone ) => zone.view === id )?.id ?? null
+		);
+	};
+
+	// --- Teclado ----------------------------------------------------------------------
+
+	const onKeyDown = ( event ) => {
+		if ( isTyping( event.target ) ) {
+			return;
+		}
+		const mod = event.ctrlKey || event.metaKey;
+		const key = event.key.toLowerCase();
+
+		if ( mod && key === 'z' ) {
+			dispatch( { type: event.shiftKey ? 'redo' : 'undo' } );
+		} else if ( mod && key === 'y' ) {
+			dispatch( { type: 'redo' } );
+		} else if ( selected && ( key === 'delete' || key === 'backspace' ) ) {
+			remove( selected.id );
+		} else if ( selected && key === 'escape' ) {
+			setSelectedId( null );
+		} else if ( selected && key.startsWith( 'arrow' ) ) {
+			const step = event.shiftKey ? 1 : 0.2;
+			const delta = {
+				arrowleft: [ -step, 0 ],
+				arrowright: [ step, 0 ],
+				arrowup: [ 0, -step ],
+				arrowdown: [ 0, step ],
+			}[ key ];
+			updateElement(
+				selected.id,
+				( element ) => ( {
+					cx: element.cx + delta[ 0 ],
+					cy: element.cy + delta[ 1 ],
+				} ),
+				{ merge: true, key: `nudge-${ selected.id }` }
+			);
+		} else {
+			return;
+		}
+		event.preventDefault();
+	};
+
+	// --- Precio -----------------------------------------------------------------------
 
 	const priced = useMemo( () => {
 		const premiums = Object.fromEntries(
@@ -60,47 +258,139 @@ export default function App( { data } ) {
 		}
 	}, [ data.zones, data.price_tiers, elements ] );
 
-	const chooseColor = ( slug ) => {
-		setColor( slug );
-		bridge.current?.setColor( slug );
-	};
-
-	const chooseView = ( id ) => {
-		setViewId( id );
-		setActiveZoneId(
-			data.zones.find( ( zone ) => zone.view === id )?.id ?? null
-		);
-	};
-
 	return (
-		<div className="camisama-customizer">
-			<div
-				className="camisama-customizer__views"
-				role="group"
-				aria-label={ __( 'Vista de la prenda', 'camisama-customizer' ) }
-			>
-				{ data.views.map( ( item ) => (
+		// eslint-disable-next-line jsx-a11y/no-static-element-interactions -- atajos de teclado del editor; cada control sigue siendo accesible por sí mismo.
+		<div className="camisama-customizer" onKeyDown={ onKeyDown }>
+			<div className="camisama-customizer__topbar">
+				<div
+					className="camisama-customizer__views"
+					role="group"
+					aria-label={ __(
+						'Vista de la prenda',
+						'camisama-customizer'
+					) }
+				>
+					{ data.views.map( ( item ) => (
+						<button
+							key={ item.id }
+							type="button"
+							aria-pressed={ item.id === viewId }
+							onClick={ () => chooseView( item.id ) }
+						>
+							{ item.label }
+						</button>
+					) ) }
+				</div>
+				<div className="camisama-customizer__history">
 					<button
-						key={ item.id }
 						type="button"
-						aria-pressed={ item.id === viewId }
-						onClick={ () => chooseView( item.id ) }
+						disabled={ ! history.past.length }
+						onClick={ () => dispatch( { type: 'undo' } ) }
+						aria-label={ __( 'Deshacer', 'camisama-customizer' ) }
+						title={ __(
+							'Deshacer (Ctrl+Z)',
+							'camisama-customizer'
+						) }
 					>
-						{ item.label }
+						↶
+					</button>
+					<button
+						type="button"
+						disabled={ ! history.future.length }
+						onClick={ () => dispatch( { type: 'redo' } ) }
+						aria-label={ __( 'Rehacer', 'camisama-customizer' ) }
+						title={ __(
+							'Rehacer (Ctrl+Y)',
+							'camisama-customizer'
+						) }
+					>
+						↷
+					</button>
+				</div>
+			</div>
+
+			<FabricStage
+				mockup={ mockup }
+				zones={ viewZones }
+				activeZoneId={ activeZone?.id }
+				elements={ viewElements }
+				fonts={ data.fonts }
+				selectedId={ selectedId }
+				label={ sprintf(
+					/* translators: %s: vista de la prenda. */
+					__(
+						'Diseño de la prenda, vista %s. Selecciona un elemento para moverlo con el ratón, el dedo o las flechas del teclado.',
+						'camisama-customizer'
+					),
+					view?.label ?? ''
+				) }
+				onSelect={ select }
+				onSelectZone={ setActiveZoneId }
+				onTransform={ ( id, geometry ) =>
+					commit( ( list ) =>
+						list.map( ( element ) =>
+							element.id === id
+								? { ...element, ...geometry }
+								: element
+						)
+					)
+				}
+				onMeasure={ ( id, size ) =>
+					dispatch( {
+						type: 'patch',
+						update: ( list ) =>
+							list.map( ( element ) =>
+								element.id === id
+									? fitToZone(
+											{ ...element, ...size },
+											zoneById( element.zone )
+										)
+									: element
+							),
+					} )
+				}
+				onError={ ( id ) => {
+					dispatch( {
+						type: 'patch',
+						update: ( list ) =>
+							list.filter( ( element ) => element.id !== id ),
+					} );
+					setMessage(
+						__(
+							'No se pudo cargar un elemento. Inténtalo de nuevo.',
+							'camisama-customizer'
+						)
+					);
+				} }
+			/>
+
+			<p className="camisama-customizer__sr-only" aria-live="polite">
+				{ message }
+			</p>
+
+			<div
+				className="camisama-customizer__zone-picker"
+				role="group"
+				aria-label={ __( 'Zona donde añadir', 'camisama-customizer' ) }
+			>
+				<span>{ __( 'Añadir en:', 'camisama-customizer' ) }</span>
+				{ viewZones.map( ( zone ) => (
+					<button
+						key={ zone.id }
+						type="button"
+						aria-pressed={ zone.id === activeZone?.id }
+						onClick={ () => setActiveZoneId( zone.id ) }
+					>
+						{ zone.label }
 					</button>
 				) ) }
 			</div>
 
-			<Stage
-				mockup={ mockup }
-				zones={ viewZones }
-				activeZoneId={ activeZoneId }
-				onSelectZone={ setActiveZoneId }
-			/>
-
 			{ data.colors.length > 1 && (
 				<fieldset className="camisama-customizer__colors">
-					<legend>{ __( 'Color', 'camisama-customizer' ) }</legend>
+					<legend>
+						{ __( 'Color de la prenda', 'camisama-customizer' ) }
+					</legend>
 					{ data.colors.map( ( item ) => (
 						<button
 							key={ item.slug }
@@ -114,6 +404,126 @@ export default function App( { data } ) {
 						/>
 					) ) }
 				</fieldset>
+			) }
+
+			{ selected && (
+				<SelectionPanel
+					element={ selected }
+					zone={ zoneById( selected.zone ) }
+					resolution={ data.resolution }
+					onResize={ ( value ) => resize( selected, value ) }
+					onRotate={ ( angle ) =>
+						updateElement(
+							selected.id,
+							{ angle },
+							{ merge: true, key: `rotate-${ selected.id }` }
+						)
+					}
+					onCenter={ () => {
+						const zone = zoneById( selected.zone );
+						updateElement( selected.id, {
+							cx: zone.size_cm.w / 2,
+							cy: zone.size_cm.h / 2,
+						} );
+					} }
+					onDuplicate={ () =>
+						add( {
+							...selected,
+							id: newId(),
+							cx: selected.cx + 1,
+							cy: selected.cy + 1,
+						} )
+					}
+					onLayer={ ( direction ) =>
+						moveLayer( selected.id, direction )
+					}
+					onRemove={ () => remove( selected.id ) }
+				/>
+			) }
+
+			<div className="camisama-customizer__tools">
+				<div
+					className="camisama-customizer__tabs"
+					role="tablist"
+					aria-label={ __(
+						'Añadir al diseño',
+						'camisama-customizer'
+					) }
+				>
+					{ TABS.map( ( item ) => (
+						<button
+							key={ item.id }
+							id={ `camisama-tab-${ item.id }` }
+							type="button"
+							role="tab"
+							aria-selected={ tab === item.id }
+							aria-controls={ `camisama-panel-${ item.id }` }
+							onClick={ () => setTab( item.id ) }
+						>
+							{ item.label }
+						</button>
+					) ) }
+				</div>
+				<div
+					id={ `camisama-panel-${ tab }` }
+					role="tabpanel"
+					aria-labelledby={ `camisama-tab-${ tab }` }
+				>
+					{ tab === 'designs' && (
+						<DesignsPanel
+							api={ data.api }
+							currency={ data.currency }
+							onAdd={ ( design ) =>
+								add( designElement( activeZone, design ) )
+							}
+						/>
+					) }
+					{ tab === 'text' && (
+						<TextPanel
+							fonts={ data.fonts }
+							selected={ selected }
+							onAdd={ ( style ) =>
+								add( textElement( activeZone, style ) )
+							}
+							onChange={ ( change ) =>
+								updateElement( selected.id, change, {
+									merge: true,
+									key: `text-${ selected.id }`,
+								} )
+							}
+						/>
+					) }
+					{ tab === 'image' && (
+						<UploadPanel
+							api={ data.api }
+							onAdd={ ( upload ) =>
+								add( imageElement( activeZone, upload ) )
+							}
+						/>
+					) }
+				</div>
+			</div>
+
+			{ viewElements.length > 0 && (
+				<section className="camisama-customizer__layers">
+					<h3>{ __( 'En esta vista', 'camisama-customizer' ) }</h3>
+					<ul>
+						{ [ ...viewElements ].reverse().map( ( element ) => (
+							<li key={ element.id }>
+								<button
+									type="button"
+									aria-pressed={ element.id === selectedId }
+									onClick={ () => select( element.id ) }
+								>
+									{ elementLabel( element ) }
+									<small>
+										{ zoneById( element.zone )?.label }
+									</small>
+								</button>
+							</li>
+						) ) }
+					</ul>
+				</section>
 			) }
 
 			<Summary

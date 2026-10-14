@@ -12,6 +12,12 @@ const extraEntries = {
 const withExtraEntries = ( config ) => ( {
 	...config,
 	entry: () => ( { ...config.entry(), ...extraEntries } ),
+	output: {
+		...config.output,
+		// Fragmentos cargados con import() (el editor y Fabric.js). WordPress solo versiona los
+		// puntos de entrada, así que el hash en el nombre evita que el navegador use uno viejo.
+		chunkFilename: 'chunks/[name].[contenthash:8].js',
+	},
 } );
 
 module.exports = Array.isArray( defaultConfig )

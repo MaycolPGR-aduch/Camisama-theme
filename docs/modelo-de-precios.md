@@ -40,7 +40,8 @@ Se usan escalones y no un precio por cm² porque el cliente los entiende mejor
 ### 3. Estampados premium (opcional)
 
 Cada estampado del catálogo puede tener un recargo propio (por ejemplo diseños de artistas
-invitados, para pagarles una comisión). Por defecto es 0. El texto y las imágenes propias no tienen
+invitados, para pagarles una comisión). Por defecto es 0. Se cobra **una vez por prenda y
+estampado**, aunque se use en varias zonas o varias veces. El texto y las imágenes propias no tienen
 recargo adicional: ya pagan por tamaño.
 
 ### 4. Descuento por volumen (fase posterior)
