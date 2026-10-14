@@ -95,7 +95,24 @@ dibujar cada diseño, y el escalón de precio se calcula con el lado mayor de lo
 |---|---|
 | `GET /designs?category=&page=&per_page=` | Estampados con archivo, medidas, categorías y recargo (cabeceras `X-WP-Total`, `X-WP-TotalPages`) |
 | `GET /design-categories` | Categorías con estampados |
-| `GET /products/{id}/customizer` | Colores, vistas con la URL de cada maqueta, zonas con sus escalones alcanzables y moneda. 404 si el producto no es personalizable |
+| `GET /products/{id}/customizer` | Colores, vistas con la URL de cada maqueta, zonas con sus escalones alcanzables, precio base y moneda. 404 si el producto no es personalizable. El bloque incrusta estos mismos datos en la página |
+| `POST /uploads` (campo `file`) | Sube una imagen del cliente. 201 con `{id, url, width, height, mime}`; 422 si no es válida; 429 si supera el límite |
+
+## Imágenes de los clientes
+
+Abierto a visitantes sin cuenta, por eso es la parte con más controles:
+
+- **Formatos:** solo PNG, JPG y WEBP reconocidos por su contenido, no por la extensión. Hasta 15 MB,
+  entre 100 px por lado y 40 megapíxeles. Los SVG de clientes no se aceptan.
+- **Recodificación:** cada imagen se vuelve a guardar con GD. Desaparece cualquier contenido oculto y
+  los metadatos EXIF, incluida la **ubicación GPS** de las fotos del móvil, y se corrige la rotación.
+- **Almacenamiento:** `uploads/camisama-uploads/AAAA/MM/` con nombres aleatorios de 128 bits, fuera
+  de la biblioteca de medios. La carpeta prohíbe listar archivos y ejecutar PHP (`.htaccess`).
+- **Límite:** 30 subidas por hora y visitante (usuario o IP; se guarda un hash, no la IP). El
+  contador va en el manejador y no en `permission_callback`, porque WordPress llama a este último
+  más de una vez por petición.
+- **Retención:** una tarea diaria borra las subidas de más de 30 días que no están en un pedido. El
+  borrado comprueba que la ruta real esté dentro de la carpeta de subidas (`SafePath`).
 
 ## Flujo de un pedido
 

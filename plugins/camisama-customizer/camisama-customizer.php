@@ -38,3 +38,4 @@ if ( ! is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 Plugin::boot( __FILE__ );
+register_deactivation_hook( __FILE__, array( Plugin::class, 'deactivate' ) );

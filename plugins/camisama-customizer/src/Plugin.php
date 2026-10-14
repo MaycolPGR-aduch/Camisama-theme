@@ -21,6 +21,9 @@ use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\CustomizerData;
 use Camisama\Customizer\Rest\CatalogController;
 use Camisama\Customizer\Rest\ProductCustomizerController;
+use Camisama\Customizer\Rest\UploadController;
+use Camisama\Customizer\Uploads\UploadStore;
+use Camisama\Customizer\Uploads\UploadValidator;
 use Camisama\Customizer\Security\SvgSanitizer;
 
 /**
@@ -90,6 +93,16 @@ final class Plugin {
 		( new DesignPostType() )->register();
 		( new SvgSupport( new SvgSanitizer() ) )->register();
 
+		$uploads = new UploadStore();
+		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
+		add_action(
+			UploadStore::CLEANUP_HOOK,
+			static function () use ( $uploads ): void {
+				$uploads->cleanup();
+			}
+		);
+		add_action( 'init', array( $this, 'schedule_cleanup' ) );
+
 		if ( is_admin() ) {
 			( new PriceSettingsPage( $prices ) )->register();
 			( new ProductConfigMetaBox( $this, $configs, $prices ) )->register();
@@ -98,11 +111,28 @@ final class Plugin {
 
 		add_action(
 			'rest_api_init',
-			static function () use ( $configs, $prices, $designs ): void {
+			static function () use ( $configs, $prices, $designs, $uploads ): void {
 				( new CatalogController( $designs ) )->register_routes();
 				( new ProductCustomizerController( new CustomizerData( $configs, $prices ) ) )->register_routes();
+				( new UploadController( new UploadValidator(), $uploads ) )->register_routes();
 			}
 		);
+	}
+
+	/**
+	 * Programa la limpieza diaria de las subidas que no acabaron en un pedido.
+	 */
+	public function schedule_cleanup(): void {
+		if ( ! wp_next_scheduled( UploadStore::CLEANUP_HOOK ) ) {
+			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', UploadStore::CLEANUP_HOOK );
+		}
+	}
+
+	/**
+	 * Al desactivar el plugin, quita la tarea programada.
+	 */
+	public static function deactivate(): void {
+		wp_clear_scheduled_hook( UploadStore::CLEANUP_HOOK );
 	}
 
 	/**
