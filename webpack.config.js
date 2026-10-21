@@ -7,6 +7,8 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const extraEntries = {
 	'admin/product-config':
 		'./plugins/camisama-customizer/client/admin/product-config/index.js',
+	'admin/production':
+		'./plugins/camisama-customizer/client/admin/production/index.js',
 };
 
 const withExtraEntries = ( config ) => ( {

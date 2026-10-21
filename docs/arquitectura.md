@@ -97,6 +97,7 @@ dibujar cada diseño, y el escalón de precio se calcula con el lado mayor de lo
 | `GET /design-categories` | Categorías con estampados |
 | `GET /products/{id}/customizer` | Colores, vistas con la URL de cada maqueta, zonas con sus escalones alcanzables, precio base y moneda. 404 si el producto no es personalizable. El bloque incrusta estos mismos datos en la página |
 | `POST /uploads` (campo `file`) | Sube una imagen del cliente. 201 con `{id, url, width, height, mime}`; 422 si no es válida; 429 si supera el límite |
+| `POST /orders/{pedido}/items/{línea}/zones/{zona}` (campo `file`) | Solo `edit_shop_orders`: guarda el PNG de impresión de una zona (comprueba su tamaño y le escribe los 300 DPI) |
 
 ## Editor de la tienda
 
@@ -120,6 +121,23 @@ es personalizable, incrusta sus datos (`CustomizerData`) y `view.js` descarga el
 - **Color:** sincronizado en los dos sentidos con el desplegable de variaciones (`wc-bridge.js`).
 - **Texto:** 8 fuentes libres para uso comercial (`Design\Fonts`, archivos en `assets/fonts/`).
 - **Imágenes propias:** aviso de calidad según la resolución efectiva (300 / 150 DPI).
+
+## Del carrito al taller
+
+1. **Añadir al carrito:** el editor envía con el formulario de WooCommerce el diseño (solo los
+   campos que el servidor necesita) y una vista previa JPEG por cada vista con algo impreso.
+2. **Validación en el servidor** (`DesignValidator`): zonas del producto, medidas finitas y dentro de
+   la zona, fuentes y colores permitidos, estampados publicados e imágenes subidas que existen. Las
+   URLs, medidas y recargos salen de la base de datos, y el color del diseño debe coincidir con la
+   variante. Cualquier fallo se muestra al cliente y la prenda no se añade.
+3. **Precio:** `DesignPricer` calcula el recargo; la línea cuesta el precio de la variante (leído de
+   nuevo en cada cálculo, para no acumular) más el recargo.
+4. **Pedido:** la línea guarda el diseño normalizado con copia de las zonas, el desglose y las vistas
+   previas (`_camisama_design`, `_camisama_quote`, `_camisama_previews`, ocultos en la
+   administración). Las imágenes y vistas previas del pedido dejan de borrarse automáticamente.
+5. **Producción** (`ProductionPage`, `ProductionStore`): hoja imprimible y archivos PNG por zona a
+   300 DPI generados en el navegador del taller y guardados en una carpeta protegida. Ver
+   [producción e impresión](produccion-e-impresion.md).
 
 ## Imágenes de los clientes
 
@@ -155,5 +173,5 @@ Ver [producción e impresión](produccion-e-impresion.md) y [modelo de precios](
 | 1. Tema | Fuentes, portada, catálogo, ficha de producto, carrito y checkout con diseño propio; tienda configurada para Perú (PEN, `es_MX`) | ✅ |
 | 2. Datos y administración | Vistas y zonas por producto con editor visual, catálogo de estampados con SVG seguros, precios por tamaño, API REST | ✅ |
 | 3. Personalizador | Editor en la ficha del producto: estampados, texto, imágenes propias seguras, precio en vivo, deshacer, teclado y móvil | ✅ |
-| 4. Pedido | Diseño en carrito, correos y administración; archivos de producción | |
+| 4. Pedido | Diseño validado en el servidor, carrito con vista previa y precio recalculado, pedido, correos, hoja de producción y PNG a 300 DPI | ✅ |
 | 5. Extras | Guardar y compartir diseños, móvil, rendimiento, pruebas de punta a punta | |

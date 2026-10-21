@@ -1,0 +1,70 @@
+.camisama-production {
+	max-width: 1100px;
+
+	&__toolbar,
+	&__app {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__toolbar {
+		margin: 16px 0;
+	}
+
+	&__meta {
+		color: #50575e;
+		font-size: 14px;
+	}
+
+	&__item {
+		margin: 24px 0;
+		padding: 16px;
+		border: 1px solid #dcdcde;
+		border-radius: 8px;
+		background: #fff;
+		break-inside: avoid;
+	}
+
+	&__previews {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-bottom: 12px;
+
+		img {
+			width: 180px;
+			height: auto;
+			border: 1px solid #dcdcde;
+			border-radius: 8px;
+		}
+	}
+
+	&__error {
+		color: #b32d2e;
+		font-weight: 600;
+	}
+}
+
+// Hoja impresa: solo el contenido, sin el menú ni los controles de WordPress.
+@media print {
+
+	#adminmenumain,
+	#wpadminbar,
+	#wpfooter,
+	.notice,
+	.camisama-production__toolbar {
+		display: none !important;
+	}
+
+	#wpcontent,
+	#wpbody-content {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.camisama-production__file {
+		display: none;
+	}
+}

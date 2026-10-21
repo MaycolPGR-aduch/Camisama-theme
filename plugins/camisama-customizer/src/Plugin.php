@@ -24,7 +24,9 @@ use Camisama\Customizer\Pricing\PriceTableRepository;
 use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\CustomizerData;
 use Camisama\Customizer\Rest\CatalogController;
+use Camisama\Customizer\Production\ProductionStore;
 use Camisama\Customizer\Rest\ProductCustomizerController;
+use Camisama\Customizer\Rest\ProductionController;
 use Camisama\Customizer\Rest\UploadController;
 use Camisama\Customizer\Uploads\UploadStore;
 use Camisama\Customizer\Uploads\UploadValidator;
@@ -97,7 +99,8 @@ final class Plugin {
 		( new DesignPostType() )->register();
 		( new SvgSupport( new SvgSanitizer() ) )->register();
 
-		$uploads = new UploadStore();
+		$uploads    = new UploadStore();
+		$production = new ProductionStore();
 		( new CartIntegration( $configs, $prices, $uploads, new PreviewStore( $uploads ) ) )->register();
 		( new OrderDisplay() )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
@@ -113,15 +116,16 @@ final class Plugin {
 			( new PriceSettingsPage( $prices ) )->register();
 			( new ProductConfigMetaBox( $this, $configs, $prices ) )->register();
 			( new ColorSwatchField() )->register();
-			( new ProductionPage() )->register();
+			( new ProductionPage( $this, $production ) )->register();
 		}
 
 		add_action(
 			'rest_api_init',
-			static function () use ( $configs, $prices, $designs, $uploads ): void {
+			static function () use ( $configs, $prices, $designs, $uploads, $production ): void {
 				( new CatalogController( $designs ) )->register_routes();
 				( new ProductCustomizerController( new CustomizerData( $configs, $prices ) ) )->register_routes();
 				( new UploadController( new UploadValidator(), $uploads ) )->register_routes();
+				( new ProductionController( $production ) )->register_routes();
 			}
 		);
 	}

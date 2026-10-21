@@ -39,15 +39,28 @@ y probada en `plugins/camisama-customizer/src/Production/PrintResolution.php`.
    - **300 DPI** al tamaño real de impresión (el archivo lleva el DPI en sus metadatos).
    - Color **sRGB**. El software de la impresora DTF (RIP) se encarga del perfil de color y de la capa de blanco.
    - Recortado al contenido: el tamaño del archivo es el tamaño real del estampado.
-   - Nombre: `{pedido}-{línea}-{zona}-{ancho}x{alto}cm.png`, por ejemplo `1045-1-frente-28x35cm.png`.
-2. **Una hoja de producción en PDF** (una por pedido) con:
+   - Nombre: `{pedido}-{línea}-{zona}-{ancho}x{alto}cm.png`, por ejemplo `129-1-front-18x25.6cm.png`.
+2. **Una hoja de producción** imprimible (o guardable como PDF desde el navegador) con:
    - modelo, color y talla de cada prenda, y cantidad;
-   - vista previa de la prenda con el diseño (frente/espalda/mangas);
-   - por cada zona: tamaño en cm y **posición de referencia** (por ejemplo "centrado, 8 cm bajo el cuello")
-     para que el operario coloque el transfer con la plancha siempre igual.
+   - vista previa de la prenda con el diseño;
+   - por cada zona: tamaño a imprimir, **posición dentro de la zona** (cm desde la izquierda y desde
+     arriba) y contenido (estampados, textos con su fuente y color, imágenes del cliente).
 3. **El diseño en JSON** guardado en el pedido, para poder regenerar los archivos o reimprimir.
 
-Todo se descarga desde la pantalla del pedido en WooCommerce (fase 4), y más adelante como ZIP.
+### Cómo se generan (implementado)
+
+1. En el pedido de WooCommerce, cada prenda personalizada muestra su vista previa y el botón
+   **"Archivos de impresión y hoja de producción"**.
+2. En esa página, **"Generar archivos de impresión (300 DPI)"** dibuja cada zona en el navegador del
+   taller con el mismo motor que vio el cliente (Fabric.js): los estampados vectoriales salen nítidos
+   a cualquier tamaño. No se hace en el móvil del cliente: un frente de 30 × 40 cm son 17 megapíxeles.
+3. El servidor comprueba que el PNG tiene el tamaño esperado, le escribe los 300 DPI (GD los guarda a
+   96 y el RIP imprimiría el diseño tres veces más grande) y lo guarda en una carpeta sin acceso
+   directo. Se descargan desde la misma página, solo con sesión de quien gestiona pedidos.
+4. Se pueden volver a generar cuando haga falta (reimpresión, cambio de fuente…).
+
+> **Al pasar a producción:** la carpeta `uploads/camisama-production/` se protege con `.htaccess`
+> (Apache). Si el servidor usa Nginx, hay que añadir una regla equivalente (`deny all` para esa ruta).
 
 ## Calidad de las imágenes que sube el cliente
 

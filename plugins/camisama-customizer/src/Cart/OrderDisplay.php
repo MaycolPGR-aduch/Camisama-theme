@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 namespace Camisama\Customizer\Cart;
 
+use Camisama\Customizer\Production\ProductionStore;
+
 /**
  * Muestra las vistas previas guardadas en cada línea: en la confirmación del pedido, en "Mi
  * cuenta", en los correos y en la pantalla del pedido de la administración.
@@ -21,6 +23,18 @@ final class OrderDisplay {
 	public function register(): void {
 		add_action( 'woocommerce_order_item_meta_end', array( $this, 'customer_previews' ), 10, 4 );
 		add_action( 'woocommerce_after_order_itemmeta', array( $this, 'admin_previews' ), 10, 2 );
+		add_filter( 'woocommerce_hidden_order_itemmeta', array( $this, 'hide_internal_meta' ) );
+	}
+
+	/**
+	 * La administración del pedido muestra todos los metadatos de la línea salvo los de esta
+	 * lista: los datos internos (JSON) se ocultan; ya se ven como vistas previas y desglose.
+	 *
+	 * @param list<string> $keys Claves ocultas.
+	 * @return list<string>
+	 */
+	public function hide_internal_meta( array $keys ): array {
+		return array_merge( $keys, array( CartIntegration::META_DESIGN, CartIntegration::META_QUOTE, CartIntegration::META_PREVIEW, ProductionStore::META ) );
 	}
 
 	/**
