@@ -53,7 +53,7 @@ final class UploadValidatorTest extends TestCase {
 
 	public function test_rejects_php_disguised_as_png(): void {
 		$path = $this->dir . '/foto.png';
-		file_put_contents( $path, '<?php system($_GET["c"]); ?>' );
+		file_put_contents( $path, '<?php echo "no soy una imagen"; ?>' );
 
 		$this->expectExceptionMessage( 'Formato no admitido' );
 		( new UploadValidator() )->validate( $path );

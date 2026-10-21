@@ -54,7 +54,8 @@ final class UploadValidator {
 			throw new \InvalidArgumentException( sprintf( 'La imagen pesa demasiado: el máximo es %d MB.', intdiv( $this->max_bytes, 1024 * 1024 ) ) );
 		}
 
-		$mime = ( new \finfo( FILEINFO_MIME_TYPE ) )->file( $path );
+		// Un archivo que no se puede abrir (p. ej. bloqueado por el antivirus) se rechaza sin generar avisos.
+		$mime = @( new \finfo( FILEINFO_MIME_TYPE ) )->file( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		if ( ! is_string( $mime ) || ! isset( self::TYPES[ $mime ] ) ) {
 			throw new \InvalidArgumentException( 'Formato no admitido: sube una imagen PNG, JPG o WEBP.' );
 		}

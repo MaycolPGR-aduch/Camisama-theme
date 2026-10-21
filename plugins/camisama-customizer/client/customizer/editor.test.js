@@ -7,6 +7,7 @@ import {
 } from './elements';
 import {
 	fitsInside,
+	printedBounds,
 	fromCanvas,
 	pushInside,
 	toCanvas,
@@ -226,5 +227,26 @@ describe( 'historial', () => {
 			update: ( list ) => list,
 		} );
 		expect( state ).toBe( initialHistory );
+	} );
+} );
+
+describe( 'printedBounds', () => {
+	const zone = { size_cm: { w: 30, h: 40 } };
+
+	it( 'une lo que hay en la zona', () => {
+		expect(
+			printedBounds( zone, [
+				{ cx: 7, cy: 5, width_cm: 6, height_cm: 6, angle: 0 },
+				{ cx: 22, cy: 15, width_cm: 8, height_cm: 4, angle: 0 },
+			] )
+		).toEqual( { left: 4, top: 2, right: 26, bottom: 17 } );
+	} );
+
+	it( 'recorta lo que sobresale de la zona', () => {
+		expect(
+			printedBounds( zone, [
+				{ cx: 28, cy: 1, width_cm: 10, height_cm: 4, angle: 0 },
+			] )
+		).toEqual( { left: 23, top: 0, right: 30, bottom: 3 } );
 	} );
 } );

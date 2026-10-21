@@ -29,7 +29,73 @@ import {
 } from './elements';
 import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
+import { renderPreview } from './renderer';
 import { connectVariationForm } from './wc-bridge';
+
+/** Campos de cada elemento que viajan al servidor; URLs, títulos y precios los pone él. */
+const SENT_FIELDS = [
+	'id',
+	'zone',
+	'kind',
+	'cx',
+	'cy',
+	'width_cm',
+	'height_cm',
+	'angle',
+	'design_id',
+	'upload_id',
+	'text',
+	'font',
+	'color',
+	'align',
+	'font_size_cm',
+];
+
+/**
+ * Campos ocultos que acompañan al producto al añadirlo al carrito.
+ *
+ * @param {Object} data     Datos del personalizador.
+ * @param {Array}  elements Diseño.
+ * @param {string} color    Color de la prenda.
+ * @return {Promise<Object>} { camisama_design, camisama_previews } o {} si no hay diseño.
+ */
+async function cartFields( data, elements, color ) {
+	if ( ! elements.length ) {
+		return {};
+	}
+
+	const previews = {};
+	for ( const view of data.views ) {
+		const zones = data.zones.filter( ( zone ) => zone.view === view.id );
+		const inView = elements.filter( ( element ) =>
+			zones.some( ( zone ) => zone.id === element.zone )
+		);
+		const mockup =
+			view.mockups[ color ] ?? Object.values( view.mockups )[ 0 ];
+		if ( inView.length && mockup ) {
+			previews[ view.id ] = await renderPreview( {
+				mockup,
+				zones,
+				elements: inView,
+				fonts: data.fonts,
+			} );
+		}
+	}
+
+	return {
+		camisama_design: JSON.stringify( {
+			color,
+			elements: elements.map( ( element ) =>
+				Object.fromEntries(
+					SENT_FIELDS.filter( ( key ) => key in element ).map(
+						( key ) => [ key, element[ key ] ]
+					)
+				)
+			),
+		} ),
+		camisama_previews: JSON.stringify( previews ),
+	};
+}
 
 const TABS = [
 	{ id: 'designs', label: __( 'Estampados', 'camisama-customizer' ) },
@@ -52,15 +118,34 @@ export default function App( { data } ) {
 	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	const [ message, setMessage ] = useState( '' );
+	const [ submitError, setSubmitError ] = useState( null );
 	const bridge = useRef( null );
+	// El puente se crea una vez; al enviar necesita el diseño y el color de ese momento.
+	const latest = useRef( {} );
+	latest.current = { elements, color };
 
 	useEffect( () => {
 		bridge.current = connectVariationForm( data.product_id, {
 			onColor: setColor,
 			onPrice: setVariationPrice,
+			onSubmit: () => {
+				setSubmitError( null );
+				return cartFields(
+					data,
+					latest.current.elements,
+					latest.current.color
+				);
+			},
+			onError: () =>
+				setSubmitError(
+					__(
+						'No pudimos preparar tu diseño. Inténtalo de nuevo.',
+						'camisama-customizer'
+					)
+				),
 		} );
 		return () => bridge.current.disconnect();
-	}, [ data.product_id ] );
+	}, [ data ] );
 
 	const zoneById = ( id ) => data.zones.find( ( zone ) => zone.id === id );
 	const view = data.views.find( ( item ) => item.id === viewId );
@@ -530,7 +615,7 @@ export default function App( { data } ) {
 				garmentPrice={ variationPrice ?? data.base_price }
 				priceIsFrom={ variationPrice === null }
 				quote={ priced.quote }
-				error={ priced.error }
+				error={ priced.error ?? submitError }
 				currency={ data.currency }
 			/>
 		</div>

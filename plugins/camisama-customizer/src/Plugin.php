@@ -12,6 +12,10 @@ namespace Camisama\Customizer;
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use Camisama\Customizer\Admin\PriceSettingsPage;
 use Camisama\Customizer\Admin\ProductConfigMetaBox;
+use Camisama\Customizer\Cart\CartIntegration;
+use Camisama\Customizer\Cart\OrderDisplay;
+use Camisama\Customizer\Cart\ProductionPage;
+use Camisama\Customizer\Cart\PreviewStore;
 use Camisama\Customizer\Config\ProductConfigRepository;
 use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Designs\DesignRepository;
@@ -94,6 +98,8 @@ final class Plugin {
 		( new SvgSupport( new SvgSanitizer() ) )->register();
 
 		$uploads = new UploadStore();
+		( new CartIntegration( $configs, $prices, $uploads, new PreviewStore( $uploads ) ) )->register();
+		( new OrderDisplay() )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
 			UploadStore::CLEANUP_HOOK,
@@ -107,6 +113,7 @@ final class Plugin {
 			( new PriceSettingsPage( $prices ) )->register();
 			( new ProductConfigMetaBox( $this, $configs, $prices ) )->register();
 			( new ColorSwatchField() )->register();
+			( new ProductionPage() )->register();
 		}
 
 		add_action(

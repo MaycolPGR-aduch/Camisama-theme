@@ -218,6 +218,9 @@ Invoke-Wp option update woocommerce_specific_allowed_countries '["PE"]' --format
 Invoke-Wp option update woocommerce_specific_ship_to_countries '["PE"]' --format=json --quiet
 Invoke-Wp option update woocommerce_permalinks '{"product_base":"/producto","category_base":"categoria-producto","tag_base":"etiqueta-producto","attribute_base":"","use_verbose_page_rules":false}' --format=json --quiet
 
+# Método de pago para probar pedidos en local (la pasarela real llega antes de producción).
+Invoke-Wp option update woocommerce_bacs_settings '{"enabled":"yes","title":"Transferencia bancaria","description":"Te enviaremos los datos de la cuenta para que hagas la transferencia. Preparamos tu pedido cuando se confirme el pago.","instructions":"Haz la transferencia indicando tu número de pedido.","account_details":""}' --format=json --quiet
+
 if (-not $SkipDemo) {
 	Write-Step 'Productos de demostración'
 	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include --user=admin

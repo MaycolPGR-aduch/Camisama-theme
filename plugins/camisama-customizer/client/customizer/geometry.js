@@ -4,6 +4,7 @@
  * El rectángulo de una zona en la maqueta representa exactamente su tamaño en cm, así que la
  * escala px/cm sale de dividir su ancho en píxeles entre su ancho en cm.
  */
+import { elementBounds } from './pricing';
 
 /**
  * Rectángulo de la zona en píxeles del lienzo, con su escala.
@@ -113,4 +114,28 @@ export function fitsInside( rect, container ) {
 		rect.left + rect.width <= container.x + container.w + 1 &&
 		rect.top + rect.height <= container.y + container.h + 1
 	);
+}
+
+/**
+ * Rectángulo (cm de la zona) que ocupa todo lo que hay en ella, recortado a la zona.
+ *
+ * @param {Object} zone     Zona (size_cm).
+ * @param {Array}  elements Elementos de la zona.
+ * @return {{left: number, top: number, right: number, bottom: number}} Rectángulo.
+ */
+export function printedBounds( zone, elements ) {
+	const boxes = elements.map( elementBounds );
+
+	return {
+		left: Math.max( 0, Math.min( ...boxes.map( ( box ) => box.left ) ) ),
+		top: Math.max( 0, Math.min( ...boxes.map( ( box ) => box.top ) ) ),
+		right: Math.min(
+			zone.size_cm.w,
+			Math.max( ...boxes.map( ( box ) => box.right ) )
+		),
+		bottom: Math.min(
+			zone.size_cm.h,
+			Math.max( ...boxes.map( ( box ) => box.bottom ) )
+		),
+	};
 }
