@@ -18,7 +18,9 @@
 		"lint:js": "wp-scripts lint-js plugins/camisama-customizer/client",
 		"lint:css": "wp-scripts lint-style \"plugins/*/client/**/*.{css,scss}\" \"themes/**/*.css\"",
 		"format": "wp-scripts format plugins/camisama-customizer/client",
-		"test:js": "wp-scripts test-unit-js plugins/camisama-customizer/client"
+		"test:js": "wp-scripts test-unit-js plugins/camisama-customizer/client",
+		"tienda:iniciar": "pwsh -NoProfile -File bin/iniciar-tienda.ps1",
+		"tienda:detener": "pwsh -NoProfile -File bin/detener-tienda.ps1"
 	},
 	"devDependencies": {
 		"@wordpress/block-editor": "^18.1.0",

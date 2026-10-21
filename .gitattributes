@@ -10,3 +10,6 @@
 *.woff binary
 *.woff2 binary
 *.ttf binary
+
+# Los .cmd de Windows necesitan CRLF.
+*.cmd text eol=crlf

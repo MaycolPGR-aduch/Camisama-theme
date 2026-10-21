@@ -50,6 +50,30 @@ el host `camisama.test`.
 
 - Tienda: http://camisama.test
 - Administración: http://camisama.test/wp-admin/
+- Correos de prueba (Mailpit): http://localhost:8025
+
+## Encender y apagar la tienda
+
+Una vez instalada, no hace falta abrir Laragon. Con **doble clic** en la carpeta del proyecto:
+
+| Archivo | Qué hace |
+|---|---|
+| `Iniciar tienda.cmd` | Arranca MySQL, Apache y Mailpit (lo que ya esté en marcha lo deja), comprueba que la tienda responde y la abre en el navegador |
+| `Detener tienda.cmd` | Apaga `npm start` de este proyecto, Apache, MySQL (de forma ordenada), Mailpit y la ventana de Laragon |
+
+También desde la terminal:
+
+```bash
+npm run tienda:iniciar
+```
+
+```bash
+npm run tienda:detener
+```
+
+Opciones: `pwsh bin/iniciar-tienda.ps1 -Desarrollo` abre además `npm start` (recompila el JS/CSS al
+guardar) y `-SinNavegador` no abre el navegador; `pwsh bin/detener-tienda.ps1 -DejarLaragonAbierto`
+no cierra la ventana de Laragon.
 
 ## Desarrollo
 
