@@ -18,7 +18,6 @@ export default function Summary( {
 		<section
 			className="camisama-customizer__summary"
 			aria-label={ __( 'Precio', 'camisama-customizer' ) }
-			aria-live="polite"
 		>
 			<dl>
 				<div>
@@ -63,18 +62,21 @@ export default function Summary( {
 					</div>
 				) }
 			</dl>
-			{ error ? (
-				<p className="camisama-customizer__error">{ error }</p>
-			) : (
-				<p className="camisama-customizer__total">
-					<span>{ __( 'Total', 'camisama-customizer' ) }</span>
-					<strong>
-						{ priceIsFrom &&
-							__( 'desde', 'camisama-customizer' ) + ' ' }
-						{ formatMoney( total, currency ) }
-					</strong>
-				</p>
-			) }
+			{ /* Solo se anuncia el total (o el error), no el desglose entero en cada cambio. */ }
+			<div aria-live="polite">
+				{ error ? (
+					<p className="camisama-customizer__error">{ error }</p>
+				) : (
+					<p className="camisama-customizer__total">
+						<span>{ __( 'Total', 'camisama-customizer' ) }</span>
+						<strong>
+							{ priceIsFrom &&
+								__( 'desde', 'camisama-customizer' ) + ' ' }
+							{ formatMoney( total, currency ) }
+						</strong>
+					</p>
+				) }
+			</div>
 		</section>
 	);
 }

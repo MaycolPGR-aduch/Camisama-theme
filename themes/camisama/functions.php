@@ -22,11 +22,15 @@ add_action( 'after_setup_theme', 'camisama_setup' );
  * Hoja de estilos del tema (los temas de bloques no la cargan automáticamente).
  */
 function camisama_enqueue_styles(): void {
+	// La fecha del archivo en la versión invalida la caché del navegador con cada cambio de CSS,
+	// sin depender de subir la versión del tema.
+	$modified = filemtime( get_stylesheet_directory() . '/style.css' );
+
 	wp_enqueue_style(
 		'camisama-style',
 		get_stylesheet_uri(),
 		array(),
-		(string) wp_get_theme()->get( 'Version' )
+		wp_get_theme()->get( 'Version' ) . ( $modified ? '.' . $modified : '' )
 	);
 }
 add_action( 'wp_enqueue_scripts', 'camisama_enqueue_styles' );

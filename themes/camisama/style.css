@@ -131,6 +131,21 @@ html {
 	margin-bottom: 0.25em;
 }
 
+/*
+ * Columna de compra de la ficha: acompaña al editor mientras se diseña,
+ * para que el total y "Añadir al carrito" sigan a la vista. Solo con
+ * columnas lado a lado y pantallas altas; en las bajas no cabría entera
+ * y su final quedaría inalcanzable.
+ */
+@media (min-width: 782px) and (min-height: 860px) {
+
+	.wp-block-column.is-product-buy {
+		position: sticky;
+		top: var(--wp--preset--spacing--50);
+		align-self: flex-start;
+	}
+}
+
 /* Galería del producto. */
 .wp-block-woocommerce-product-image-gallery img {
 	border-radius: 24px;

@@ -448,4 +448,31 @@ $warning: #8a5a00;
 		color: $accent;
 		font-weight: 600;
 	}
+
+	// Resumen dentro del formulario de compra, entre las variaciones y el botón.
+	&__purchase {
+		margin-bottom: var(--wp--preset--spacing--40, 1rem);
+	}
+}
+
+// Con el resumen en el formulario, sobran el precio de la variante y el
+// rango junto al título: solo cuentan la prenda lisa y contradicen el
+// total. Sin editor (no cargó), siguen visibles.
+.variations_form.has-camisama-summary .woocommerce-variation-price,
+.wp-block-woocommerce-product-price:has(~ .wp-block-add-to-cart-form .has-camisama-summary) {
+	display: none;
+}
+
+// Sin el precio, el bloque de la variante suele quedar vacío: su margen solo
+// abriría un hueco entre la talla y el resumen. El aviso de existencias, si
+// aparece, conserva el suyo.
+.variations_form.has-camisama-summary {
+
+	.woocommerce-variation.single_variation {
+		margin-bottom: 0;
+	}
+
+	.woocommerce-variation-availability p {
+		margin: 0 0 var(--wp--preset--spacing--40, 1rem);
+	}
 }

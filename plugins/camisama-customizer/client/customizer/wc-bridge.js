@@ -17,7 +17,8 @@ const COLOR_FIELD = 'select[name="attribute_pa_color"]';
  * @param {Function} handlers.onSubmit Antes de enviar al carrito: devuelve (async) los campos
  *                                     ocultos que acompañan al pedido ({ nombre: valor }).
  * @param {Function} handlers.onError  Recibe el error si onSubmit falla (el envío se cancela).
- * @return {{setColor: Function, disconnect: Function}} Control del puente.
+ * @return {{setColor: Function, disconnect: Function, summaryNode: ?HTMLElement}} Control del
+ *         puente; summaryNode es el hueco del resumen de precio dentro del formulario.
  */
 export function connectVariationForm(
 	productId,
@@ -30,11 +31,23 @@ export function connectVariationForm(
 		) ?? document.querySelector( 'form.variations_form' );
 
 	if ( ! $ || ! form ) {
-		return { setColor: () => {}, disconnect: () => {} };
+		return { setColor: () => {}, disconnect: () => {}, summaryNode: null };
 	}
 
 	const $form = $( form );
 	const select = form.querySelector( COLOR_FIELD );
+
+	// Hueco para el resumen del precio justo encima de cantidad y botón: el total queda pegado a
+	// "Añadir al carrito" y sustituye al precio de la variante, que solo cuenta la prenda lisa.
+	const actions = form.querySelector( '.woocommerce-variation-add-to-cart' );
+	let summaryNode = null;
+	if ( actions ) {
+		summaryNode = document.createElement( 'div' );
+		summaryNode.className =
+			'camisama-customizer camisama-customizer__purchase';
+		actions.before( summaryNode );
+		form.classList.add( 'has-camisama-summary' );
+	}
 
 	// Los manejadores de jQuery reciben tanto los cambios del usuario como los de .trigger().
 	$form.on( 'change.camisama', COLOR_FIELD, ( event ) => {
@@ -98,6 +111,9 @@ export function connectVariationForm(
 		disconnect() {
 			$form.off( '.camisama' );
 			form.removeEventListener( 'submit', submit );
+			summaryNode?.remove();
+			form.classList.remove( 'has-camisama-summary' );
 		},
+		summaryNode,
 	};
 }

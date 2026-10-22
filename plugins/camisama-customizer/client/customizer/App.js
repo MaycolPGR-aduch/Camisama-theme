@@ -6,6 +6,7 @@
  * servidor (pricing.js).
  */
 import {
+	createPortal,
 	useEffect,
 	useMemo,
 	useReducer,
@@ -119,6 +120,8 @@ export default function App( { data } ) {
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	const [ message, setMessage ] = useState( '' );
 	const [ submitError, setSubmitError ] = useState( null );
+	// Hueco del resumen en el formulario de compra; sin él, el resumen va al final del editor.
+	const [ purchaseNode, setPurchaseNode ] = useState( null );
 	const bridge = useRef( null );
 	// El puente se crea una vez; al enviar necesita el diseño y el color de ese momento.
 	const latest = useRef( {} );
@@ -144,6 +147,7 @@ export default function App( { data } ) {
 					)
 				),
 		} );
+		setPurchaseNode( bridge.current.summaryNode );
 		return () => bridge.current.disconnect();
 	}, [ data ] );
 
@@ -342,6 +346,16 @@ export default function App( { data } ) {
 			};
 		}
 	}, [ data.zones, data.price_tiers, elements ] );
+
+	const summary = (
+		<Summary
+			garmentPrice={ variationPrice ?? data.base_price }
+			priceIsFrom={ variationPrice === null }
+			quote={ priced.quote }
+			error={ priced.error ?? submitError }
+			currency={ data.currency }
+		/>
+	);
 
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions -- atajos de teclado del editor; cada control sigue siendo accesible por sí mismo.
@@ -611,13 +625,7 @@ export default function App( { data } ) {
 				</section>
 			) }
 
-			<Summary
-				garmentPrice={ variationPrice ?? data.base_price }
-				priceIsFrom={ variationPrice === null }
-				quote={ priced.quote }
-				error={ priced.error ?? submitError }
-				currency={ data.currency }
-			/>
+			{ purchaseNode ? createPortal( summary, purchaseNode ) : summary }
 		</div>
 	);
 }
