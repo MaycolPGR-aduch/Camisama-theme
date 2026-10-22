@@ -134,6 +134,7 @@ export default function TextPanel( {
 						<input
 							id="camisama-text-color"
 							type="color"
+							title={ __( 'Otro color', 'camisama-customizer' ) }
 							value={ values.color }
 							onChange={ ( event ) =>
 								update( {

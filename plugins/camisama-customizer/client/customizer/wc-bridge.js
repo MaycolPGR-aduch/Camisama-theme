@@ -5,6 +5,8 @@
  * sincronizados; el precio de la variante elegida es la base del precio en vivo.
  */
 
+import { __ } from '@wordpress/i18n';
+
 const COLOR_FIELD = 'select[name="attribute_pa_color"]';
 
 /**
@@ -116,7 +118,15 @@ export function connectVariationForm(
 		}
 
 		form.dataset.camisama = 'busy';
+		// Las vistas previas tardan un momento: el botón dice qué está pasando.
+		const label = button?.textContent;
 		button?.classList.add( 'loading' );
+		if ( button ) {
+			button.textContent = __(
+				'Preparando tu diseño…',
+				'camisama-customizer'
+			);
+		}
 		onBusy( true );
 		try {
 			const fields = await onSubmit();
@@ -137,6 +147,9 @@ export function connectVariationForm(
 			onError( error );
 		} finally {
 			button?.classList.remove( 'loading' );
+			if ( button && label ) {
+				button.textContent = label;
+			}
 			onBusy( false );
 		}
 	};

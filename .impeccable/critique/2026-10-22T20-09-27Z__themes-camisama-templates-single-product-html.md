@@ -10,6 +10,7 @@ target_fingerprint: "sha256:dd91c3cd698f81e769de7a0ad69ea69048148e740deec34ec984
 target_path: "C:\\Camisama\\themes\\camisama\\templates\\single-product.html"
 timestamp: 2026-10-22T20-09-27Z
 slug: themes-camisama-templates-single-product-html
+closed: true
 ---
 Method: dual-agent (A: revisión de diseño · B: detector + navegador)
 

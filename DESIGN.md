@@ -45,6 +45,11 @@ typography:
     fontSize: "0.875rem"
     fontWeight: 500
     lineHeight: 1.4
+  caption:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 600
+    lineHeight: 1.4
 rounded:
   check: "4px"
   notice: "10px"
@@ -81,6 +86,11 @@ components:
   product-card-image:
     backgroundColor: "{colors.blanco}"
     rounded: "{rounded.card}"
+  button-editor:
+    backgroundColor: "{colors.tinta}"
+    textColor: "{colors.papel}"
+    rounded: "{rounded.pill}"
+    padding: "0.4em 1em"
   chip:
     textColor: "{colors.tinta}"
     typography: "{typography.label}"
@@ -203,6 +213,8 @@ legible para todo lo que se lee o se opera.
 - **Body** (400, 1rem, 1.6): texto general; columnas de contenido de 760px como máximo.
 - **Label** (500, 0.875rem): navegación, migas de pan y metadatos. El nombre del sitio va en
   Bricolage 800 con -0.03em.
+- **Caption** (600, 0.75rem): solo las etiquetas de zona sobre el lienzo, en píldora de tinta; es
+  el único texto por debajo de 0.875rem, porque va dentro de la prenda y no debe tapar el diseño.
 
 ### Named Rules
 **The Dos Voces Rule.** Bricolage Grotesque habla en titulares, precios totales y la marca; todo lo
@@ -242,6 +254,8 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
 - **Hover / Focus:** hover a rojo sello oscuro; foco con anillo índigo de 2px y separación de 2px.
 - **Outline:** borde de 2px del color del texto, fondo transparente; en hover se rellena de tinta
   con texto papel.
+- **Editor:** acciones internas del editor ("Añadir texto", "Elegir imagen"): píldora rellena de
+  tinta con texto papel. El rojo queda para "Añadir al carrito".
 
 ### Cards / Containers
 - **Corner Style:** 20px en la imagen de la tarjeta de producto.
@@ -249,7 +263,9 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
 - **Shadow Strategy:** ninguna (ver Elevation & Depth).
 
 ### Inputs / Fields
-- **Style:** fondo blanco, borde lino de 1.5px, radio 12px; etiqueta encima en Inter 600 a 0.875rem.
+- **Style:** fondo blanco, borde lino de 1.5px, radio 12px, 44px de alto y letra de 16px (con
+  menos, Safari en iPhone amplía la página); etiqueta encima en Inter 600 a 0.875rem. Los
+  desplegables y la cantidad del formulario de WooCommerce llevan el mismo aspecto.
 - **Focus:** anillo índigo de 2px, igual que el resto.
 - **Range:** `accent-color` tinta.
 

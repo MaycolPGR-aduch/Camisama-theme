@@ -33,6 +33,29 @@ html {
 	outline-offset: 2px;
 }
 
+/* Lo que dibuja el navegador también lleva la paleta. */
+:root {
+	accent-color: var(--wp--preset--color--contrast);
+	caret-color: var(--wp--preset--color--primary);
+}
+
+::selection {
+	background: color-mix(in srgb, var(--wp--preset--color--accent) 45%, transparent);
+	color: inherit;
+}
+
+/* Sin palabras sueltas al final de párrafos; titulares equilibrados. */
+p,
+li {
+	text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+
 /* Botón con borde: usa el color del texto en lugar del rojo de relleno. */
 .wp-block-button.is-style-outline > .wp-block-button__link {
 	border: 2px solid currentcolor;
@@ -144,6 +167,36 @@ html {
 		top: var(--wp--preset--spacing--50);
 		align-self: flex-start;
 	}
+}
+
+/*
+ * Formulario de compra (variaciones y cantidad): mismos campos que el
+ * editor, en lugar de los controles grises por defecto de WooCommerce.
+ * Selectores largos a propósito: WooCommerce fija altura de línea y
+ * tamaño de letra con reglas más específicas que cortaban el texto.
+ * 16 px de letra: con menos, Safari en iPhone amplía la página al tocar.
+ */
+.wp-block-add-to-cart-form form.cart .variations select,
+.wp-block-add-to-cart-form form.cart .quantity .qty {
+	box-sizing: border-box;
+	min-height: 44px;
+	padding-block: 0.5em;
+	border: 1.5px solid var(--wp--preset--color--border);
+	border-radius: 12px;
+	background-color: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--contrast);
+	font-family: inherit;
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.wp-block-add-to-cart-form form.cart .variations select {
+	padding-inline: 0.75em 2.75rem;
+}
+
+.wp-block-add-to-cart-form form.cart .variations select:hover,
+.wp-block-add-to-cart-form form.cart .quantity .qty:hover {
+	border-color: var(--wp--preset--color--contrast);
 }
 
 /* Galería del producto. */
