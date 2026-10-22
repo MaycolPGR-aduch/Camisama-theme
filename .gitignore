@@ -27,3 +27,7 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Impeccable: estado local del servidor del detector y ajustes personales
+/.impeccable/live/
+/.impeccable/config.local.json

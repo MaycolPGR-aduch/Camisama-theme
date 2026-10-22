@@ -1,12 +1,15 @@
 /**
  * Texto: añadir uno nuevo o editar el seleccionado (contenido, fuente, color y alineación).
+ *
+ * Mientras el cliente no elige color, el texto nuevo toma el que más contrasta con la prenda.
  */
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+import { isReadable, mostReadable } from '../contrast';
 import { loadFont } from '../fonts';
 
-const COLORS = [
+export const TEXT_COLORS = [
 	{ hex: '#16161A', name: __( 'Negro', 'camisama-customizer' ) },
 	{ hex: '#FFFFFF', name: __( 'Blanco', 'camisama-customizer' ) },
 	{ hex: '#D3261C', name: __( 'Rojo', 'camisama-customizer' ) },
@@ -23,11 +26,18 @@ const ALIGNS = [
 
 export const MAX_TEXT = 60;
 
-export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
+export default function TextPanel( {
+	fonts,
+	selected,
+	garment,
+	onAdd,
+	onChange,
+} ) {
+	// color null: automático, el más legible sobre la prenda (y sigue al cambiarla).
 	const [ draft, setDraft ] = useState( {
 		text: '',
 		font: fonts[ 0 ].slug,
-		color: COLORS[ 0 ].hex,
+		color: null,
 		align: 'center',
 	} );
 
@@ -37,7 +47,18 @@ export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
 	}, [ fonts ] );
 
 	const editing = selected?.kind === 'text';
-	const values = editing ? selected : draft;
+	const values = editing
+		? selected
+		: {
+				...draft,
+				color:
+					draft.color ??
+					mostReadable(
+						garment,
+						TEXT_COLORS.map( ( item ) => item.hex )
+					),
+			};
+	const readable = isReadable( values.color, garment );
 	const update = ( patch ) =>
 		editing ? onChange( patch ) : setDraft( { ...draft, ...patch } );
 
@@ -89,7 +110,7 @@ export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
 			<fieldset className="camisama-customizer__field">
 				<legend>{ __( 'Color', 'camisama-customizer' ) }</legend>
 				<div className="camisama-customizer__palette">
-					{ COLORS.map( ( color ) => (
+					{ TEXT_COLORS.map( ( color ) => (
 						<button
 							key={ color.hex }
 							type="button"
@@ -113,6 +134,7 @@ export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
 						<input
 							id="camisama-text-color"
 							type="color"
+							title={ __( 'Otro color', 'camisama-customizer' ) }
 							value={ values.color }
 							onChange={ ( event ) =>
 								update( {
@@ -122,6 +144,14 @@ export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
 						/>
 					</span>
 				</div>
+				{ ! readable && (
+					<p className="camisama-customizer__contrast">
+						{ __(
+							'Este color casi no se verá sobre la prenda. Elige uno que contraste más.',
+							'camisama-customizer'
+						) }
+					</p>
+				) }
 			</fieldset>
 
 			<fieldset className="camisama-customizer__field">
@@ -146,7 +176,7 @@ export default function TextPanel( { fonts, selected, onAdd, onChange } ) {
 					className="camisama-customizer__button"
 					disabled={ ! draft.text.trim() }
 					onClick={ () => {
-						onAdd( { ...draft, text: draft.text.trim() } );
+						onAdd( { ...values, text: draft.text.trim() } );
 						setDraft( { ...draft, text: '' } );
 					} }
 				>

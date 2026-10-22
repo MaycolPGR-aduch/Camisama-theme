@@ -9,7 +9,8 @@ El repositorio contiene dos piezas:
 - **`plugins/camisama-customizer`**: el personalizador (bloque, lógica de zonas, precios y producción).
 
 Documentación: [arquitectura](docs/arquitectura.md) · [identidad visual](docs/identidad-visual.md) ·
-[producción e impresión](docs/produccion-e-impresion.md) · [modelo de precios](docs/modelo-de-precios.md)
+[producción e impresión](docs/produccion-e-impresion.md) · [modelo de precios](docs/modelo-de-precios.md) ·
+[estado de la web: hecho y pendiente](docs/estado-de-la-web.md)
 
 ## Requisitos
 
@@ -19,6 +20,20 @@ Documentación: [arquitectura](docs/arquitectura.md) · [identidad visual](docs/
 - PowerShell 7
 
 ## Puesta en marcha
+
+Clona el repositorio y entra en su carpeta:
+
+```bash
+git clone https://github.com/MaycolPGR-aduch/Camisama-theme.git
+```
+
+```bash
+cd Camisama-theme
+```
+
+Laragon trae su propio PHP y Composer, pero solo los pone en el PATH de **su** terminal (botón
+**Terminal** de Laragon). Si `composer` no se reconoce en otra terminal, usa la de Laragon o llama
+a `C:\laragon\bin\composer\composer.bat` en su lugar. Instala las dependencias y compila:
 
 ```bash
 composer install

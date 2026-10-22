@@ -11,6 +11,34 @@ import { Canvas, FabricImage } from 'fabric';
 import { fitsInside, fromCanvas, pushInside, zoneBox } from './geometry';
 import { TEXT_BASE, applyElement, createObject, snapshot } from './objects';
 
+/**
+ * Dónde poner la etiqueta de una zona para que no pise a las demás. Va centrada encima, salvo
+ * en una zona central que tenga otra justo encima (la nuca sobre la espalda) o zonas a su misma
+ * altura (las mangas junto al frente): entonces va debajo y las de los lados quedan solas arriba.
+ *
+ * @param {Object}   zone  Zona (rect relativo a la maqueta, de 0 a 1).
+ * @param {Object[]} zones Zonas de la vista.
+ * @return {string} Clase de colocación, o cadena vacía.
+ */
+function labelPlacement( zone, zones ) {
+	const { x, y, w } = zone.rect;
+	const center = x + w / 2;
+	if ( center < 0.4 || center > 0.6 ) {
+		return '';
+	}
+	const others = zones.filter( ( other ) => other.id !== zone.id );
+	const below = others.some(
+		( other ) =>
+			// Otra zona justo encima, o empezando a la misma altura.
+			( other.rect.y < y &&
+				other.rect.y + other.rect.h > y - 0.06 &&
+				other.rect.x < x + w &&
+				other.rect.x + other.rect.w > x ) ||
+			Math.abs( other.rect.y - y ) < 0.08
+	);
+	return below ? ' is-label-below' : '';
+}
+
 export default function FabricStage( {
 	mockup,
 	zones,
@@ -52,6 +80,9 @@ export default function FabricStage( {
 			selection: false,
 			preserveObjectStacking: true,
 			uniformScaling: true,
+			// En pantallas táctiles el dedo desplaza la página salvo si empieza sobre el
+			// elemento seleccionado, que entonces se arrastra: el lienzo no atrapa el scroll.
+			allowTouchScrolling: true,
 		} );
 		canvasRef.current = canvas;
 
@@ -322,7 +353,7 @@ export default function FabricStage( {
 						key={ zone.id }
 						className={ `camisama-customizer__zone${
 							zone.id === activeZoneId ? ' is-active' : ''
-						}` }
+						}${ labelPlacement( zone, zones ) }` }
 						style={ {
 							left: `${ zone.rect.x * 100 }%`,
 							top: `${ zone.rect.y * 100 }%`,
