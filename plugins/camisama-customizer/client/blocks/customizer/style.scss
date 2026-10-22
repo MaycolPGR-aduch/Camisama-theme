@@ -6,6 +6,7 @@ $surface: var(--wp--preset--color--surface, #fff);
 $line: var(--wp--preset--color--border, #e4ded3);
 $muted: var(--wp--preset--color--muted, #5f5e66);
 $accent: var(--wp--preset--color--primary, #d3261c);
+$accent-dark: var(--wp--preset--color--primary-dark, #a51d15);
 $focus: var(--wp--preset--color--secondary, #26357f);
 $warning: #8a5a00;
 
@@ -36,6 +37,11 @@ $warning: #8a5a00;
 	&:disabled {
 		opacity: 0.4;
 		cursor: not-allowed;
+	}
+
+	// Objetivo táctil de 44 px aunque la píldora se vea más baja.
+	@media (pointer: coarse) {
+		min-height: 44px;
 	}
 }
 
@@ -98,7 +104,7 @@ $warning: #8a5a00;
 	}
 
 	&__history button {
-		min-width: 2.5rem;
+		min-width: 2.75rem;
 		font-size: 1.1rem;
 	}
 
@@ -109,12 +115,24 @@ $warning: #8a5a00;
 
 	// --- Lienzo ---
 
+	&__canvas {
+		display: grid;
+		gap: var(--wp--preset--spacing--40, 1rem);
+	}
+
+	// Fabric (allowTouchScrolling) bloquea el scroll solo al arrastrar el
+	// elemento seleccionado; aquí no hay que impedirlo.
+	// Nunca más alto que la pantalla (móvil en horizontal, portátiles bajos):
+	// la prenda entera tiene que caber a la vista mientras se diseña.
 	&__stage {
 		position: relative;
+		justify-self: center;
+		width: min(100%, calc(100vh - 6rem));
+		width: min(100%, calc(100svh - 6rem));
 		overflow: hidden;
 		border-radius: 24px;
 		background: $surface;
-		touch-action: none;
+		touch-action: manipulation;
 		user-select: none;
 
 		canvas {
@@ -452,6 +470,117 @@ $warning: #8a5a00;
 	// Resumen dentro del formulario de compra, entre las variaciones y el botón.
 	&__purchase {
 		margin-bottom: var(--wp--preset--spacing--40, 1rem);
+	}
+
+	// --- Barra de compra (móvil) ---
+
+	&__bar {
+		position: fixed;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.75rem var(--wp--preset--spacing--50, 1.25rem);
+		padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+		border-top: 1px solid $line;
+		background: $surface;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__bar-total {
+		display: grid;
+		margin: 0;
+		line-height: 1.2;
+
+		span {
+			color: $muted;
+			font-size: 0.875rem;
+		}
+
+		strong {
+			font-family: var(--wp--preset--font-family--display, inherit);
+			font-size: var(--wp--preset--font-size--large, 1.25rem);
+		}
+	}
+
+	&__bar-button {
+		min-height: 44px;
+		padding: 0.6em 1.4em;
+		border: 0;
+		border-radius: 999px;
+		background: $accent;
+		color: #fff;
+		font-weight: 600;
+		white-space: nowrap;
+
+		&:hover {
+			background: $accent-dark;
+		}
+
+		&:disabled {
+			opacity: 0.7;
+			cursor: progress;
+		}
+	}
+
+	// --- Pantallas táctiles: objetivos de 44 px ---
+
+	@media (pointer: coarse) {
+
+		&__swatch,
+		&__custom-color input {
+			width: 2.75rem;
+			height: 2.75rem;
+		}
+
+		&__field input[type="range"] {
+			height: 44px;
+		}
+
+		&__layers ul button {
+			min-height: 44px;
+		}
+	}
+
+	// --- Móvil: columnas apiladas (mismo corte que el bloque de columnas) ---
+
+	@media (max-width: 781px) {
+
+		// Lienzo fijo arriba mientras se recorren estampados, texto y ajustes:
+		// lo que se añade se ve al momento. Más bajo, para dejar sitio a las
+		// herramientas entre él y la barra de compra.
+		&__canvas {
+			position: sticky;
+			top: 0;
+			z-index: 2;
+			gap: 0.5rem;
+			padding-block: 0.5rem;
+			background: $paper;
+		}
+
+		&__stage {
+			width: min(100%, 38vh);
+			width: min(100%, 38svh);
+		}
+
+		// Hueco para que la barra no tape las últimas herramientas.
+		&.has-purchase-bar {
+			padding-bottom: 5rem;
+		}
+	}
+
+	@media (min-width: 782px) {
+
+		&__bar {
+			display: none;
+		}
 	}
 }
 

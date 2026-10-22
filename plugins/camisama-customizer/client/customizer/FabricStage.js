@@ -52,6 +52,9 @@ export default function FabricStage( {
 			selection: false,
 			preserveObjectStacking: true,
 			uniformScaling: true,
+			// En pantallas táctiles el dedo desplaza la página salvo si empieza sobre el
+			// elemento seleccionado, que entonces se arrastra: el lienzo no atrapa el scroll.
+			allowTouchScrolling: true,
 		} );
 		canvasRef.current = canvas;
 

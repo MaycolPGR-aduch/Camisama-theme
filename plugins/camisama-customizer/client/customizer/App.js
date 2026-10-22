@@ -16,6 +16,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 
 import FabricStage from './FabricStage';
+import PurchaseBar from './PurchaseBar';
 import Summary from './Summary';
 import DesignsPanel from './panels/DesignsPanel';
 import SelectionPanel, { elementLabel } from './panels/SelectionPanel';
@@ -28,6 +29,7 @@ import {
 	newId,
 	textElement,
 } from './elements';
+import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
 import { renderPreview } from './renderer';
@@ -120,6 +122,9 @@ export default function App( { data } ) {
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	const [ message, setMessage ] = useState( '' );
 	const [ submitError, setSubmitError ] = useState( null );
+	// Opciones elegidas en WooCommerce aparte del color ("Talla M"), o null si falta alguna.
+	const [ chosenOptions, setChosenOptions ] = useState( null );
+	const [ busy, setBusy ] = useState( false );
 	// Hueco del resumen en el formulario de compra; sin él, el resumen va al final del editor.
 	const [ purchaseNode, setPurchaseNode ] = useState( null );
 	const bridge = useRef( null );
@@ -131,6 +136,8 @@ export default function App( { data } ) {
 		bridge.current = connectVariationForm( data.product_id, {
 			onColor: setColor,
 			onPrice: setVariationPrice,
+			onOptions: setChosenOptions,
+			onBusy: setBusy,
 			onSubmit: () => {
 				setSubmitError( null );
 				return cartFields(
@@ -139,13 +146,18 @@ export default function App( { data } ) {
 					latest.current.color
 				);
 			},
-			onError: () =>
+			onError: () => {
 				setSubmitError(
 					__(
 						'No pudimos preparar tu diseño. Inténtalo de nuevo.',
 						'camisama-customizer'
 					)
-				),
+				);
+				// El error sale en el resumen: si se compró desde la barra del móvil, está lejos.
+				bridge.current.summaryNode?.scrollIntoView( {
+					block: 'nearest',
+				} );
+			},
 		} );
 		setPurchaseNode( bridge.current.summaryNode );
 		return () => bridge.current.disconnect();
@@ -357,111 +369,135 @@ export default function App( { data } ) {
 		/>
 	);
 
+	const garmentPrice = variationPrice ?? data.base_price;
+	const totalLabel =
+		( variationPrice === null
+			? __( 'desde', 'camisama-customizer' ) + ' '
+			: '' ) +
+		formatMoney(
+			garmentPrice + ( priced.quote?.total ?? 0 ),
+			data.currency
+		);
+
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions -- atajos de teclado del editor; cada control sigue siendo accesible por sí mismo.
-		<div className="camisama-customizer" onKeyDown={ onKeyDown }>
-			<div className="camisama-customizer__topbar">
-				<div
-					className="camisama-customizer__views"
-					role="group"
-					aria-label={ __(
-						'Vista de la prenda',
-						'camisama-customizer'
-					) }
-				>
-					{ data.views.map( ( item ) => (
+		<div
+			className={ `camisama-customizer${
+				purchaseNode ? ' has-purchase-bar' : ''
+			}` }
+			onKeyDown={ onKeyDown }
+		>
+			{ /* Vistas, deshacer y lienzo: en el móvil quedan fijos arriba mientras se usan las herramientas. */ }
+			<div className="camisama-customizer__canvas">
+				<div className="camisama-customizer__topbar">
+					<div
+						className="camisama-customizer__views"
+						role="group"
+						aria-label={ __(
+							'Vista de la prenda',
+							'camisama-customizer'
+						) }
+					>
+						{ data.views.map( ( item ) => (
+							<button
+								key={ item.id }
+								type="button"
+								aria-pressed={ item.id === viewId }
+								onClick={ () => chooseView( item.id ) }
+							>
+								{ item.label }
+							</button>
+						) ) }
+					</div>
+					<div className="camisama-customizer__history">
 						<button
-							key={ item.id }
 							type="button"
-							aria-pressed={ item.id === viewId }
-							onClick={ () => chooseView( item.id ) }
+							disabled={ ! history.past.length }
+							onClick={ () => dispatch( { type: 'undo' } ) }
+							aria-label={ __(
+								'Deshacer',
+								'camisama-customizer'
+							) }
+							title={ __(
+								'Deshacer (Ctrl+Z)',
+								'camisama-customizer'
+							) }
 						>
-							{ item.label }
+							↶
 						</button>
-					) ) }
+						<button
+							type="button"
+							disabled={ ! history.future.length }
+							onClick={ () => dispatch( { type: 'redo' } ) }
+							aria-label={ __(
+								'Rehacer',
+								'camisama-customizer'
+							) }
+							title={ __(
+								'Rehacer (Ctrl+Y)',
+								'camisama-customizer'
+							) }
+						>
+							↷
+						</button>
+					</div>
 				</div>
-				<div className="camisama-customizer__history">
-					<button
-						type="button"
-						disabled={ ! history.past.length }
-						onClick={ () => dispatch( { type: 'undo' } ) }
-						aria-label={ __( 'Deshacer', 'camisama-customizer' ) }
-						title={ __(
-							'Deshacer (Ctrl+Z)',
-							'camisama-customizer'
-						) }
-					>
-						↶
-					</button>
-					<button
-						type="button"
-						disabled={ ! history.future.length }
-						onClick={ () => dispatch( { type: 'redo' } ) }
-						aria-label={ __( 'Rehacer', 'camisama-customizer' ) }
-						title={ __(
-							'Rehacer (Ctrl+Y)',
-							'camisama-customizer'
-						) }
-					>
-						↷
-					</button>
-				</div>
-			</div>
 
-			<FabricStage
-				mockup={ mockup }
-				zones={ viewZones }
-				activeZoneId={ activeZone?.id }
-				elements={ viewElements }
-				fonts={ data.fonts }
-				selectedId={ selectedId }
-				label={ sprintf(
-					/* translators: %s: vista de la prenda. */
-					__(
-						'Diseño de la prenda, vista %s. Selecciona un elemento para moverlo con el ratón, el dedo o las flechas del teclado.',
-						'camisama-customizer'
-					),
-					view?.label ?? ''
-				) }
-				onSelect={ select }
-				onSelectZone={ setActiveZoneId }
-				onTransform={ ( id, geometry ) =>
-					commit( ( list ) =>
-						list.map( ( element ) =>
-							element.id === id
-								? { ...element, ...geometry }
-								: element
-						)
-					)
-				}
-				onMeasure={ ( id, size ) =>
-					dispatch( {
-						type: 'patch',
-						update: ( list ) =>
+				<FabricStage
+					mockup={ mockup }
+					zones={ viewZones }
+					activeZoneId={ activeZone?.id }
+					elements={ viewElements }
+					fonts={ data.fonts }
+					selectedId={ selectedId }
+					label={ sprintf(
+						/* translators: %s: vista de la prenda. */
+						__(
+							'Diseño de la prenda, vista %s. Selecciona un elemento para moverlo con el ratón, el dedo o las flechas del teclado.',
+							'camisama-customizer'
+						),
+						view?.label ?? ''
+					) }
+					onSelect={ select }
+					onSelectZone={ setActiveZoneId }
+					onTransform={ ( id, geometry ) =>
+						commit( ( list ) =>
 							list.map( ( element ) =>
 								element.id === id
-									? fitToZone(
-											{ ...element, ...size },
-											zoneById( element.zone )
-										)
+									? { ...element, ...geometry }
 									: element
-							),
-					} )
-				}
-				onError={ ( id ) => {
-					dispatch( {
-						type: 'patch',
-						update: ( list ) =>
-							list.filter( ( element ) => element.id !== id ),
-					} );
-					setMessage(
-						__(
-							'No se pudo cargar un elemento. Inténtalo de nuevo.',
-							'camisama-customizer'
+							)
 						)
-					);
-				} }
-			/>
+					}
+					onMeasure={ ( id, size ) =>
+						dispatch( {
+							type: 'patch',
+							update: ( list ) =>
+								list.map( ( element ) =>
+									element.id === id
+										? fitToZone(
+												{ ...element, ...size },
+												zoneById( element.zone )
+											)
+										: element
+								),
+						} )
+					}
+					onError={ ( id ) => {
+						dispatch( {
+							type: 'patch',
+							update: ( list ) =>
+								list.filter( ( element ) => element.id !== id ),
+						} );
+						setMessage(
+							__(
+								'No se pudo cargar un elemento. Inténtalo de nuevo.',
+								'camisama-customizer'
+							)
+						);
+					} }
+				/>
+			</div>
 
 			<p className="camisama-customizer__sr-only" aria-live="polite">
 				{ message }
@@ -626,6 +662,20 @@ export default function App( { data } ) {
 			) }
 
 			{ purchaseNode ? createPortal( summary, purchaseNode ) : summary }
+
+			{ purchaseNode && (
+				<PurchaseBar
+					target={ purchaseNode }
+					total={ totalLabel }
+					options={ chosenOptions }
+					invalid={ Boolean( priced.error ) }
+					busy={ busy }
+					onBuy={ () => bridge.current.buy() }
+					onReview={ () =>
+						purchaseNode.scrollIntoView( { block: 'center' } )
+					}
+				/>
+			) }
 		</div>
 	);
 }
