@@ -1,0 +1,377 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T19:56:12+00:00",
+  "title": "Design System: Camisama",
+  "extensions": {
+    "colorMeta": {
+      "papel": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "oklch(96.8% 0.009 84.6)",
+        "tonalRamp": [
+          "#0C0B09",
+          "#262522",
+          "#44423E",
+          "#63615C",
+          "#85827D",
+          "#A7A5A0",
+          "#CBC9C4",
+          "#F0EEEA"
+        ]
+      },
+      "blanco": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#A5A5A5",
+          "#C9C9C9",
+          "#EEEEEE"
+        ]
+      },
+      "lino": {
+        "role": "neutral",
+        "displayName": "Lino",
+        "canonical": "oklch(90.2% 0.016 82.8)",
+        "tonalRamp": [
+          "#0D0B07",
+          "#28251F",
+          "#45413A",
+          "#656158",
+          "#878278",
+          "#A9A49B",
+          "#CDC9C0",
+          "#F2EEE6"
+        ]
+      },
+      "grafito": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "oklch(48.6% 0.013 291.7)",
+        "tonalRamp": [
+          "#0B0B0E",
+          "#252429",
+          "#424147",
+          "#616067",
+          "#828189",
+          "#A5A4AC",
+          "#C9C8CF",
+          "#EEEDF4"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(20.2% 0.008 285.7)",
+        "tonalRamp": [
+          "#0B0B0D",
+          "#252528",
+          "#414245",
+          "#616165",
+          "#828287",
+          "#A4A4A9",
+          "#C8C9CD",
+          "#EEEEF2"
+        ]
+      },
+      "rojo-sello": {
+        "role": "primary",
+        "displayName": "Rojo sello",
+        "canonical": "oklch(56.0% 0.208 29.1)",
+        "tonalRamp": [
+          "#2E0000",
+          "#580000",
+          "#850000",
+          "#B41912",
+          "#E43B2E",
+          "#FF6F5D",
+          "#FF9C89",
+          "#FFC9B7"
+        ]
+      },
+      "rojo-sello-oscuro": {
+        "role": "primary",
+        "displayName": "Rojo sello oscuro",
+        "canonical": "oklch(46.8% 0.172 29.1)",
+        "tonalRamp": [
+          "#290000",
+          "#510000",
+          "#7B140E",
+          "#A83227",
+          "#D55041",
+          "#F67B6B",
+          "#FFA695",
+          "#FFD0C1"
+        ]
+      },
+      "indigo": {
+        "role": "secondary",
+        "displayName": "Índigo",
+        "canonical": "oklch(36.3% 0.126 270.3)",
+        "tonalRamp": [
+          "#03052A",
+          "#15204F",
+          "#2E3D77",
+          "#495CA2",
+          "#667DCD",
+          "#8AA1EC",
+          "#B0C6FF",
+          "#D8EDFF"
+        ]
+      },
+      "mostaza": {
+        "role": "tertiary",
+        "displayName": "Mostaza",
+        "canonical": "oklch(81.5% 0.167 83.9)",
+        "tonalRamp": [
+          "#1D0200",
+          "#3F1B00",
+          "#633700",
+          "#895500",
+          "#B07600",
+          "#D19B00",
+          "#F2C15B",
+          "#FFE892"
+        ]
+      },
+      "calidad-optima-fondo": {
+        "role": "semantic",
+        "displayName": "Calidad óptima (fondo)",
+        "canonical": "oklch(95.6% 0.017 156.9)",
+        "tonalRamp": [
+          "#080C09",
+          "#212723",
+          "#3C443F",
+          "#5B645E",
+          "#7B857E",
+          "#9EA8A1",
+          "#C3CCC6",
+          "#E9F1EB"
+        ]
+      },
+      "calidad-optima-texto": {
+        "role": "semantic",
+        "displayName": "Calidad óptima (texto)",
+        "canonical": "oklch(46.8% 0.108 151.7)",
+        "tonalRamp": [
+          "#001200",
+          "#002F11",
+          "#144F29",
+          "#2F7144",
+          "#4B9561",
+          "#76B787",
+          "#A0DAAE",
+          "#CAFED6"
+        ]
+      },
+      "calidad-aceptable-fondo": {
+        "role": "semantic",
+        "displayName": "Calidad aceptable (fondo)",
+        "canonical": "oklch(96.8% 0.041 90.2)",
+        "tonalRamp": [
+          "#0F0B02",
+          "#2A2515",
+          "#49412E",
+          "#696149",
+          "#8C8267",
+          "#AEA58C",
+          "#D1C9B2",
+          "#F6EEDA"
+        ]
+      },
+      "calidad-aceptable-texto": {
+        "role": "semantic",
+        "displayName": "Calidad aceptable (texto)",
+        "canonical": "oklch(50.8% 0.108 73.3)",
+        "tonalRamp": [
+          "#1A0500",
+          "#3A1D00",
+          "#5D3900",
+          "#825712",
+          "#A9772F",
+          "#CA9C5E",
+          "#EBC18B",
+          "#FFE8B8"
+        ]
+      },
+      "calidad-baja-fondo": {
+        "role": "semantic",
+        "displayName": "Calidad baja (fondo)",
+        "canonical": "oklch(94.5% 0.024 23.8)",
+        "tonalRamp": [
+          "#110908",
+          "#2D2221",
+          "#4C3E3D",
+          "#6D5D5B",
+          "#907D7B",
+          "#B2A09E",
+          "#D5C5C3",
+          "#FAEAE9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Portada y momentos de marca."
+      },
+      "headline": {
+        "displayName": "Titular",
+        "purpose": "h1 de página."
+      },
+      "title": {
+        "displayName": "Título",
+        "purpose": "h2 de sección."
+      },
+      "body": {
+        "displayName": "Cuerpo",
+        "purpose": "Texto general, columnas de 760px como máximo."
+      },
+      "label": {
+        "displayName": "Etiqueta",
+        "purpose": "Navegación, chips, migas de pan y metadatos."
+      }
+    },
+    "shadows": [
+      {
+        "name": "zone-outline",
+        "value": "0 0 0 1px rgba(22, 22, 26, 0.35), inset 0 0 0 1px rgba(22, 22, 26, 0.35)",
+        "purpose": "Halo funcional del contorno de zona para que se vea sobre prendas de cualquier color. No es elevación."
+      },
+      {
+        "name": "zone-outline-active",
+        "value": "0 0 0 2px #16161a, inset 0 0 0 1px #16161a",
+        "purpose": "Contorno de la zona activa."
+      }
+    ],
+    "motion": [
+      {
+        "name": "card-image-zoom",
+        "value": "transform 0.3s ease",
+        "purpose": "Zoom de 1.03 en la imagen de la tarjeta de producto al pasar el cursor; desactivado con prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "content",
+        "value": "760px"
+      },
+      {
+        "name": "wide",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción que avanza: añadir al carrito, pagar, aplicar.",
+      "html": "<button class=\"ds-btn-primary\">Añadir al carrito</button>",
+      "css": ".ds-btn-primary { background: var(--wp--preset--color--primary, #d3261c); color: #fff; border: 0; border-radius: 999px; padding: 0.8em 1.6em; font: 600 1rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 0.15s; } .ds-btn-primary:hover { background: var(--wp--preset--color--primary-dark, #a51d15); } .ds-btn-primary:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón con borde",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Acción secundaria junto a la principal.",
+      "html": "<button class=\"ds-btn-outline\">Ver estampados</button>",
+      "css": ".ds-btn-outline { background: transparent; color: var(--wp--preset--color--contrast, #16161a); border: 2px solid currentcolor; border-radius: 999px; padding: 0.8em 1.6em; font: 600 1rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 0.15s, color 0.15s; } .ds-btn-outline:hover { background: var(--wp--preset--color--contrast, #16161a); border-color: var(--wp--preset--color--contrast, #16161a); color: var(--wp--preset--color--base, #f7f4ee); } .ds-btn-outline:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chips del editor",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Vistas, zonas, pestañas y acciones del editor; relleno de tinta al elegir.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">Frente</button><button class=\"ds-chip\" aria-pressed=\"false\">Espalda</button><button class=\"ds-chip\" aria-pressed=\"false\">Manga izq.</button><button class=\"ds-chip\" disabled>Nuca</button></div>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; } .ds-chip { padding: 0.4em 1em; border: 1.5px solid var(--wp--preset--color--contrast, #16161a); border-radius: 999px; background: transparent; color: var(--wp--preset--color--contrast, #16161a); font: 600 0.875rem/1.3 Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-chip[aria-pressed=\"true\"] { background: var(--wp--preset--color--contrast, #16161a); color: var(--wp--preset--color--base, #f7f4ee); } .ds-chip:disabled { opacity: 0.4; cursor: not-allowed; } .ds-chip:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Texto, selects y áreas del editor.",
+      "html": "<label class=\"ds-field\"><span>Tu texto</span><textarea rows=\"2\">Tu diseño, tu ley.</textarea></label>",
+      "css": ".ds-field { display: grid; gap: 0.35rem; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--wp--preset--color--contrast, #16161a); } .ds-field span { font-size: 0.875rem; font-weight: 600; } .ds-field textarea { padding: 0.5em 0.75em; border: 1.5px solid var(--wp--preset--color--border, #e4ded3); border-radius: 12px; background: var(--wp--preset--color--surface, #fff); color: var(--wp--preset--color--contrast, #16161a); font: inherit; } .ds-field textarea:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Colores de prenda",
+      "kind": "custom",
+      "refersTo": "swatch",
+      "description": "Selector de color de la prenda.",
+      "html": "<div class=\"ds-swatches\"><button class=\"ds-swatch\" style=\"--swatch:#16161a\" aria-pressed=\"true\" aria-label=\"Negro\"></button><button class=\"ds-swatch\" style=\"--swatch:#ffffff\" aria-pressed=\"false\" aria-label=\"Blanco\"></button><button class=\"ds-swatch\" style=\"--swatch:#26357f\" aria-pressed=\"false\" aria-label=\"Azul\"></button></div>",
+      "css": ".ds-swatches { display: flex; gap: 0.5rem; } .ds-swatch { width: 2.25rem; height: 2.25rem; padding: 0; border: 2px solid var(--wp--preset--color--border, #e4ded3); border-radius: 50%; background: var(--swatch); box-shadow: inset 0 0 0 2px var(--wp--preset--color--surface, #fff); cursor: pointer; } .ds-swatch[aria-pressed=\"true\"] { border-color: var(--wp--preset--color--contrast, #16161a); } .ds-swatch:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Panel con resumen de precio",
+      "kind": "card",
+      "refersTo": "editor-panel",
+      "description": "Tarjeta blanca de herramientas y precio en vivo.",
+      "html": "<section class=\"ds-panel\"><dl><div><dt>Prenda</dt><dd>S/ 35.00</dd></div><div><dt>Frente</dt><dd>S/ 18.00</dd></div></dl><p class=\"ds-total\"><span>Total</span><strong>S/ 53.00</strong></p></section>",
+      "css": ".ds-panel { padding: 1.25rem; border: 1px solid var(--wp--preset--color--border, #e4ded3); border-radius: 20px; background: var(--wp--preset--color--surface, #fff); font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--wp--preset--color--contrast, #16161a); } .ds-panel dl { display: grid; gap: 0.35rem; margin: 0; } .ds-panel dl > div { display: flex; justify-content: space-between; gap: 1rem; color: var(--wp--preset--color--muted, #5f5e66); } .ds-panel dd { margin: 0; } .ds-total { display: flex; justify-content: space-between; align-items: baseline; margin: 0.75rem 0 0; padding-top: 0.75rem; border-top: 1px solid var(--wp--preset--color--border, #e4ded3); } .ds-total strong { font-family: \"Bricolage Grotesque\", ui-sans-serif, system-ui, sans-serif; font-size: 1.75rem; }"
+    },
+    {
+      "name": "Aviso de calidad de imagen",
+      "kind": "custom",
+      "refersTo": "quality-acceptable",
+      "description": "Estado de resolución de la imagen del cliente en la zona.",
+      "html": "<div class=\"ds-quality\"><p class=\"ds-q is-optimal\">Calidad óptima para este tamaño.</p><p class=\"ds-q is-acceptable\">Calidad aceptable.</p><p class=\"ds-q is-low\">Calidad baja: reduce el tamaño.</p></div>",
+      "css": ".ds-quality { display: grid; gap: 0.5rem; font-family: Inter, ui-sans-serif, system-ui, sans-serif; } .ds-q { margin: 0; padding: 0.5em 0.75em; border-radius: 10px; font-size: 0.875rem; } .ds-q.is-optimal { background: #e8f4ec; color: #1d6b3a; } .ds-q.is-acceptable { background: #fff4d6; color: #8a5a00; } .ds-q.is-low { background: #fde7e5; color: var(--wp--preset--color--primary, #d3261c); font-weight: 600; }"
+    },
+    {
+      "name": "Navegación",
+      "kind": "nav",
+      "description": "Cabecera de la tienda.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\">Camisama</a><a href=\"#\">Tienda</a><a href=\"#\">Cómo funciona</a><a href=\"#\">Carrito</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 1.25rem; padding: 1rem; background: var(--wp--preset--color--base, #f7f4ee); font: 500 0.875rem/1.4 Inter, ui-sans-serif, system-ui, sans-serif; } .ds-nav a { color: var(--wp--preset--color--contrast, #16161a); text-decoration: none; } .ds-nav a:hover { color: var(--wp--preset--color--primary, #d3261c); } .ds-nav a:focus-visible { outline: 2px solid var(--wp--preset--color--secondary, #26357f); outline-offset: 2px; } .ds-nav .ds-brand { margin-right: auto; font: 800 1.25rem/1 \"Bricolage Grotesque\", ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.03em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El sello",
+    "overview": "Papel cálido, tinta casi negra y un rojo de sello que marca lo importante: la acción de comprar, los checks, el estado activo. La tienda se siente como un taller de estampado ordenado: fondo claro y tranquilo, tipografía de titulares con carácter (Bricolage Grotesque, ajustada y pesada) y un cuerpo neutro y legible (Inter). La prenda y el diseño del cliente son lo protagonista; la interfaz los enmarca.\n\nDensidad media, formas redondeadas generosas en imágenes y botones en píldora. Plano por defecto: la profundidad viene del contraste entre papel y blanco, no de sombras. Los controles son **táctiles y seguros**: fichas con borde firme que se rellenan al elegirlas, con estados que no dejan dudas.\n\nNo debe parecer una **tienda genérica** (plantilla de WooCommerce o marketplace: blanco, gris y banners) ni estar **sobrecargada** (muchos colores, degradados, sombras y animaciones compitiendo).",
+    "keyCharacteristics": [
+      "Fondo papel (no blanco puro); las imágenes de producto van sobre blanco.",
+      "Un solo acento fuerte, el rojo sello; índigo para enlaces y foco; mostaza como apoyo puntual.",
+      "Titulares en Bricolage Grotesque 700 con tracking negativo; texto en Inter.",
+      "Botones en píldora; tarjetas e imágenes con esquinas de 20–24px.",
+      "Sin sombras; movimiento mínimo y respetuoso con `prefers-reduced-motion`."
+    ],
+    "rules": [
+      {
+        "name": "The Un Solo Sello Rule",
+        "body": "El rojo marca la acción principal y poco más; si todo es rojo, nada destaca.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dos Voces Rule",
+        "body": "Bricolage Grotesque habla en titulares, precios totales y la marca; todo lo que se lee o se opera va en Inter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Papel y Blanco Rule",
+        "body": "La profundidad es tonal: papel al fondo, blanco para lo que se toca o se mira de cerca. Si algo necesita destacar, cambia de superficie, no gana una sombra.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** usar papel como fondo y blanco solo para superficies e imágenes de producto.",
+      "**Do** reservar el rojo sello para la acción principal y las marcas de estado.",
+      "**Do** usar índigo de 2px para el foco visible en todos los elementos interactivos.",
+      "**Do** usar el chip en píldora (tinta, relleno al seleccionar) para toda elección dentro del editor, y reservar el relleno rojo para la acción que avanza.",
+      "**Do** acompañar cualquier animación con su alternativa para `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** caer en la tienda genérica: nada de fondos blancos planos con todo en gris, banners de oferta ni la apariencia por defecto de los bloques de WooCommerce sin el tema aplicado.",
+      "**Don't** sobrecargar: un acento fuerte por pantalla, sin degradados ni animaciones que compitan con el diseño del cliente.",
+      "**Don't** añadir sombras para dar profundidad; usa el contraste papel/blanco.",
+      "**Don't** usar mostaza para texto sobre papel o blanco.",
+      "**Don't** mezclar otras tipografías en la interfaz de la tienda (las 8 fuentes del editor son contenido del cliente, no de la interfaz)."
+    ]
+  }
+}
