@@ -245,8 +245,10 @@ $warning: #8a5a00;
 			font-weight: 600;
 		}
 
+		// border-box: con el relleno y el borde, el 100 % se salía de la tarjeta.
 		textarea,
 		select {
+			box-sizing: border-box;
 			width: 100%;
 			padding: 0.5em 0.75em;
 			border: 1.5px solid $line;
@@ -378,6 +380,36 @@ $warning: #8a5a00;
 			background: #fde7e5;
 			color: $accent;
 			font-weight: 600;
+		}
+	}
+
+	// Texto que casi no se ve sobre la prenda: mismo tono que la calidad
+	// "aceptable"; junto al lienzo lleva el arreglo en un botón.
+	&__contrast {
+		margin: 0;
+		padding: 0.5em 0.75em;
+		border-radius: 10px;
+		background: #fff4d6;
+		color: $warning;
+		font-size: 0.875rem;
+
+		&:has(button) {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.5rem 1rem;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		button {
+
+			@include pill;
+			border-color: currentcolor;
+			color: inherit;
 		}
 	}
 

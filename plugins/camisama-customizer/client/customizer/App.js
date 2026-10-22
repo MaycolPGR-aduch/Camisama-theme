@@ -20,7 +20,7 @@ import PurchaseBar from './PurchaseBar';
 import Summary from './Summary';
 import DesignsPanel from './panels/DesignsPanel';
 import SelectionPanel, { elementLabel } from './panels/SelectionPanel';
-import TextPanel from './panels/TextPanel';
+import TextPanel, { TEXT_COLORS } from './panels/TextPanel';
 import UploadPanel from './panels/UploadPanel';
 import {
 	designElement,
@@ -29,6 +29,7 @@ import {
 	newId,
 	textElement,
 } from './elements';
+import { isReadable, mostReadable } from './contrast';
 import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
@@ -369,6 +370,33 @@ export default function App( { data } ) {
 		/>
 	);
 
+	// Textos que casi no se ven sobre la prenda elegida (p. ej. negro sobre negro). No se
+	// cambian solos: se avisa y se ofrece el color más legible en un toque.
+	const garment = data.colors.find( ( item ) => item.slug === color );
+	const hiddenTexts = elements.filter(
+		( element ) =>
+			element.kind === 'text' &&
+			! isReadable( element.color, garment?.hex )
+	);
+	const readableColor = TEXT_COLORS.find(
+		( item ) =>
+			item.hex ===
+			mostReadable(
+				garment?.hex,
+				TEXT_COLORS.map( ( option ) => option.hex )
+			)
+	);
+	const fixContrast = () => {
+		const ids = new Set( hiddenTexts.map( ( element ) => element.id ) );
+		commit( ( list ) =>
+			list.map( ( element ) =>
+				ids.has( element.id )
+					? { ...element, color: readableColor.hex }
+					: element
+			)
+		);
+	};
+
 	const garmentPrice = variationPrice ?? data.base_price;
 	const totalLabel =
 		( variationPrice === null
@@ -497,6 +525,41 @@ export default function App( { data } ) {
 						);
 					} }
 				/>
+				{ hiddenTexts.length > 0 && garment && (
+					<div
+						className="camisama-customizer__contrast"
+						role="status"
+					>
+						<p>
+							{ hiddenTexts.length === 1
+								? sprintf(
+										/* translators: 1: texto, p. ej. Texto «Feliz cumple», 2: color de la prenda. */
+										__(
+											'%1$s casi no se ve sobre una prenda de color %2$s.',
+											'camisama-customizer'
+										),
+										elementLabel( hiddenTexts[ 0 ] ),
+										garment.name.toLowerCase()
+									)
+								: sprintf(
+										/* translators: 1: número de textos, 2: color de la prenda. */
+										__(
+											'%1$d textos casi no se ven sobre una prenda de color %2$s.',
+											'camisama-customizer'
+										),
+										hiddenTexts.length,
+										garment.name.toLowerCase()
+									) }
+						</p>
+						<button type="button" onClick={ fixContrast }>
+							{ sprintf(
+								/* translators: %s: color del texto, p. ej. blanco. */
+								__( 'Cambiar a %s', 'camisama-customizer' ),
+								readableColor.name.toLowerCase()
+							) }
+						</button>
+					</div>
+				) }
 			</div>
 
 			<p className="camisama-customizer__sr-only" aria-live="polite">
@@ -617,6 +680,7 @@ export default function App( { data } ) {
 						<TextPanel
 							fonts={ data.fonts }
 							selected={ selected }
+							garment={ garment?.hex }
 							onAdd={ ( style ) =>
 								add( textElement( activeZone, style ) )
 							}
