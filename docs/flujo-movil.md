@@ -76,8 +76,12 @@ cerca.
    "Preparando el editor…" mientras carga. Incluye lo mínimo del modo diseño (pantalla completa
    con ✕, "atrás" del móvil y Esc, pie con el total y "Siguiente: talla"). Mientras no esté el
    paso 3, "Siguiente: talla" muestra el formulario de WooCommerce bajo la ficha.
-2. Modo diseño a pantalla completa: completar el diálogo (foco atrapado), hoja de herramientas e
-   invitación a empezar.
+2. **Hecha.** Modo diseño completo: diálogo con `aria-modal` y el tabulador encerrado; hoja de
+   herramientas con asa y tres alturas (media al abrir, casi completa para el catálogo, mínima
+   para ver la prenda entera), por toque, deslizamiento o flechas; el lienzo usa el hueco que
+   deja la hoja. Invitación "Elige un estampado, escribe tu frase o sube tu foto" con el diseño
+   vacío (también en escritorio). Pendiente para la tanda 3: al seleccionar desde el catálogo, los
+   ajustes quedan más arriba en la hoja, fuera de la vista.
 3. Acercar el lienzo a la zona al seleccionar, con los ajustes en la hoja.
 4. Paso 3: talla en botones sin preselección, cantidad, desglose y miniaturas.
 5. Repaso (`/impeccable polish`) y crítica nueva para comparar con el 25/40.

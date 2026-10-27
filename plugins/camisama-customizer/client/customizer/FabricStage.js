@@ -52,6 +52,7 @@ export default function FabricStage( {
 	onTransform,
 	onMeasure,
 	onError,
+	children,
 } ) {
 	const wrapRef = useRef( null );
 	const canvasElRef = useRef( null );
@@ -365,6 +366,7 @@ export default function FabricStage( {
 					</div>
 				) ) }
 			</div>
+			{ children }
 		</div>
 	);
 }

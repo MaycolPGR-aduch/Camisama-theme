@@ -128,6 +128,34 @@ $warning: #8a5a00;
 		gap: var(--wp--preset--spacing--40, 1rem);
 	}
 
+	// Envoltura de las herramientas: solo es una caja en el modo diseño del
+	// móvil (la hoja); en escritorio y en la ficha sus hijos van como siempre.
+	&__sheet {
+		display: contents;
+	}
+
+	// Con el diseño vacío: qué se puede hacer, sobre la propia prenda.
+	&__invite {
+		position: absolute;
+		bottom: 0.75rem;
+		left: 50%;
+		width: max-content;
+		max-width: calc(100% - 1.5rem);
+		margin: 0;
+		padding: 0.4em 0.9em;
+		border: 1px solid $line;
+		border-radius: 999px;
+		background: $surface;
+		color: $ink;
+		font-size: 0.875rem;
+		font-weight: 600;
+		line-height: 1.35;
+		text-align: center;
+		text-wrap: balance;
+		pointer-events: none;
+		transform: translateX(-50%);
+	}
+
 	// Fabric (allowTouchScrolling) bloquea el scroll solo al arrastrar el
 	// elemento seleccionado; aquí no hay que impedirlo.
 	// Nunca más alto que la pantalla (móvil en horizontal, portátiles bajos):
@@ -713,7 +741,8 @@ $warning: #8a5a00;
 
 			> :not(.camisama-customizer__canvas),
 			.camisama-customizer__canvas > :not(.camisama-customizer__stage),
-			.camisama-customizer__zones {
+			.camisama-customizer__zones,
+			.camisama-customizer__invite {
 				display: none;
 			}
 
@@ -728,17 +757,97 @@ $warning: #8a5a00;
 			}
 		}
 
-		// Paso 2, el modo diseño: el editor ocupa la pantalla y se desplaza por
-		// dentro (el lienzo queda fijo arriba); la página de debajo no se mueve.
+		// Paso 2, el modo diseño: pantalla completa en columna, lienzo arriba y
+		// hoja de herramientas abajo (sobre el pie con el total). La hoja tiene
+		// tres alturas y el lienzo usa lo que queda; la página no se mueve.
 		&.is-designing {
+			--sheet: 45dvh;
 			position: fixed;
 			inset: 0;
 			z-index: 100000;
-			align-content: start;
-			overflow-y: auto;
-			overscroll-behavior: contain;
-			padding: 0 var(--wp--preset--spacing--50, 1.25rem) 6rem;
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+			overflow: hidden;
+			padding: 0 0 4.5rem;
 			background: $paper;
+
+			&.is-sheet-full {
+				--sheet: calc(100dvh - 14rem);
+			}
+
+			// Mínima: solo el asa (44 px), para ver la prenda entera.
+			&.is-sheet-min {
+				--sheet: 2.75rem;
+			}
+
+			// Con la hoja casi completa el lienzo es una miniatura: sin la
+			// invitación encima.
+			&.is-sheet-full .camisama-customizer__invite {
+				display: none;
+			}
+
+			// align-content: start, para que las filas no se estiren con el
+			// hueco (la ✕ y el lienzo se alargaban con la hoja bajada).
+			.camisama-customizer__canvas {
+				position: static;
+				flex: 1 1 auto;
+				align-content: start;
+				min-height: 0;
+				overflow-y: auto;
+				padding: 0.5rem var(--wp--preset--spacing--50, 1.25rem);
+			}
+
+			// Cuadrado que cabe en el hueco: alto de pantalla menos hoja, pie
+			// (4.5rem), barra superior y márgenes (4.25rem).
+			.camisama-customizer__stage {
+				width: min(100%, calc(100vh - var(--sheet) - 8.75rem));
+				width: min(100%, calc(100dvh - var(--sheet) - 8.75rem));
+			}
+
+			.camisama-customizer__sheet {
+				display: grid;
+				flex: 0 0 var(--sheet);
+				align-content: start;
+				gap: var(--wp--preset--spacing--40, 1rem);
+				overflow-y: auto;
+				overscroll-behavior: contain;
+				padding: 0 var(--wp--preset--spacing--50, 1.25rem) 1rem;
+				border-top: 1px solid $line;
+				border-radius: 20px 20px 0 0;
+			}
+
+			&.is-sheet-min .camisama-customizer__sheet {
+				overflow: hidden;
+			}
+		}
+
+		// Asa de la hoja: barra corta centrada; fija arriba al desplazar la hoja.
+		&__handle {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 0.25rem;
+			min-height: 44px;
+			margin-inline: calc(-1 * var(--wp--preset--spacing--50, 1.25rem));
+			border: 0;
+			background: $paper;
+			color: $muted;
+			font-size: 0.875rem;
+			font-weight: 600;
+			touch-action: none;
+
+			&::before {
+				width: 2.5rem;
+				height: 4px;
+				border-radius: 2px;
+				background: color-mix(in srgb, $muted 45%, transparent);
+				content: "";
+			}
 		}
 
 		&__close {

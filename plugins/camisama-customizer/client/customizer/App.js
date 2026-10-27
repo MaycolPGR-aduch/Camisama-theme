@@ -18,6 +18,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import FabricStage from './FabricStage';
 import FlowEntry from './FlowEntry';
 import PurchaseBar from './PurchaseBar';
+import SheetHandle from './SheetHandle';
 import Summary from './Summary';
 import DesignsPanel from './panels/DesignsPanel';
 import SelectionPanel, { elementLabel } from './panels/SelectionPanel';
@@ -237,6 +238,9 @@ export default function App( { data } ) {
 	const mobile = useMediaQuery( MOBILE );
 	const [ designing, setDesigning ] = useState( Boolean( data.edit ) );
 	const [ buying, setBuying ] = useState( false );
+	// Altura de la hoja de herramientas en el modo diseño (SheetHandle): min, half o full.
+	const [ sheet, setSheet ] = useState( 'half' );
+	const rootRef = useRef( null );
 	const [ entryNode, setEntryNode ] = useState( null );
 	const openRef = useRef( null );
 	const closeRef = useRef( null );
@@ -528,6 +532,7 @@ export default function App( { data } ) {
 
 	const openDesign = () => {
 		setBuying( false );
+		setSheet( 'half' );
 		setDesigning( true );
 	};
 
@@ -554,6 +559,24 @@ export default function App( { data } ) {
 	// --- Teclado ----------------------------------------------------------------------
 
 	const onKeyDown = ( event ) => {
+		// Modo diseño del móvil: el tabulador no sale del diálogo.
+		if ( mobile && designing && event.key === 'Tab' ) {
+			const focusable = [
+				...rootRef.current.querySelectorAll(
+					'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+				),
+			].filter( ( node ) => ! node.disabled && node.offsetParent );
+			const first = focusable[ 0 ];
+			const last = focusable[ focusable.length - 1 ];
+			if ( event.shiftKey && event.target === first ) {
+				event.preventDefault();
+				last.focus();
+			} else if ( ! event.shiftKey && event.target === last ) {
+				event.preventDefault();
+				first.focus();
+			}
+			return;
+		}
 		if ( isTyping( event.target ) ) {
 			return;
 		}
@@ -711,10 +734,12 @@ export default function App( { data } ) {
 
 	return (
 		<div
+			ref={ rootRef }
 			className={ `camisama-customizer is-flow${
 				purchaseNode ? ' has-purchase-bar' : ''
-			}${ designing ? ' is-designing' : '' }` }
+			}${ designing ? ` is-designing is-sheet-${ sheet }` : '' }` }
 			role={ mobile && designing ? 'dialog' : undefined }
+			aria-modal={ mobile && designing ? 'true' : undefined }
 			aria-label={
 				mobile && designing
 					? __( 'Diseña tu prenda', 'camisama-customizer' )
@@ -853,7 +878,16 @@ export default function App( { data } ) {
 							)
 						);
 					} }
-				/>
+				>
+					{ ! elements.length && (
+						<p className="camisama-customizer__invite">
+							{ __(
+								'Elige un estampado, escribe tu frase o sube tu foto',
+								'camisama-customizer'
+							) }
+						</p>
+					) }
+				</FabricStage>
 				{ editKey && (
 					<div
 						className="camisama-customizer__restored"
@@ -927,166 +961,193 @@ export default function App( { data } ) {
 				{ message }
 			</p>
 
-			<div
-				className="camisama-customizer__zone-picker"
-				role="group"
-				aria-label={ __( 'Zona donde añadir', 'camisama-customizer' ) }
-			>
-				<span>{ __( 'Añadir en:', 'camisama-customizer' ) }</span>
-				{ viewZones.map( ( zone ) => (
-					<button
-						key={ zone.id }
-						type="button"
-						aria-pressed={ zone.id === activeZone?.id }
-						onClick={ () => setActiveZoneId( zone.id ) }
-					>
-						{ zone.label }
-					</button>
-				) ) }
-			</div>
+			{ /* Herramientas. En el modo diseño del móvil, una hoja bajo el lienzo con tres alturas;
+			en escritorio y en la ficha no cambia nada (style.scss: display: contents). */ }
+			<div className="camisama-customizer__sheet">
+				{ mobile && designing && (
+					<SheetHandle step={ sheet } onChange={ setSheet } />
+				) }
 
-			{ data.colors.length > 1 && (
-				<fieldset className="camisama-customizer__colors">
-					<legend>
-						{ __( 'Color de la prenda', 'camisama-customizer' ) }
-					</legend>
-					{ data.colors.map( ( item ) => (
-						<button
-							key={ item.slug }
-							type="button"
-							className="camisama-customizer__swatch"
-							style={ { '--swatch': item.hex ?? '#ffffff' } }
-							aria-pressed={ item.slug === color }
-							aria-label={ item.name }
-							title={ item.name }
-							onClick={ () => chooseColor( item.slug ) }
-						/>
-					) ) }
-				</fieldset>
-			) }
-
-			{ selected && (
-				<SelectionPanel
-					element={ selected }
-					zone={ zoneById( selected.zone ) }
-					resolution={ data.resolution }
-					onResize={ ( value ) => resize( selected, value ) }
-					onRotate={ ( angle ) =>
-						updateElement(
-							selected.id,
-							{ angle },
-							{ merge: true, key: `rotate-${ selected.id }` }
-						)
-					}
-					onCenter={ () => {
-						const zone = zoneById( selected.zone );
-						updateElement( selected.id, {
-							cx: zone.size_cm.w / 2,
-							cy: zone.size_cm.h / 2,
-						} );
-					} }
-					onDuplicate={ () =>
-						add( {
-							...selected,
-							id: newId(),
-							cx: selected.cx + 1,
-							cy: selected.cy + 1,
-						} )
-					}
-					onLayer={ ( direction ) =>
-						moveLayer( selected.id, direction )
-					}
-					onRemove={ () => remove( selected.id ) }
-				/>
-			) }
-
-			<div className="camisama-customizer__tools">
 				<div
-					className="camisama-customizer__tabs"
-					role="tablist"
+					className="camisama-customizer__zone-picker"
+					role="group"
 					aria-label={ __(
-						'Añadir al diseño',
+						'Zona donde añadir',
 						'camisama-customizer'
 					) }
 				>
-					{ TABS.map( ( item ) => (
+					<span>{ __( 'Añadir en:', 'camisama-customizer' ) }</span>
+					{ viewZones.map( ( zone ) => (
 						<button
-							key={ item.id }
-							id={ `camisama-tab-${ item.id }` }
+							key={ zone.id }
 							type="button"
-							role="tab"
-							aria-selected={ tab === item.id }
-							aria-controls={ `camisama-panel-${ item.id }` }
-							onClick={ () => setTab( item.id ) }
+							aria-pressed={ zone.id === activeZone?.id }
+							onClick={ () => setActiveZoneId( zone.id ) }
 						>
-							{ item.label }
+							{ zone.label }
 						</button>
 					) ) }
 				</div>
-				<div
-					id={ `camisama-panel-${ tab }` }
-					role="tabpanel"
-					aria-labelledby={ `camisama-tab-${ tab }` }
-				>
-					{ tab === 'designs' && (
-						<DesignsPanel
-							api={ data.api }
-							currency={ data.currency }
-							onAdd={ ( design ) =>
-								add( designElement( activeZone, design ) )
-							}
-						/>
-					) }
-					{ tab === 'text' && (
-						<TextPanel
-							fonts={ data.fonts }
-							selected={ selected }
-							garment={ garment?.hex }
-							onAdd={ ( style ) =>
-								add( textElement( activeZone, style ) )
-							}
-							onChange={ ( change ) =>
-								updateElement( selected.id, change, {
-									merge: true,
-									key: `text-${ selected.id }`,
-								} )
-							}
-						/>
-					) }
-					{ tab === 'image' && (
-						<UploadPanel
-							api={ data.api }
-							onAdd={ ( upload ) =>
-								add( imageElement( activeZone, upload ) )
-							}
-						/>
-					) }
-				</div>
-			</div>
 
-			{ viewElements.length > 0 && (
-				<section className="camisama-customizer__layers">
-					<h3>{ __( 'En esta vista', 'camisama-customizer' ) }</h3>
-					<ul>
-						{ [ ...viewElements ].reverse().map( ( element ) => (
-							<li key={ element.id }>
-								<button
-									type="button"
-									aria-pressed={ element.id === selectedId }
-									onClick={ () => select( element.id ) }
-								>
-									{ elementLabel( element ) }
-									<small>
-										{ zoneById( element.zone )?.label }
-									</small>
-								</button>
-							</li>
+				{ data.colors.length > 1 && (
+					<fieldset className="camisama-customizer__colors">
+						<legend>
+							{ __(
+								'Color de la prenda',
+								'camisama-customizer'
+							) }
+						</legend>
+						{ data.colors.map( ( item ) => (
+							<button
+								key={ item.slug }
+								type="button"
+								className="camisama-customizer__swatch"
+								style={ { '--swatch': item.hex ?? '#ffffff' } }
+								aria-pressed={ item.slug === color }
+								aria-label={ item.name }
+								title={ item.name }
+								onClick={ () => chooseColor( item.slug ) }
+							/>
 						) ) }
-					</ul>
-				</section>
-			) }
+					</fieldset>
+				) }
 
-			{ purchaseNode ? createPortal( purchase, purchaseNode ) : purchase }
+				{ selected && (
+					<SelectionPanel
+						element={ selected }
+						zone={ zoneById( selected.zone ) }
+						resolution={ data.resolution }
+						onResize={ ( value ) => resize( selected, value ) }
+						onRotate={ ( angle ) =>
+							updateElement(
+								selected.id,
+								{ angle },
+								{ merge: true, key: `rotate-${ selected.id }` }
+							)
+						}
+						onCenter={ () => {
+							const zone = zoneById( selected.zone );
+							updateElement( selected.id, {
+								cx: zone.size_cm.w / 2,
+								cy: zone.size_cm.h / 2,
+							} );
+						} }
+						onDuplicate={ () =>
+							add( {
+								...selected,
+								id: newId(),
+								cx: selected.cx + 1,
+								cy: selected.cy + 1,
+							} )
+						}
+						onLayer={ ( direction ) =>
+							moveLayer( selected.id, direction )
+						}
+						onRemove={ () => remove( selected.id ) }
+					/>
+				) }
+
+				<div className="camisama-customizer__tools">
+					<div
+						className="camisama-customizer__tabs"
+						role="tablist"
+						aria-label={ __(
+							'Añadir al diseño',
+							'camisama-customizer'
+						) }
+					>
+						{ TABS.map( ( item ) => (
+							<button
+								key={ item.id }
+								id={ `camisama-tab-${ item.id }` }
+								type="button"
+								role="tab"
+								aria-selected={ tab === item.id }
+								aria-controls={ `camisama-panel-${ item.id }` }
+								onClick={ () => setTab( item.id ) }
+							>
+								{ item.label }
+							</button>
+						) ) }
+					</div>
+					<div
+						id={ `camisama-panel-${ tab }` }
+						role="tabpanel"
+						aria-labelledby={ `camisama-tab-${ tab }` }
+					>
+						{ tab === 'designs' && (
+							<DesignsPanel
+								api={ data.api }
+								currency={ data.currency }
+								onAdd={ ( design ) =>
+									add( designElement( activeZone, design ) )
+								}
+							/>
+						) }
+						{ tab === 'text' && (
+							<TextPanel
+								fonts={ data.fonts }
+								selected={ selected }
+								garment={ garment?.hex }
+								onAdd={ ( style ) =>
+									add( textElement( activeZone, style ) )
+								}
+								onChange={ ( change ) =>
+									updateElement( selected.id, change, {
+										merge: true,
+										key: `text-${ selected.id }`,
+									} )
+								}
+							/>
+						) }
+						{ tab === 'image' && (
+							<UploadPanel
+								api={ data.api }
+								onAdd={ ( upload ) =>
+									add( imageElement( activeZone, upload ) )
+								}
+							/>
+						) }
+					</div>
+				</div>
+
+				{ viewElements.length > 0 && (
+					<section className="camisama-customizer__layers">
+						<h3>
+							{ __( 'En esta vista', 'camisama-customizer' ) }
+						</h3>
+						<ul>
+							{ [ ...viewElements ]
+								.reverse()
+								.map( ( element ) => (
+									<li key={ element.id }>
+										<button
+											type="button"
+											aria-pressed={
+												element.id === selectedId
+											}
+											onClick={ () =>
+												select( element.id )
+											}
+										>
+											{ elementLabel( element ) }
+											<small>
+												{
+													zoneById( element.zone )
+														?.label
+												}
+											</small>
+										</button>
+									</li>
+								) ) }
+						</ul>
+					</section>
+				) }
+
+				{ purchaseNode
+					? createPortal( purchase, purchaseNode )
+					: purchase }
+			</div>
 
 			{ purchaseNode && (
 				<PurchaseBar
