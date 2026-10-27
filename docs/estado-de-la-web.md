@@ -58,10 +58,11 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Editar el diseño desde el carrito**: "Editar diseño" en cada línea (carrito, minicarrito
       y pago; también el nombre y la miniatura) abre el editor con ese diseño, su talla y su
       cantidad; "Guardar cambios" sustituye la línea.
-- [ ] **Plan del flujo de tres pasos en el móvil** (prenda → diseño a pantalla completa → talla y
-      pago) con `/impeccable shape`, antes de tocar el lienzo y el texto.
-- [ ] **Lienzo y herramientas** (P1): ampliar la zona activa al seleccionar; lienzo fijo en
-      escritorio.
+- [x] **Plan del flujo de tres pasos en el móvil**: aprobado en [flujo-movil.md](flujo-movil.md)
+      (ficha → diseño a pantalla completa → talla y pago).
+- [ ] **Construir el flujo móvil** por tandas (ver flujo-movil.md). Incluye el P1 "lienzo y
+      herramientas" en el móvil (acercar la zona al seleccionar) y la talla sin preselección.
+- [ ] **Lienzo fijo en escritorio** (resto del P1 "lienzo y herramientas").
 - [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
       nuevo no caiga encima de lo anterior.
 - [ ] **Escalones de precio** (P2): decir qué es "Grande" y colocar los estampados en Mediano.
@@ -84,6 +85,7 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Fotos reales** de las prendas en lugar de las maquetas generadas; con ellas, encuadrar
       mejor la prenda en el lienzo (en el móvil ocupa la mitad).
 - [ ] **Logotipo definitivo** (el actual es provisional).
+- [ ] **Medidas de las tallas** por modelo (ancho y largo en cm) para la guía "¿Qué talla?".
 
 ### Resto de la web
 
