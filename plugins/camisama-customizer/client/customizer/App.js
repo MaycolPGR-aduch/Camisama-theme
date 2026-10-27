@@ -59,14 +59,17 @@ const SENT_FIELDS = [
 /**
  * Campos ocultos que acompañan al producto al añadirlo al carrito.
  *
- * @param {Object} data     Datos del personalizador.
- * @param {Array}  elements Diseño.
- * @param {string} color    Color de la prenda.
- * @return {Promise<Object>} { camisama_design, camisama_previews } o {} si no hay diseño.
+ * @param {Object}  data     Datos del personalizador.
+ * @param {Array}   elements Diseño.
+ * @param {string}  color    Color de la prenda.
+ * @param {?string} replace  Línea del carrito que se está editando (se sustituye), o null.
+ * @return {Promise<Object>} { camisama_design, camisama_previews, camisama_replace }; sin diseño,
+ *                           solo camisama_replace (si se edita) o nada.
  */
-async function cartFields( data, elements, color ) {
+async function cartFields( data, elements, color, replace ) {
+	const target = replace ? { camisama_replace: replace } : {};
 	if ( ! elements.length ) {
-		return {};
+		return target;
 	}
 
 	const previews = {};
@@ -99,7 +102,42 @@ async function cartFields( data, elements, color ) {
 			),
 		} ),
 		camisama_previews: JSON.stringify( previews ),
+		...target,
 	};
+}
+
+/**
+ * Estado inicial al editar una línea del carrito: su diseño, en la vista de su primer elemento.
+ *
+ * @param {Object} edit Línea (render.php: CartEdit::current).
+ * @param {Object} data Datos del personalizador.
+ * @return {Object} { elements, color, viewId, zoneId }.
+ */
+function fromCart( edit, data ) {
+	const zone = data.zones.find(
+		( item ) => item.id === edit.elements[ 0 ]?.zone
+	);
+	return {
+		elements: edit.elements,
+		color: edit.color,
+		viewId: zone?.view ?? null,
+		zoneId: zone?.id ?? null,
+	};
+}
+
+/**
+ * Cambia (o quita) ?camisama_edit= en la barra de direcciones, para que recargar abra lo mismo.
+ *
+ * @param {?string} key Línea que se edita, o null.
+ */
+function setEditParam( key ) {
+	const url = new window.URL( window.location.href );
+	if ( key ) {
+		url.searchParams.set( 'camisama_edit', key );
+	} else {
+		url.searchParams.delete( 'camisama_edit' );
+	}
+	window.history.replaceState( window.history.state, '', url );
 }
 
 const TABS = [
@@ -135,8 +173,15 @@ const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
 
 export default function App( { data } ) {
-	// Diseño que se dejó a medias en este dispositivo (draft.js), o null.
-	const [ restored ] = useState( () => loadDraft( data.product_id, data ) );
+	// Diseño de partida: la línea del carrito que se edita o, si no, el que se dejó a medias en
+	// este dispositivo (draft.js). Null si no hay ninguno.
+	const [ restored ] = useState( () =>
+		data.edit
+			? fromCart( data.edit, data )
+			: loadDraft( data.product_id, data )
+	);
+	// Línea del carrito que se está editando: al guardar, el diseño la sustituye.
+	const [ editKey, setEditKey ] = useState( data.edit?.key ?? null );
 	const [ history, dispatch ] = useReducer(
 		historyReducer,
 		restored,
@@ -155,7 +200,7 @@ export default function App( { data } ) {
 			data.zones.find( ( zone ) => zone.view === data.views[ 0 ]?.id )?.id
 	);
 	const [ restoredNotice, setRestoredNotice ] = useState(
-		Boolean( restored )
+		Boolean( restored ) && ! data.edit
 	);
 	// Diseño tal como se añadió al carrito: mientras no cambie, se da por comprado.
 	const [ addedDesign, setAddedDesign ] = useState( null );
@@ -172,7 +217,7 @@ export default function App( { data } ) {
 	const bridge = useRef( null );
 	// El puente se crea una vez; al enviar necesita el diseño y el color de ese momento.
 	const latest = useRef( {} );
-	latest.current = { elements, color };
+	latest.current = { elements, color, editKey };
 
 	useEffect( () => {
 		bridge.current = connectVariationForm( data.product_id, data.cart, {
@@ -185,12 +230,18 @@ export default function App( { data } ) {
 				return cartFields(
 					data,
 					latest.current.elements,
-					latest.current.color
+					latest.current.color,
+					latest.current.editKey
 				);
 			},
-			onAdded: () => {
+			onAdded: ( key ) => {
 				setAddedDesign( latest.current.elements );
 				setRestoredNotice( false );
+				// Guardado al editar: la línea nueva es la que se sigue editando.
+				if ( latest.current.editKey && key ) {
+					setEditKey( key );
+					setEditParam( key );
+				}
 			},
 			onError: ( error ) => {
 				setSubmitError(
@@ -212,11 +263,21 @@ export default function App( { data } ) {
 		if ( restored?.color ) {
 			bridge.current.setColor( restored.color );
 		}
+		if ( data.edit ) {
+			bridge.current.prefill( data.edit.attributes, data.edit.quantity );
+			bridge.current.setLabel(
+				__( 'Guardar cambios', 'camisama-customizer' )
+			);
+		}
 		return () => bridge.current.disconnect();
 	}, [ data, restored ] );
 
-	// Borrador: se guarda poco después de cada cambio (no en cada paso de un arrastre).
+	// Borrador: se guarda poco después de cada cambio (no en cada paso de un arrastre). Al editar
+	// una línea del carrito no: salir sin guardar es descartar los cambios.
 	useEffect( () => {
+		if ( editKey ) {
+			return;
+		}
 		const timer = setTimeout(
 			() =>
 				saveDraft( data.product_id, {
@@ -229,7 +290,15 @@ export default function App( { data } ) {
 			300
 		);
 		return () => clearTimeout( timer );
-	}, [ data.product_id, elements, color, viewId, activeZoneId, inCart ] );
+	}, [
+		data.product_id,
+		elements,
+		color,
+		viewId,
+		activeZoneId,
+		inCart,
+		editKey,
+	] );
 
 	const zoneById = ( id ) => data.zones.find( ( zone ) => zone.id === id );
 	const view = data.views.find( ( item ) => item.id === viewId );
@@ -432,6 +501,12 @@ export default function App( { data } ) {
 		setSelectedId( null );
 		setRestoredNotice( false );
 		setAddedDesign( null );
+		// Un diseño nuevo ya no sustituye a la línea que se editaba.
+		if ( editKey ) {
+			setEditKey( null );
+			setEditParam( null );
+			bridge.current.setLabel( null );
+		}
 		commit( () => [] );
 	};
 
@@ -453,10 +528,15 @@ export default function App( { data } ) {
 			{ inCart && (
 				<div className="camisama-customizer__added" role="status">
 					<p>
-						{ __(
-							'Tu diseño está en el carrito.',
-							'camisama-customizer'
-						) }
+						{ editKey
+							? __(
+									'Cambios guardados en tu carrito.',
+									'camisama-customizer'
+								)
+							: __(
+									'Tu diseño está en el carrito.',
+									'camisama-customizer'
+								) }
 					</p>
 					<a href={ data.cart.url }>
 						{ __( 'Ver carrito', 'camisama-customizer' ) }
@@ -624,6 +704,22 @@ export default function App( { data } ) {
 						);
 					} }
 				/>
+				{ editKey && (
+					<div
+						className="camisama-customizer__restored"
+						role="status"
+					>
+						<p>
+							{ __(
+								'Estás editando un diseño de tu carrito: al guardar, lo reemplazas.',
+								'camisama-customizer'
+							) }
+						</p>
+						<a href={ data.cart.url }>
+							{ __( 'Volver al carrito', 'camisama-customizer' ) }
+						</a>
+					</div>
+				) }
 				{ restoredNotice && ! history.past.length && (
 					<div
 						className="camisama-customizer__restored"
@@ -850,6 +946,7 @@ export default function App( { data } ) {
 					invalid={ Boolean( priced.error ) }
 					busy={ busy }
 					inCart={ inCart }
+					editing={ Boolean( editKey ) }
 					cartUrl={ data.cart.url }
 					onBuy={ () => bridge.current.buy() }
 					onReview={ () =>

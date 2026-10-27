@@ -55,8 +55,9 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **No perder el diseño**: borrador en el dispositivo (7 días, por producto) que se recupera
       al volver, y añadir al carrito sin recargar, con el minicarrito abierto con la miniatura y
       "Tu diseño está en el carrito" junto al botón.
-- [ ] **Editar el diseño desde el carrito** (enlace en cada línea que abra el editor con ese
-      diseño y lo sustituya al guardar).
+- [x] **Editar el diseño desde el carrito**: "Editar diseño" en cada línea (carrito, minicarrito
+      y pago; también el nombre y la miniatura) abre el editor con ese diseño, su talla y su
+      cantidad; "Guardar cambios" sustituye la línea.
 - [ ] **Plan del flujo de tres pasos en el móvil** (prenda → diseño a pantalla completa → talla y
       pago) con `/impeccable shape`, antes de tocar el lienzo y el texto.
 - [ ] **Lienzo y herramientas** (P1): ampliar la zona activa al seleccionar; lienzo fijo en
@@ -94,7 +95,7 @@ local, 45 pruebas de JS y lint limpio.
 ### Fase 5: funciones del personalizador
 
 - [ ] Guardar y compartir diseños.
-- [ ] Editar el diseño desde el carrito.
+- [x] Editar el diseño desde el carrito (hecho antes, ver la ficha de producto).
 - [ ] Zoom en el lienzo del móvil.
 - [ ] Quitar el fondo de las fotos de los clientes.
 - [ ] Descargar en un ZIP los archivos de impresión de un pedido.

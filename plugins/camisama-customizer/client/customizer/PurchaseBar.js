@@ -15,6 +15,7 @@ export default function PurchaseBar( {
 	invalid,
 	busy,
 	inCart,
+	editing,
 	cartUrl,
 	onBuy,
 	onReview,
@@ -32,7 +33,9 @@ export default function PurchaseBar( {
 		return () => observer.disconnect();
 	}, [ target ] );
 
-	let action = __( 'Añadir al carrito', 'camisama-customizer' );
+	let action = editing
+		? __( 'Guardar cambios', 'camisama-customizer' )
+		: __( 'Añadir al carrito', 'camisama-customizer' );
 	if ( busy ) {
 		action = __( 'Preparando tu diseño…', 'camisama-customizer' );
 	} else if ( invalid ) {

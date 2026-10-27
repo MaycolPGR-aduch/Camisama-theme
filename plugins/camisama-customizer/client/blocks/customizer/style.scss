@@ -484,6 +484,11 @@ $warning: #8a5a00;
 			margin: 0;
 		}
 
+		a {
+			color: inherit;
+			font-weight: 600;
+		}
+
 		button {
 
 			@include pill;
@@ -505,11 +510,6 @@ $warning: #8a5a00;
 
 		p {
 			flex-basis: 100%;
-			font-weight: 600;
-		}
-
-		a {
-			color: inherit;
 			font-weight: 600;
 		}
 	}

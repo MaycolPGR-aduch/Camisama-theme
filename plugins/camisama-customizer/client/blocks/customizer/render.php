@@ -9,6 +9,7 @@
  * @package Camisama\Customizer
  */
 
+use Camisama\Customizer\Cart\CartEdit;
 use Camisama\Customizer\Products\CustomizerData;
 
 defined( 'ABSPATH' ) || exit;
@@ -30,6 +31,12 @@ $camisama_data       = CustomizerData::create()->for_product( $camisama_product_
 if ( null === $camisama_data ) {
 	echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bloques interiores ya renderizados por WordPress.
 	return;
+}
+
+// Editar desde el carrito (?camisama_edit=): el diseño de esa línea, su talla y su cantidad.
+$camisama_edit = CartEdit::current( $camisama_product_id );
+if ( null !== $camisama_edit ) {
+	$camisama_data['edit'] = $camisama_edit;
 }
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes( array( 'data-product-id' => (string) $camisama_product_id ) ) ); ?>>

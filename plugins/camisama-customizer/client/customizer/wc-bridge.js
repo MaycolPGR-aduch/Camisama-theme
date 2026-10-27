@@ -14,17 +14,21 @@ const ERROR_NOTICES =
 	'.woocommerce-error li, .wc-block-components-notice-banner.is-error .wc-block-components-notice-banner__content';
 
 /**
- * Unidades en el carrito según la Store API.
+ * Estado del carrito según la Store API: unidades y claves de sus líneas.
  *
  * @param {string} api URL de wc/store/v1/cart.
- * @return {Promise<number>} items_count.
+ * @return {Promise<{count: number, keys: string[]}>} Carrito.
  */
-async function cartCount( api ) {
+async function cartState( api ) {
 	const response = await fetch( api, { credentials: 'same-origin' } );
 	if ( ! response.ok ) {
 		throw new Error( `Store API ${ response.status }` );
 	}
-	return ( await response.json() ).items_count;
+	const cart = await response.json();
+	return {
+		count: cart.items_count,
+		keys: cart.items.map( ( item ) => item.key ),
+	};
 }
 
 /**
@@ -32,12 +36,17 @@ async function cartCount( api ) {
  * la página y perder el editor. El resultado se comprueba en la Store API (¿creció el carrito?)
  * y no en el HTML, que solo se lee para mostrar el motivo si WooCommerce lo rechaza.
  *
- * @param {HTMLFormElement}    form   Formulario de variaciones.
- * @param {?HTMLButtonElement} button Botón de envío (en productos simples lleva add-to-cart).
- * @param {string}             api    URL de wc/store/v1/cart.
+ * Al reemplazar una línea (editar desde el carrito) el número de unidades puede no cambiar:
+ * entonces vale que WooCommerce no haya dado error.
+ *
+ * @param {HTMLFormElement}    form    Formulario de variaciones.
+ * @param {?HTMLButtonElement} button  Botón de envío (en productos simples lleva add-to-cart).
+ * @param {string}             api     URL de wc/store/v1/cart.
+ * @param {?string}            replace Clave de la línea que se sustituye, o null.
+ * @return {Promise<?string>} Clave de la línea con el diseño (si se puede saber).
  */
-async function addToCart( form, button, api ) {
-	const before = await cartCount( api );
+async function addToCart( form, button, api, replace ) {
+	const before = await cartState( api );
 	const body = new window.FormData( form );
 	if ( button?.name && ! body.has( button.name ) ) {
 		body.append( button.name, button.value );
@@ -48,13 +57,15 @@ async function addToCart( form, button, api ) {
 		credentials: 'same-origin',
 	} );
 	const html = await response.text();
-	if ( ( await cartCount( api ) ) > before ) {
-		return;
-	}
 	const reason = new window.DOMParser()
 		.parseFromString( html, 'text/html' )
 		.querySelector( ERROR_NOTICES )
 		?.textContent.trim();
+	const after = await cartState( api );
+	const added = after.keys.find( ( key ) => ! before.keys.includes( key ) );
+	if ( after.count > before.count || ( replace && ! reason ) ) {
+		return added ?? ( after.keys.includes( replace ) ? replace : null );
+	}
 	const error = new Error(
 		reason ||
 			__(
@@ -79,9 +90,10 @@ async function addToCart( form, button, api ) {
  * @param {Function} handlers.onBusy    Recibe true mientras se prepara el envío al carrito.
  * @param {Function} handlers.onSubmit  Antes de enviar al carrito: devuelve (async) los campos
  *                                      ocultos que acompañan al pedido ({ nombre: valor }).
- * @param {Function} handlers.onAdded   Se llama cuando el diseño ya está en el carrito.
+ * @param {Function} handlers.onAdded   Se llama cuando el diseño ya está en el carrito, con la
+ *                                      clave de su línea si se puede saber.
  * @param {Function} handlers.onError   Recibe el error si algo falla (el diseño no se añadió).
- * @return {Object} Control del puente: setColor, buy, disconnect y summaryNode (el hueco del
+ * @return {Object} Control del puente: prefill, setLabel, setColor, buy, disconnect y summaryNode (el hueco del
  *                  resumen de precio dentro del formulario, o null).
  */
 export function connectVariationForm(
@@ -97,6 +109,8 @@ export function connectVariationForm(
 
 	if ( ! $ || ! form ) {
 		return {
+			prefill: () => {},
+			setLabel: () => {},
 			setColor: () => {},
 			buy: () => {},
 			disconnect: () => {},
@@ -107,6 +121,7 @@ export function connectVariationForm(
 	const $form = $( form );
 	const select = form.querySelector( COLOR_FIELD );
 	const button = form.querySelector( '.single_add_to_cart_button' );
+	const defaultLabel = button?.textContent;
 	const options = [ ...form.querySelectorAll( 'table.variations select' ) ];
 
 	// Hueco para el resumen del precio justo encima de cantidad y botón: el total queda pegado a
@@ -197,7 +212,12 @@ export function connectVariationForm(
 				}
 				input.value = value;
 			}
-			await addToCart( form, button, cart.api );
+			const key = await addToCart(
+				form,
+				button,
+				cart.api,
+				fields.camisama_replace || null
+			);
 			if ( cart.redirect ) {
 				// La tienda pide ir al carrito tras añadir: se respeta.
 				window.location.assign( cart.url );
@@ -216,7 +236,7 @@ export function connectVariationForm(
 					detail: { preserveCartData: false },
 				} )
 			);
-			onAdded();
+			onAdded( key );
 		} catch ( error ) {
 			onError( error );
 		} finally {
@@ -231,6 +251,27 @@ export function connectVariationForm(
 	form.addEventListener( 'submit', submit );
 
 	return {
+		// Editar desde el carrito: la talla (y demás opciones) y la cantidad de esa línea.
+		prefill( attributes, quantity ) {
+			for ( const [ name, value ] of Object.entries( attributes ) ) {
+				const field = form.querySelector(
+					`select[name="${ window.CSS.escape( name ) }"]`
+				);
+				if ( field && value && field.value !== value ) {
+					$( field ).val( value ).trigger( 'change' );
+				}
+			}
+			const qty = form.querySelector( 'input.qty' );
+			if ( qty && quantity ) {
+				qty.value = String( quantity );
+			}
+		},
+		// Texto del botón ("Guardar cambios" al editar); sin texto, vuelve al de WooCommerce.
+		setLabel( text ) {
+			if ( button ) {
+				button.textContent = text || defaultLabel;
+			}
+		},
 		setColor( slug ) {
 			color = slug;
 			if ( select && select.value !== slug ) {

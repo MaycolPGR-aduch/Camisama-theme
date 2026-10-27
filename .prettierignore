@@ -1,0 +1,6 @@
+# Código de terceros y generado: ni se formatea ni se revisa.
+.claude/
+vendor/
+node_modules/
+plugins/*/build/
+plugins/*/vendor/

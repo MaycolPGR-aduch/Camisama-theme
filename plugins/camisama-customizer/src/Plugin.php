@@ -12,6 +12,7 @@ namespace Camisama\Customizer;
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use Camisama\Customizer\Admin\PriceSettingsPage;
 use Camisama\Customizer\Admin\ProductConfigMetaBox;
+use Camisama\Customizer\Cart\CartEdit;
 use Camisama\Customizer\Cart\CartIntegration;
 use Camisama\Customizer\Cart\OrderDisplay;
 use Camisama\Customizer\Cart\ProductionPage;
@@ -102,6 +103,7 @@ final class Plugin {
 		$uploads    = new UploadStore();
 		$production = new ProductionStore();
 		( new CartIntegration( $configs, $prices, $uploads, new PreviewStore( $uploads ) ) )->register();
+		( new CartEdit() )->register();
 		( new OrderDisplay() )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
