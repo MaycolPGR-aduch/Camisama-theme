@@ -90,13 +90,14 @@ async function addToCart( form, button, api, replace ) {
  * @param {Function} handlers.onAdded  Se llama cuando el diseño ya está en el carrito, con la
  *                                     clave de su línea si se puede saber.
  * @param {Function} handlers.onError  Recibe el error si algo falla (el diseño no se añadió).
- * @return {Object} Control del puente: prefill, setLabel, setColor, disconnect y summaryNode
- *                  (el hueco del resumen de precio dentro del formulario, o null).
+ * @param {Function} handlers.onBusy   Recibe true mientras se prepara y envía el diseño.
+ * @return {Object} Control del puente: options, choose, buy, prefill, setLabel, setColor, disconnect y
+ *                  summaryNode (el hueco del resumen de precio dentro del formulario, o null).
  */
 export function connectVariationForm(
 	productId,
 	cart,
-	{ onColor, onPrice, onSubmit, onAdded, onError }
+	{ onColor, onPrice, onSubmit, onAdded, onError, onBusy }
 ) {
 	const $ = window.jQuery;
 	const form =
@@ -106,6 +107,9 @@ export function connectVariationForm(
 
 	if ( ! $ || ! form ) {
 		return {
+			options: () => [],
+			choose: () => {},
+			buy: () => {},
 			prefill: () => {},
 			setLabel: () => {},
 			setColor: () => {},
@@ -118,6 +122,17 @@ export function connectVariationForm(
 	const select = form.querySelector( COLOR_FIELD );
 	const button = form.querySelector( '.single_add_to_cart_button' );
 	const defaultLabel = button?.textContent;
+	const quantityField = form.querySelector( 'input.qty' );
+
+	// Elige una opción del formulario como si la eligiera el cliente (WooCommerce busca la variante).
+	const choose = ( name, value ) => {
+		const field = form.querySelector(
+			`select[name="${ window.CSS.escape( name ) }"]`
+		);
+		if ( field && field.value !== value ) {
+			$( field ).val( value ).trigger( 'change' );
+		}
+	};
 
 	// Hueco para el resumen del precio justo encima de cantidad y botón: el total queda pegado a
 	// "Añadir al carrito" y sustituye al precio de la variante, que solo cuenta la prenda lisa.
@@ -156,6 +171,7 @@ export function connectVariationForm(
 		}
 
 		form.dataset.camisama = 'busy';
+		onBusy?.( true );
 		// Las vistas previas tardan un momento: el botón dice qué está pasando.
 		const label = button?.textContent;
 		button?.classList.add( 'loading' );
@@ -206,6 +222,7 @@ export function connectVariationForm(
 			onError( error );
 		} finally {
 			delete form.dataset.camisama;
+			onBusy?.( false );
 			button?.classList.remove( 'loading' );
 			if ( button && label ) {
 				button.textContent = label;
@@ -215,19 +232,45 @@ export function connectVariationForm(
 	form.addEventListener( 'submit', submit );
 
 	return {
+		// Opciones del producto aparte del color (la talla), para elegirlas fuera del formulario.
+		options() {
+			return [ ...form.querySelectorAll( 'table.variations select' ) ]
+				.filter( ( field ) => field !== select )
+				.map( ( field ) => ( {
+					name: field.name,
+					label:
+						form
+							.querySelector( `label[for="${ field.id }"]` )
+							?.textContent.trim() ?? field.name,
+					values: [ ...field.options ]
+						.filter( ( option ) => option.value )
+						.map( ( option ) => ( {
+							value: option.value,
+							text: option.text,
+						} ) ),
+				} ) );
+		},
+		choose,
+		// Paso de talla y pago del móvil: elige las opciones y la cantidad y envía el formulario
+		// (que adjunta el diseño y lo añade sin recargar, como el botón de WooCommerce).
+		buy( choices, quantity ) {
+			for ( const [ name, value ] of Object.entries( choices ) ) {
+				choose( name, value );
+			}
+			if ( quantityField ) {
+				quantityField.value = String( quantity );
+			}
+			form.requestSubmit( button ?? undefined );
+		},
 		// Editar desde el carrito: la talla (y demás opciones) y la cantidad de esa línea.
 		prefill( attributes, quantity ) {
 			for ( const [ name, value ] of Object.entries( attributes ) ) {
-				const field = form.querySelector(
-					`select[name="${ window.CSS.escape( name ) }"]`
-				);
-				if ( field && value && field.value !== value ) {
-					$( field ).val( value ).trigger( 'change' );
+				if ( value ) {
+					choose( name, value );
 				}
 			}
-			const qty = form.querySelector( 'input.qty' );
-			if ( qty && quantity ) {
-				qty.value = String( quantity );
+			if ( quantityField && quantity ) {
+				quantityField.value = String( quantity );
 			}
 		},
 		// Texto del botón ("Guardar cambios" al editar); sin texto, vuelve al de WooCommerce.

@@ -10,6 +10,15 @@ conviene recordar.
 ## 2026-10-27
 
 ### Añadido
+- **Flujo móvil, tanda 4: talla y pago** en una pantalla propia: miniaturas del diseño (o de la
+  prenda lisa), "Editar diseño", desglose del precio, **talla en botones sin ninguna marcada**,
+  guía "¿Qué talla?" con medidas de referencia, cantidad y "Añadir al carrito" (o "Guardar
+  cambios" al editar desde el carrito). Sin talla, "Elige una talla." en la página, sin el
+  `alert()` del navegador.
+- **Medidas de talla de referencia** (ancho de pecho y largo): adulto S 47/69, M 50/72, L 53/74,
+  XL 56/76, XXL 59/78; niños 4 32/45, 6 35/49, 8 38/53, 10 41/57, 12 44/61. Cada producto puede
+  tener las suyas (`_camisama_size_guide`) y la tienda puede cambiarlas con el filtro
+  `camisama_size_guide`.
 - **Flujo móvil, tanda 3** ([docs/flujo-movil.md](docs/flujo-movil.md)): al seleccionar un
   elemento en el modo diseño, el lienzo se acerca a su zona (hasta ×4 en mangas y nuca, nítido y
   con el arrastre en cm correctos) y la hoja muestra solo sus ajustes con "Listo"; si es un texto,

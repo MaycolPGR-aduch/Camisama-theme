@@ -1,33 +1,16 @@
 /**
  * Paso 1 del flujo móvil (docs/flujo-movil.md), junto al título del producto: el precio de
- * partida y la entrada al editor. El formulario de compra de WooCommerce queda reservado para
- * el paso de talla y pago, que se abre con la acción secundaria o desde el editor.
+ * partida y la entrada al editor o, con la acción secundaria, al paso de talla y pago.
  */
 import { __ } from '@wordpress/i18n';
 
 export default function FlowEntry( {
 	price,
 	hasDesign,
-	buying,
 	onDesign,
 	onBuy,
 	openRef,
 } ) {
-	if ( buying ) {
-		return (
-			<button
-				type="button"
-				className="camisama-customizer__secondary"
-				ref={ openRef }
-				onClick={ onDesign }
-			>
-				{ hasDesign
-					? __( 'Editar diseño', 'camisama-customizer' )
-					: __( 'Personalizar', 'camisama-customizer' ) }
-			</button>
-		);
-	}
-
 	return (
 		<>
 			<p className="camisama-customizer__from">

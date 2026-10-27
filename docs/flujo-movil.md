@@ -84,6 +84,11 @@ cerca.
    ajustes quedan más arriba en la hoja, fuera de la vista.
 3. **Hecha.** Al seleccionar, el lienzo se acerca a la zona del elemento (zoom de Fabric, hasta ×4)
    y la hoja muestra solo sus ajustes con "Listo"; si es un texto, también el panel de texto.
-4. Paso 3: talla en botones sin preselección, cantidad, desglose y miniaturas. Guía "¿Qué
-   talla?" con medidas de referencia por defecto, editables después (decisión del 27 de octubre).
+4. **Hecha.** Paso 3 en pantalla propia (BuyStep): miniaturas del diseño (o la prenda lisa),
+   "Editar diseño", desglose, talla en botones sin preselección (la M por defecto de WooCommerce
+   se quita al entrar), guía "¿Qué talla?" con medidas de referencia (Products/SizeGuide.php,
+   editables por producto con el meta _camisama_size_guide o el filtro camisama_size_guide),
+   cantidad y "Añadir al carrito" / "Guardar cambios"; sin talla, mensaje en la página. El cajón
+   del minicarrito se abre encima al añadir. Del diseño a la talla (y al revés) se sustituye la
+   entrada del historial: "atrás" vuelve a la ficha.
 5. Repaso (`/impeccable polish`) y crítica nueva para comparar con el 25/40.

@@ -61,15 +61,18 @@ local, 45 pruebas de JS y lint limpio.
       cantidad; "Guardar cambios" sustituye la línea.
 - [x] **Plan del flujo de tres pasos en el móvil**: aprobado en [flujo-movil.md](flujo-movil.md)
       (ficha → diseño a pantalla completa → talla y pago).
-- [ ] **Construir el flujo móvil** por tandas (ver flujo-movil.md). Incluye el P1 "lienzo y
-      herramientas" en el móvil (acercar la zona al seleccionar) y la talla sin preselección.
+- [ ] **Construir el flujo móvil** por tandas (ver flujo-movil.md): tandas 1 a 4 hechas (ficha,
+      modo diseño con hoja, acercar la zona al seleccionar, paso de talla y pago). Falta la 5:
+      repaso y crítica nueva.
 - [ ] **Lienzo fijo en escritorio** (resto del P1 "lienzo y herramientas").
 - [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
       nuevo no caiga encima de lo anterior.
 - [ ] **Escalones de precio** (P2): decir qué es "Grande" y colocar los estampados en Mediano.
-- [ ] **Talla sin preselección y guía de tallas** (P2): hoy llega elegida la M. Chips de talla,
-      "¿Qué talla?" con medidas en cm y mensaje en línea en lugar del `alert()` de WooCommerce.
-      Quitar el desplegable de color duplicado (los círculos del editor ya lo resuelven).
+- [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
+      marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
+      `alert()`, en el paso de talla y pago.
+- [ ] **Lo mismo en escritorio**: allí sigue el formulario de WooCommerce con la M por defecto, el
+      desplegable de color duplicado y el `alert()`.
 - [ ] **Etiqueta del carrito**: dice "Recargo de estampado" cuando es la impresión por zonas.
 - [ ] **Jerga del editor**: "Traer adelante / Enviar atrás", "Añadir en:", y los escalones de
       precio ("Mediano", "Grande") sin explicar.

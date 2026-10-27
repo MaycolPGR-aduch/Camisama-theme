@@ -100,6 +100,8 @@ final class CustomizerData {
 				'url'      => esc_url_raw( wc_get_cart_url() ),
 				'redirect' => 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ),
 			),
+			// Medidas de la prenda por talla para "¿Qué talla?" (paso de talla y pago).
+			'size_guide'  => SizeGuide::for_product( $product_id ),
 			'resolution'  => array(
 				'target_dpi' => PrintResolution::TARGET_DPI,
 				'min_dpi'    => PrintResolution::MIN_ACCEPTABLE_DPI,
