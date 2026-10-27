@@ -44,6 +44,7 @@ export default function SelectionPanel( {
 	onDuplicate,
 	onLayer,
 	onRemove,
+	onDone,
 } ) {
 	const isText = element.kind === 'text';
 	const maxSize = isText
@@ -58,7 +59,19 @@ export default function SelectionPanel( {
 			className="camisama-customizer__selection"
 			aria-label={ __( 'Elemento seleccionado', 'camisama-customizer' ) }
 		>
-			<h3>{ elementLabel( element ) }</h3>
+			{ /* "Listo" solo en el modo diseño del móvil: suelta el elemento y vuelve a las herramientas. */ }
+			<div className="camisama-customizer__selection-head">
+				<h3>{ elementLabel( element ) }</h3>
+				{ onDone && (
+					<button
+						type="button"
+						className="camisama-customizer__done"
+						onClick={ onDone }
+					>
+						{ __( 'Listo', 'camisama-customizer' ) }
+					</button>
+				) }
+			</div>
 
 			<div className="camisama-customizer__field">
 				<label htmlFor="camisama-size">

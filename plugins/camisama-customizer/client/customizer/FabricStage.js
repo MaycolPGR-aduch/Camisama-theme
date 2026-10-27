@@ -5,11 +5,47 @@
  * cliente mueve, escala o gira algo, devuelve la nueva geometría en cm (onTransform). Cada objeto
  * queda recortado a su zona y no puede salirse de ella.
  */
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { Canvas, FabricImage } from 'fabric';
 
 import { fitsInside, fromCanvas, pushInside, zoneBox } from './geometry';
 import { TEXT_BASE, applyElement, createObject, snapshot } from './objects';
+
+// Zoom máximo al acercar una zona (las mangas y la nuca son pequeñas) y margen alrededor.
+const MAX_ZOOM = 4;
+const ZOOM_FILL = 0.8;
+
+/**
+ * Encuadre que acerca una zona: escala y desplazamiento en px del lienzo, sin dejar ver fuera de
+ * la maqueta. Null si no hay que acercar nada.
+ *
+ * @param {?Object} zone Zona (rect relativo a la maqueta, de 0 a 1).
+ * @param {Object}  size Tamaño del lienzo en px.
+ * @return {?{scale: number, x: number, y: number}} Encuadre.
+ */
+function zoneView( zone, size ) {
+	if ( ! zone || ! size.width ) {
+		return null;
+	}
+	const { x, y, w, h } = zone.rect;
+	const scale = Math.max(
+		1,
+		Math.min( MAX_ZOOM, ZOOM_FILL / Math.max( w, h ) )
+	);
+	const clamp = ( value, length ) =>
+		Math.min( 0, Math.max( length - length * scale, value ) );
+	return {
+		scale,
+		x: clamp(
+			size.width / 2 - scale * ( x + w / 2 ) * size.width,
+			size.width
+		),
+		y: clamp(
+			size.height / 2 - scale * ( y + h / 2 ) * size.height,
+			size.height
+		),
+	};
+}
 
 /**
  * Dónde poner la etiqueta de una zona para que no pise a las demás. Va centrada encima, salvo
@@ -52,6 +88,7 @@ export default function FabricStage( {
 	onTransform,
 	onMeasure,
 	onError,
+	focusZone,
 	children,
 } ) {
 	const wrapRef = useRef( null );
@@ -214,6 +251,26 @@ export default function FabricStage( {
 		}
 	}, [ size ] );
 
+	// Acercar la zona del elemento seleccionado (modo diseño del móvil): zoom de Fabric, que
+	// redibuja nítido y traduce el puntero; las líneas de zona (HTML) siguen el mismo encuadre.
+	const view = useMemo(
+		() => zoneView( focusZone, size ),
+		[ focusZone, size ]
+	);
+	useEffect( () => {
+		const canvas = canvasRef.current;
+		if ( ! canvas || ! size.width ) {
+			return;
+		}
+		canvas.setViewportTransform(
+			view
+				? [ view.scale, 0, 0, view.scale, view.x, view.y ]
+				: [ 1, 0, 0, 1, 0, 0 ]
+		);
+		canvas.getObjects().forEach( ( obj ) => obj.setCoords() );
+		canvas.requestRenderAll();
+	}, [ view, size ] );
+
 	// Maqueta de fondo.
 	useEffect( () => {
 		const canvas = canvasRef.current;
@@ -348,7 +405,18 @@ export default function FabricStage( {
 			aria-label={ label }
 		>
 			<canvas ref={ canvasElRef } />
-			<div className="camisama-customizer__zones" aria-hidden="true">
+			<div
+				className="camisama-customizer__zones"
+				aria-hidden="true"
+				style={
+					view
+						? {
+								transform: `translate(${ view.x }px, ${ view.y }px) scale(${ view.scale })`,
+								'--zoom': view.scale,
+							}
+						: undefined
+				}
+			>
 				{ zones.map( ( zone ) => (
 					<div
 						key={ zone.id }

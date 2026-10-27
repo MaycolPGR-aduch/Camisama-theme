@@ -4,6 +4,7 @@ Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-c
 falta para abrirla al público. Actualizado el 27 de octubre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
+Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).
 
 ---
 
@@ -85,7 +86,8 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Fotos reales** de las prendas en lugar de las maquetas generadas; con ellas, encuadrar
       mejor la prenda en el lienzo (en el móvil ocupa la mitad).
 - [ ] **Logotipo definitivo** (el actual es provisional).
-- [ ] **Medidas de las tallas** por modelo (ancho y largo en cm) para la guía "¿Qué talla?".
+- [ ] **Medidas reales de las tallas** por modelo (ancho y largo en cm). Mientras tanto, la guía
+      "¿Qué talla?" usará unas de referencia por defecto.
 
 ### Resto de la web
 

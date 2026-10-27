@@ -82,6 +82,8 @@ cerca.
    deja la hoja. Invitación "Elige un estampado, escribe tu frase o sube tu foto" con el diseño
    vacío (también en escritorio). Pendiente para la tanda 3: al seleccionar desde el catálogo, los
    ajustes quedan más arriba en la hoja, fuera de la vista.
-3. Acercar el lienzo a la zona al seleccionar, con los ajustes en la hoja.
-4. Paso 3: talla en botones sin preselección, cantidad, desglose y miniaturas.
+3. **Hecha.** Al seleccionar, el lienzo se acerca a la zona del elemento (zoom de Fabric, hasta ×4)
+   y la hoja muestra solo sus ajustes con "Listo"; si es un texto, también el panel de texto.
+4. Paso 3: talla en botones sin preselección, cantidad, desglose y miniaturas. Guía "¿Qué
+   talla?" con medidas de referencia por defecto, editables después (decisión del 27 de octubre).
 5. Repaso (`/impeccable polish`) y crítica nueva para comparar con el 25/40.

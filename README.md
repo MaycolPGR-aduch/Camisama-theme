@@ -10,7 +10,8 @@ El repositorio contiene dos piezas:
 
 Documentación: [arquitectura](docs/arquitectura.md) · [identidad visual](docs/identidad-visual.md) ·
 [producción e impresión](docs/produccion-e-impresion.md) · [modelo de precios](docs/modelo-de-precios.md) ·
-[estado de la web: hecho y pendiente](docs/estado-de-la-web.md)
+[estado de la web: hecho y pendiente](docs/estado-de-la-web.md) ·
+[registro de cambios](CHANGELOG.md)
 
 ## Requisitos
 

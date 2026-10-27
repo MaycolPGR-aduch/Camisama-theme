@@ -530,6 +530,24 @@ export default function App( { data } ) {
 
 	// --- Flujo móvil -------------------------------------------------------------------
 
+	// Modo diseño del móvil con un elemento seleccionado: el lienzo se acerca a su zona y la hoja
+	// muestra solo sus ajustes (y, si es un texto, el panel para cambiarlo).
+	const editingElement = mobile && designing && Boolean( selected );
+	useEffect( () => {
+		if ( ! editingElement ) {
+			return;
+		}
+		setSheet( ( current ) => ( current === 'min' ? 'half' : current ) );
+		if ( selected.kind === 'text' ) {
+			setTab( 'text' );
+		}
+		rootRef.current
+			?.querySelector( '.camisama-customizer__sheet' )
+			?.scrollTo( { top: 0 } );
+		// Solo al cambiar de elemento, no con cada ajuste de ese elemento.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ editingElement, selectedId ] );
+
 	const openDesign = () => {
 		setBuying( false );
 		setSheet( 'half' );
@@ -737,7 +755,9 @@ export default function App( { data } ) {
 			ref={ rootRef }
 			className={ `camisama-customizer is-flow${
 				purchaseNode ? ' has-purchase-bar' : ''
-			}${ designing ? ` is-designing is-sheet-${ sheet }` : '' }` }
+			}${ designing ? ` is-designing is-sheet-${ sheet }` : '' }${
+				editingElement ? ' has-selection' : ''
+			}${ editingElement && selected.kind === 'text' ? ' is-text-selected' : '' }` }
 			role={ mobile && designing ? 'dialog' : undefined }
 			aria-modal={ mobile && designing ? 'true' : undefined }
 			aria-label={
@@ -832,6 +852,9 @@ export default function App( { data } ) {
 					elements={ viewElements }
 					fonts={ data.fonts }
 					selectedId={ selectedId }
+					focusZone={
+						editingElement ? zoneById( selected.zone ) : null
+					}
 					label={ sprintf(
 						/* translators: %s: vista de la prenda. */
 						__(
@@ -1044,6 +1067,11 @@ export default function App( { data } ) {
 							moveLayer( selected.id, direction )
 						}
 						onRemove={ () => remove( selected.id ) }
+						onDone={
+							editingElement
+								? () => setSelectedId( null )
+								: undefined
+						}
 					/>
 				) }
 
