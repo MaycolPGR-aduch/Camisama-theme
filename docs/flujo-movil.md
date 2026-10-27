@@ -71,8 +71,13 @@ cerca.
 
 ## Construcción por tandas
 
-1. Ficha del paso 1 en el móvil ("Personalizar", "Comprar sin diseño", estado de carga y borrador).
-2. Modo diseño a pantalla completa (diálogo, atrás del móvil, hoja de herramientas, invitación).
+1. **Hecha.** Ficha del paso 1 en el móvil: la prenda tal como va, "Desde S/ … + impresión según
+   el tamaño", "Personalizar" / "Seguir diseñando", "Comprar sin diseño" / "Ir a talla y pago" y
+   "Preparando el editor…" mientras carga. Incluye lo mínimo del modo diseño (pantalla completa
+   con ✕, "atrás" del móvil y Esc, pie con el total y "Siguiente: talla"). Mientras no esté el
+   paso 3, "Siguiente: talla" muestra el formulario de WooCommerce bajo la ficha.
+2. Modo diseño a pantalla completa: completar el diálogo (foco atrapado), hoja de herramientas e
+   invitación a empezar.
 3. Acercar el lienzo a la zona al seleccionar, con los ajustes en la hoja.
 4. Paso 3: talla en botones sin preselección, cantidad, desglose y miniaturas.
 5. Repaso (`/impeccable polish`) y crítica nueva para comparar con el 25/40.

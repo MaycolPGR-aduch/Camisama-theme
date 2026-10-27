@@ -16,6 +16,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 
 import FabricStage from './FabricStage';
+import FlowEntry from './FlowEntry';
 import PurchaseBar from './PurchaseBar';
 import Summary from './Summary';
 import DesignsPanel from './panels/DesignsPanel';
@@ -169,6 +170,28 @@ const HistoryIcon = ( { redo = false } ) => (
 	</svg>
 );
 
+/** Mismo corte que el bloque de columnas: por debajo, la ficha se apila y entra el flujo móvil. */
+const MOBILE = '(max-width: 781px)';
+
+/**
+ * ¿Se cumple la media query? Se actualiza al girar el móvil o cambiar el tamaño de la ventana.
+ *
+ * @param {string} query Media query.
+ * @return {boolean} Si se cumple.
+ */
+function useMediaQuery( query ) {
+	const [ matches, setMatches ] = useState(
+		() => window.matchMedia( query ).matches
+	);
+	useEffect( () => {
+		const list = window.matchMedia( query );
+		const update = () => setMatches( list.matches );
+		list.addEventListener( 'change', update );
+		return () => list.removeEventListener( 'change', update );
+	}, [ query ] );
+	return matches;
+}
+
 const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
 
@@ -209,9 +232,14 @@ export default function App( { data } ) {
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	const [ message, setMessage ] = useState( '' );
 	const [ submitError, setSubmitError ] = useState( null );
-	// Opciones elegidas en WooCommerce aparte del color ("Talla M"), o null si falta alguna.
-	const [ chosenOptions, setChosenOptions ] = useState( null );
-	const [ busy, setBusy ] = useState( false );
+	// Flujo móvil (docs/flujo-movil.md): ficha → modo diseño a pantalla completa → talla y pago.
+	// Al editar desde el carrito se entra directamente en el modo diseño.
+	const mobile = useMediaQuery( MOBILE );
+	const [ designing, setDesigning ] = useState( Boolean( data.edit ) );
+	const [ buying, setBuying ] = useState( false );
+	const [ entryNode, setEntryNode ] = useState( null );
+	const openRef = useRef( null );
+	const closeRef = useRef( null );
 	// Hueco del resumen en el formulario de compra; sin él, el resumen va al final del editor.
 	const [ purchaseNode, setPurchaseNode ] = useState( null );
 	const bridge = useRef( null );
@@ -223,8 +251,6 @@ export default function App( { data } ) {
 		bridge.current = connectVariationForm( data.product_id, data.cart, {
 			onColor: setColor,
 			onPrice: setVariationPrice,
-			onOptions: setChosenOptions,
-			onBusy: setBusy,
 			onSubmit: () => {
 				setSubmitError( null );
 				return cartFields(
@@ -271,6 +297,74 @@ export default function App( { data } ) {
 		}
 		return () => bridge.current.disconnect();
 	}, [ data, restored ] );
+
+	// Hueco del paso 1 junto al formulario: view.js lo dejó con "Preparando el editor…".
+	useEffect( () => {
+		let node = document.querySelector(
+			'.camisama-customizer__entry[data-placeholder]'
+		);
+		if ( node ) {
+			node.replaceChildren();
+			delete node.dataset.placeholder;
+		} else {
+			const form = document.querySelector( '.wp-block-add-to-cart-form' );
+			if ( ! form ) {
+				return;
+			}
+			node = document.createElement( 'div' );
+			node.className = 'camisama-customizer camisama-customizer__entry';
+			form.before( node );
+		}
+		setEntryNode( node );
+		return () => node.remove();
+	}, [] );
+
+	// El modo diseño tapa la página: no se desplaza lo de debajo. El formulario de compra solo se
+	// ve en el paso de talla y pago.
+	useEffect( () => {
+		const root = document.documentElement;
+		root.classList.toggle( 'camisama-designing', mobile && designing );
+		root.classList.toggle( 'camisama-buying', buying );
+	}, [ mobile, designing, buying ] );
+	useEffect(
+		() => () =>
+			document.documentElement.classList.remove(
+				'camisama-designing',
+				'camisama-buying'
+			),
+		[]
+	);
+
+	// El modo diseño es una pantalla propia: el "atrás" del móvil lo cierra en lugar de salir de
+	// la página. Se apunta en el historial al abrirlo (también si se entra editando).
+	useEffect( () => {
+		if ( ! mobile || ! designing ) {
+			return;
+		}
+		if ( ! window.history.state?.camisamaDesign ) {
+			window.history.pushState(
+				{ ...window.history.state, camisamaDesign: true },
+				''
+			);
+		}
+		closeRef.current?.focus();
+		const onPop = () => {
+			if ( ! window.history.state?.camisamaDesign ) {
+				setDesigning( false );
+				setSelectedId( null );
+				window.setTimeout( () => openRef.current?.focus() );
+			}
+		};
+		window.addEventListener( 'popstate', onPop );
+		return () => window.removeEventListener( 'popstate', onPop );
+	}, [ mobile, designing ] );
+
+	// Al pasar a talla y pago, el formulario queda a la vista.
+	useEffect( () => {
+		if ( buying && mobile ) {
+			entryNode?.scrollIntoView( { block: 'start' } );
+		}
+	}, [ buying, mobile, entryNode ] );
 
 	// Borrador: se guarda poco después de cada cambio (no en cada paso de un arrastre). Al editar
 	// una línea del carrito no: salir sin guardar es descartar los cambios.
@@ -430,6 +524,33 @@ export default function App( { data } ) {
 		);
 	};
 
+	// --- Flujo móvil -------------------------------------------------------------------
+
+	const openDesign = () => {
+		setBuying( false );
+		setDesigning( true );
+	};
+
+	// Cierra el modo diseño volviendo atrás en el historial (deshace el pushState de abrir).
+	const closeDesign = ( then ) => {
+		setSelectedId( null );
+		if ( window.history.state?.camisamaDesign ) {
+			window.history.back();
+		} else {
+			setDesigning( false );
+		}
+		then?.();
+		window.setTimeout( () => openRef.current?.focus() );
+	};
+
+	const goToBuy = () => {
+		if ( designing ) {
+			closeDesign( () => setBuying( true ) );
+		} else {
+			setBuying( true );
+		}
+	};
+
 	// --- Teclado ----------------------------------------------------------------------
 
 	const onKeyDown = ( event ) => {
@@ -447,6 +568,8 @@ export default function App( { data } ) {
 			remove( selected.id );
 		} else if ( selected && key === 'escape' ) {
 			setSelectedId( null );
+		} else if ( mobile && designing && key === 'escape' ) {
+			closeDesign();
 		} else if ( selected && key.startsWith( 'arrow' ) ) {
 			const step = event.shiftKey ? 1 : 0.2;
 			const delta = {
@@ -587,16 +710,43 @@ export default function App( { data } ) {
 		);
 
 	return (
-		// eslint-disable-next-line jsx-a11y/no-static-element-interactions -- atajos de teclado del editor; cada control sigue siendo accesible por sí mismo.
 		<div
-			className={ `camisama-customizer${
+			className={ `camisama-customizer is-flow${
 				purchaseNode ? ' has-purchase-bar' : ''
-			}` }
+			}${ designing ? ' is-designing' : '' }` }
+			role={ mobile && designing ? 'dialog' : undefined }
+			aria-label={
+				mobile && designing
+					? __( 'Diseña tu prenda', 'camisama-customizer' )
+					: undefined
+			}
 			onKeyDown={ onKeyDown }
 		>
 			{ /* Vistas, deshacer y lienzo: en el móvil quedan fijos arriba mientras se usan las herramientas. */ }
 			<div className="camisama-customizer__canvas">
 				<div className="camisama-customizer__topbar">
+					{ mobile && designing && (
+						<button
+							type="button"
+							className="camisama-customizer__close"
+							ref={ closeRef }
+							aria-label={ __( 'Cerrar', 'camisama-customizer' ) }
+							title={ __( 'Cerrar', 'camisama-customizer' ) }
+							onClick={ () => closeDesign() }
+						>
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								aria-hidden="true"
+								focusable="false"
+							>
+								<path d="M6 6l12 12M18 6 6 18" />
+							</svg>
+						</button>
+					) }
 					<div
 						className="camisama-customizer__views"
 						role="group"
@@ -940,20 +1090,30 @@ export default function App( { data } ) {
 
 			{ purchaseNode && (
 				<PurchaseBar
-					target={ purchaseNode }
+					visible={ mobile && designing }
 					total={ totalLabel }
-					options={ chosenOptions }
-					invalid={ Boolean( priced.error ) }
-					busy={ busy }
 					inCart={ inCart }
-					editing={ Boolean( editKey ) }
 					cartUrl={ data.cart.url }
-					onBuy={ () => bridge.current.buy() }
-					onReview={ () =>
-						purchaseNode.scrollIntoView( { block: 'center' } )
-					}
+					onNext={ goToBuy }
 				/>
 			) }
+
+			{ entryNode &&
+				createPortal(
+					<FlowEntry
+						price={
+							elements.length
+								? totalLabel
+								: formatMoney( data.base_price, data.currency )
+						}
+						hasDesign={ elements.length > 0 }
+						buying={ buying }
+						onDesign={ openDesign }
+						onBuy={ goToBuy }
+						openRef={ openRef }
+					/>,
+					entryNode
+				) }
 		</div>
 	);
 }
