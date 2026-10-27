@@ -94,6 +94,12 @@ final class CustomizerData {
 				'root'  => esc_url_raw( rest_url( 'camisama/v1' ) ),
 				'nonce' => wp_create_nonce( 'wp_rest' ),
 			),
+			// Añadir al carrito sin recargar: el editor comprueba el resultado en la Store API.
+			'cart'        => array(
+				'api'      => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
+				'url'      => esc_url_raw( wc_get_cart_url() ),
+				'redirect' => 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ),
+			),
 			'resolution'  => array(
 				'target_dpi' => PrintResolution::TARGET_DPI,
 				'min_dpi'    => PrintResolution::MIN_ACCEPTABLE_DPI,

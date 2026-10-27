@@ -14,6 +14,8 @@ export default function PurchaseBar( {
 	options,
 	invalid,
 	busy,
+	inCart,
+	cartUrl,
 	onBuy,
 	onReview,
 } ) {
@@ -47,17 +49,28 @@ export default function PurchaseBar( {
 			aria-label={ __( 'Compra', 'camisama-customizer' ) }
 		>
 			<p className="camisama-customizer__bar-total">
-				<span>{ options ?? __( 'Total', 'camisama-customizer' ) }</span>
+				<span>
+					{ inCart
+						? __( 'En tu carrito', 'camisama-customizer' )
+						: ( options ?? __( 'Total', 'camisama-customizer' ) ) }
+				</span>
 				<strong>{ total }</strong>
 			</p>
-			<button
-				type="button"
-				className="camisama-customizer__bar-button"
-				disabled={ busy }
-				onClick={ invalid ? onReview : onBuy }
-			>
-				{ action }
-			</button>
+			{ /* Ya añadido: el siguiente paso es el carrito, no añadirlo otra vez. */ }
+			{ inCart ? (
+				<a className="camisama-customizer__bar-button" href={ cartUrl }>
+					{ __( 'Ver carrito', 'camisama-customizer' ) }
+				</a>
+			) : (
+				<button
+					type="button"
+					className="camisama-customizer__bar-button"
+					disabled={ busy }
+					onClick={ invalid ? onReview : onBuy }
+				>
+					{ action }
+				</button>
+			) }
 		</div>
 	);
 }

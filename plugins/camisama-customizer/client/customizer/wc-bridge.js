@@ -9,10 +9,68 @@ import { __ } from '@wordpress/i18n';
 
 const COLOR_FIELD = 'select[name="attribute_pa_color"]';
 
+// Avisos de error de WooCommerce en la página que devuelve el envío (plantilla clásica y bloques).
+const ERROR_NOTICES =
+	'.woocommerce-error li, .wc-block-components-notice-banner.is-error .wc-block-components-notice-banner__content';
+
+/**
+ * Unidades en el carrito según la Store API.
+ *
+ * @param {string} api URL de wc/store/v1/cart.
+ * @return {Promise<number>} items_count.
+ */
+async function cartCount( api ) {
+	const response = await fetch( api, { credentials: 'same-origin' } );
+	if ( ! response.ok ) {
+		throw new Error( `Store API ${ response.status }` );
+	}
+	return ( await response.json() ).items_count;
+}
+
+/**
+ * Envía el formulario de compra en segundo plano, como lo haría el navegador, para no recargar
+ * la página y perder el editor. El resultado se comprueba en la Store API (¿creció el carrito?)
+ * y no en el HTML, que solo se lee para mostrar el motivo si WooCommerce lo rechaza.
+ *
+ * @param {HTMLFormElement}    form   Formulario de variaciones.
+ * @param {?HTMLButtonElement} button Botón de envío (en productos simples lleva add-to-cart).
+ * @param {string}             api    URL de wc/store/v1/cart.
+ */
+async function addToCart( form, button, api ) {
+	const before = await cartCount( api );
+	const body = new window.FormData( form );
+	if ( button?.name && ! body.has( button.name ) ) {
+		body.append( button.name, button.value );
+	}
+	const response = await fetch( form.action || window.location.href, {
+		method: 'POST',
+		body,
+		credentials: 'same-origin',
+	} );
+	const html = await response.text();
+	if ( ( await cartCount( api ) ) > before ) {
+		return;
+	}
+	const reason = new window.DOMParser()
+		.parseFromString( html, 'text/html' )
+		.querySelector( ERROR_NOTICES )
+		?.textContent.trim();
+	const error = new Error(
+		reason ||
+			__(
+				'No pudimos añadir tu diseño al carrito. Inténtalo de nuevo.',
+				'camisama-customizer'
+			)
+	);
+	error.notice = true; // Texto pensado para el cliente: se muestra tal cual.
+	throw error;
+}
+
 /**
  * Conecta el editor con el formulario de variaciones del producto.
  *
  * @param {number}   productId          ID del producto.
+ * @param {Object}   cart               Datos del carrito: api (Store API) y url (página).
  * @param {Object}   handlers           Funciones a las que avisar.
  * @param {Function} handlers.onColor   Recibe el slug del color elegido en WooCommerce.
  * @param {Function} handlers.onPrice   Recibe el precio de la variante en céntimos, o null.
@@ -21,13 +79,15 @@ const COLOR_FIELD = 'select[name="attribute_pa_color"]';
  * @param {Function} handlers.onBusy    Recibe true mientras se prepara el envío al carrito.
  * @param {Function} handlers.onSubmit  Antes de enviar al carrito: devuelve (async) los campos
  *                                      ocultos que acompañan al pedido ({ nombre: valor }).
- * @param {Function} handlers.onError   Recibe el error si onSubmit falla (el envío se cancela).
+ * @param {Function} handlers.onAdded   Se llama cuando el diseño ya está en el carrito.
+ * @param {Function} handlers.onError   Recibe el error si algo falla (el diseño no se añadió).
  * @return {Object} Control del puente: setColor, buy, disconnect y summaryNode (el hueco del
  *                  resumen de precio dentro del formulario, o null).
  */
 export function connectVariationForm(
 	productId,
-	{ onColor, onPrice, onOptions, onBusy, onSubmit, onError }
+	cart,
+	{ onColor, onPrice, onOptions, onBusy, onSubmit, onAdded, onError }
 ) {
 	const $ = window.jQuery;
 	const form =
@@ -106,12 +166,9 @@ export function connectVariationForm(
 	}
 
 	// Añadir al carrito: se detiene el envío, se adjuntan el diseño y las vistas previas (que
-	// tardan en generarse) y se vuelve a enviar con requestSubmit, que esta vez sigue de largo.
+	// tardan en generarse) y se envía en segundo plano. El editor sigue con el diseño y el
+	// minicarrito se actualiza (y se abre, si está configurado así) con su miniatura.
 	const submit = async ( event ) => {
-		if ( form.dataset.camisama === 'ready' ) {
-			delete form.dataset.camisama;
-			return;
-		}
 		event.preventDefault();
 		if ( form.dataset.camisama === 'busy' ) {
 			return;
@@ -140,12 +197,30 @@ export function connectVariationForm(
 				}
 				input.value = value;
 			}
-			form.dataset.camisama = 'ready';
-			form.requestSubmit( button ?? undefined );
+			await addToCart( form, button, cart.api );
+			if ( cart.redirect ) {
+				// La tienda pide ir al carrito tras añadir: se respeta.
+				window.location.assign( cart.url );
+				return;
+			}
+			// Mismo aviso que dan los botones de WooCommerce: refresca el minicarrito.
+			$( document.body ).trigger( 'added_to_cart', [
+				{},
+				'',
+				$( button ),
+			] );
+			document.body.dispatchEvent(
+				new window.CustomEvent( 'wc-blocks_added_to_cart', {
+					bubbles: true,
+					cancelable: true,
+					detail: { preserveCartData: false },
+				} )
+			);
+			onAdded();
 		} catch ( error ) {
-			delete form.dataset.camisama;
 			onError( error );
 		} finally {
+			delete form.dataset.camisama;
 			button?.classList.remove( 'loading' );
 			if ( button && label ) {
 				button.textContent = label;
@@ -169,7 +244,13 @@ export function connectVariationForm(
 				$( select ).val( color ).trigger( 'change' );
 			}
 			const missing = options.find( ( field ) => ! field.value );
-			if ( missing || ! button ) {
+			// WooCommerce marca el botón como disabled (sin el atributo) si la variante no existe
+			// o está agotada: se lleva al formulario, que lo explica.
+			if (
+				missing ||
+				! button ||
+				button.classList.contains( 'disabled' )
+			) {
 				form.scrollIntoView( { block: 'center' } );
 				missing?.focus( { preventScroll: true } );
 				return;

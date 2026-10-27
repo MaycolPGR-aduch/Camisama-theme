@@ -33,7 +33,7 @@
 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap"}} -->
 <div class="wp-block-group"><!-- wp:woocommerce/customer-account {"displayStyle":"icon_only"} /-->
 
-<!-- wp:woocommerce/mini-cart /--></div>
+<!-- wp:woocommerce/mini-cart {"addToCartBehaviour":"open_drawer"} /--></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->

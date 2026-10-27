@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 22 de octubre de 2026.
+falta para abrirla al público. Actualizado el 27 de octubre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 
@@ -50,14 +50,24 @@ local, 45 pruebas de JS y lint limpio.
 
 ### Ficha de producto (siguiente en la lista)
 
-- [ ] **Repetir la crítica de Impeccable** para medir la mejora frente al 23/40.
-- [ ] **No perder el diseño al añadir al carrito** (P2): hoy la página se recarga con la prenda
-      vacía. Guardar un borrador y confirmar con la vista previa y el total.
+- [x] **Repetir la crítica de Impeccable**: 25/40 (antes 23/40). Nuevos P1: el diseño se perdía,
+      lienzo y herramientas no conviven, texto sin vista previa.
+- [x] **No perder el diseño**: borrador en el dispositivo (7 días, por producto) que se recupera
+      al volver, y añadir al carrito sin recargar, con el minicarrito abierto con la miniatura y
+      "Tu diseño está en el carrito" junto al botón.
+- [ ] **Editar el diseño desde el carrito** (enlace en cada línea que abra el editor con ese
+      diseño y lo sustituya al guardar).
+- [ ] **Plan del flujo de tres pasos en el móvil** (prenda → diseño a pantalla completa → talla y
+      pago) con `/impeccable shape`, antes de tocar el lienzo y el texto.
+- [ ] **Lienzo y herramientas** (P1): ampliar la zona activa al seleccionar; lienzo fijo en
+      escritorio.
+- [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
+      nuevo no caiga encima de lo anterior.
+- [ ] **Escalones de precio** (P2): decir qué es "Grande" y colocar los estampados en Mediano.
 - [ ] **Talla sin preselección y guía de tallas** (P2): hoy llega elegida la M. Chips de talla,
       "¿Qué talla?" con medidas en cm y mensaje en línea en lugar del `alert()` de WooCommerce.
       Quitar el desplegable de color duplicado (los círculos del editor ya lo resuelven).
 - [ ] **Etiqueta del carrito**: dice "Recargo de estampado" cuando es la impresión por zonas.
-- [ ] **Texto nuevo**: no hay forma de empezar otro texto cuando ya hay uno seleccionado.
 - [ ] **Jerga del editor**: "Traer adelante / Enviar atrás", "Añadir en:", y los escalones de
       precio ("Mediano", "Grande") sin explicar.
 - [ ] **Elementos nuevos siempre en el centro**, encima de los anteriores.

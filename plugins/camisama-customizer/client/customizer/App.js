@@ -30,6 +30,7 @@ import {
 	textElement,
 } from './elements';
 import { isReadable, mostReadable } from './contrast';
+import { loadDraft, saveDraft } from './draft';
 import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
@@ -134,14 +135,31 @@ const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
 
 export default function App( { data } ) {
-	const [ history, dispatch ] = useReducer( historyReducer, initialHistory );
+	// Diseño que se dejó a medias en este dispositivo (draft.js), o null.
+	const [ restored ] = useState( () => loadDraft( data.product_id, data ) );
+	const [ history, dispatch ] = useReducer(
+		historyReducer,
+		restored,
+		( draft ) => ( { ...initialHistory, present: draft?.elements ?? [] } )
+	);
 	const elements = history.present;
 	const [ selectedId, setSelectedId ] = useState( null );
-	const [ color, setColor ] = useState( data.colors[ 0 ].slug );
-	const [ viewId, setViewId ] = useState( data.views[ 0 ]?.id );
-	const [ activeZoneId, setActiveZoneId ] = useState(
-		data.zones.find( ( zone ) => zone.view === data.views[ 0 ]?.id )?.id
+	const [ color, setColor ] = useState(
+		restored?.color ?? data.colors[ 0 ].slug
 	);
+	const [ viewId, setViewId ] = useState(
+		restored?.viewId ?? data.views[ 0 ]?.id
+	);
+	const [ activeZoneId, setActiveZoneId ] = useState(
+		restored?.zoneId ??
+			data.zones.find( ( zone ) => zone.view === data.views[ 0 ]?.id )?.id
+	);
+	const [ restoredNotice, setRestoredNotice ] = useState(
+		Boolean( restored )
+	);
+	// Diseño tal como se añadió al carrito: mientras no cambie, se da por comprado.
+	const [ addedDesign, setAddedDesign ] = useState( null );
+	const inCart = addedDesign !== null && addedDesign === elements;
 	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	const [ message, setMessage ] = useState( '' );
@@ -157,7 +175,7 @@ export default function App( { data } ) {
 	latest.current = { elements, color };
 
 	useEffect( () => {
-		bridge.current = connectVariationForm( data.product_id, {
+		bridge.current = connectVariationForm( data.product_id, data.cart, {
 			onColor: setColor,
 			onPrice: setVariationPrice,
 			onOptions: setChosenOptions,
@@ -170,12 +188,18 @@ export default function App( { data } ) {
 					latest.current.color
 				);
 			},
-			onError: () => {
+			onAdded: () => {
+				setAddedDesign( latest.current.elements );
+				setRestoredNotice( false );
+			},
+			onError: ( error ) => {
 				setSubmitError(
-					__(
-						'No pudimos preparar tu diseño. Inténtalo de nuevo.',
-						'camisama-customizer'
-					)
+					error?.notice
+						? error.message
+						: __(
+								'No pudimos preparar tu diseño. Inténtalo de nuevo.',
+								'camisama-customizer'
+							)
 				);
 				// El error sale en el resumen: si se compró desde la barra del móvil, está lejos.
 				bridge.current.summaryNode?.scrollIntoView( {
@@ -184,8 +208,28 @@ export default function App( { data } ) {
 			},
 		} );
 		setPurchaseNode( bridge.current.summaryNode );
+		// El formulario de WooCommerce arranca con su color por defecto: manda el del borrador.
+		if ( restored?.color ) {
+			bridge.current.setColor( restored.color );
+		}
 		return () => bridge.current.disconnect();
-	}, [ data ] );
+	}, [ data, restored ] );
+
+	// Borrador: se guarda poco después de cada cambio (no en cada paso de un arrastre).
+	useEffect( () => {
+		const timer = setTimeout(
+			() =>
+				saveDraft( data.product_id, {
+					elements,
+					color,
+					viewId,
+					zoneId: activeZoneId,
+					added: inCart,
+				} ),
+			300
+		);
+		return () => clearTimeout( timer );
+	}, [ data.product_id, elements, color, viewId, activeZoneId, inCart ] );
 
 	const zoneById = ( id ) => data.zones.find( ( zone ) => zone.id === id );
 	const view = data.views.find( ( item ) => item.id === viewId );
@@ -383,6 +427,14 @@ export default function App( { data } ) {
 		}
 	}, [ data.zones, data.price_tiers, elements ] );
 
+	// Empezar de cero (tras recuperar un borrador o añadir al carrito); se puede deshacer.
+	const startOver = () => {
+		setSelectedId( null );
+		setRestoredNotice( false );
+		setAddedDesign( null );
+		commit( () => [] );
+	};
+
 	const summary = (
 		<Summary
 			garmentPrice={ variationPrice ?? data.base_price }
@@ -391,6 +443,30 @@ export default function App( { data } ) {
 			error={ priced.error ?? submitError }
 			currency={ data.currency }
 		/>
+	);
+
+	// Resumen y, tras añadir, la confirmación junto al botón que se acaba de pulsar. El
+	// minicarrito muestra además la miniatura del diseño.
+	const purchase = (
+		<>
+			{ summary }
+			{ inCart && (
+				<div className="camisama-customizer__added" role="status">
+					<p>
+						{ __(
+							'Tu diseño está en el carrito.',
+							'camisama-customizer'
+						) }
+					</p>
+					<a href={ data.cart.url }>
+						{ __( 'Ver carrito', 'camisama-customizer' ) }
+					</a>
+					<button type="button" onClick={ startOver }>
+						{ __( 'Empezar otro diseño', 'camisama-customizer' ) }
+					</button>
+				</div>
+			) }
+		</>
 	);
 
 	// Textos que casi no se ven sobre la prenda elegida (p. ej. negro sobre negro). No se
@@ -548,6 +624,22 @@ export default function App( { data } ) {
 						);
 					} }
 				/>
+				{ restoredNotice && ! history.past.length && (
+					<div
+						className="camisama-customizer__restored"
+						role="status"
+					>
+						<p>
+							{ __(
+								'Recuperamos el diseño que dejaste a medias.',
+								'camisama-customizer'
+							) }
+						</p>
+						<button type="button" onClick={ startOver }>
+							{ __( 'Empezar de cero', 'camisama-customizer' ) }
+						</button>
+					</div>
+				) }
 				{ hiddenTexts.length > 0 && garment && (
 					<div
 						className="camisama-customizer__contrast"
@@ -748,7 +840,7 @@ export default function App( { data } ) {
 				</section>
 			) }
 
-			{ purchaseNode ? createPortal( summary, purchaseNode ) : summary }
+			{ purchaseNode ? createPortal( purchase, purchaseNode ) : purchase }
 
 			{ purchaseNode && (
 				<PurchaseBar
@@ -757,6 +849,8 @@ export default function App( { data } ) {
 					options={ chosenOptions }
 					invalid={ Boolean( priced.error ) }
 					busy={ busy }
+					inCart={ inCart }
+					cartUrl={ data.cart.url }
 					onBuy={ () => bridge.current.buy() }
 					onReview={ () =>
 						purchaseNode.scrollIntoView( { block: 'center' } )

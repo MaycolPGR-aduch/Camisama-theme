@@ -465,6 +465,55 @@ $warning: #8a5a00;
 		}
 	}
 
+	// "Recuperamos tu diseño" (junto al lienzo) y "Tu diseño está en el carrito"
+	// (junto al botón): misma forma que el aviso de contraste, en neutro y en
+	// el verde de "calidad óptima".
+	&__restored,
+	&__added {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem 1rem;
+		margin: 0;
+		padding: 0.5em 0.75em;
+		border-radius: 10px;
+		font-size: 0.875rem;
+
+		p {
+			margin: 0;
+		}
+
+		button {
+
+			@include pill;
+			border-color: currentcolor;
+			color: inherit;
+		}
+	}
+
+	&__restored {
+		border: 1px solid $line;
+		background: $surface;
+		color: $ink;
+	}
+
+	&__added {
+		margin-bottom: var(--wp--preset--spacing--40, 1rem);
+		background: #e8f4ec;
+		color: #1d6b3a;
+
+		p {
+			flex-basis: 100%;
+			font-weight: 600;
+		}
+
+		a {
+			color: inherit;
+			font-weight: 600;
+		}
+	}
+
 	&__selection {
 		display: grid;
 		gap: 0.75rem;
@@ -594,8 +643,12 @@ $warning: #8a5a00;
 		}
 	}
 
+	// Botón o, ya en el carrito, enlace "Ver carrito" con el mismo aspecto.
 	&__bar-button {
+		display: inline-flex;
+		align-items: center;
 		min-height: 44px;
+		text-decoration: none;
 		padding: 0.6em 1.4em;
 		border: 0;
 		border-radius: 999px;
