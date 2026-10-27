@@ -86,8 +86,15 @@ export default function UploadPanel( { api, onAdd } ) {
 						: __( 'Elegir imagen', 'camisama-customizer' ) }
 				</label>
 				<p>
+					{ /* Arrastrar solo tiene sentido con ratón: en pantallas táctiles se oculta. */ }
+					<span className="camisama-customizer__drag-hint">
+						{ __(
+							'o arrástrala aquí.',
+							'camisama-customizer'
+						) }{ ' ' }
+					</span>
 					{ __(
-						'o arrástrala aquí. PNG, JPG o WEBP de hasta 15 MB.',
+						'PNG, JPG o WEBP de hasta 15 MB.',
 						'camisama-customizer'
 					) }
 				</p>

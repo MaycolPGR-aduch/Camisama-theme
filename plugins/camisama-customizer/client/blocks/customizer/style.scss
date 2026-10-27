@@ -352,9 +352,14 @@ $warning: #8a5a00;
 
 	// Acción interna del editor (añadir texto, elegir imagen): rellena de
 	// tinta. El rojo queda solo para "Añadir al carrito" (Un Solo Sello).
+	// inline-flex: también cuando es un <label> ("Elegir imagen"), con el texto
+	// centrado en la píldora.
 	&__button {
 
 		@include pill;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		justify-self: start;
 		border-color: $ink;
 		background: $ink;
@@ -417,6 +422,12 @@ $warning: #8a5a00;
 
 		@include pill;
 		justify-self: center;
+	}
+
+	// El campo de archivo real está oculto: el foco se ve en su botón.
+	&__drop:focus-within .camisama-customizer__button {
+		outline: 2px solid $focus;
+		outline-offset: 2px;
 	}
 
 	&__drop {
@@ -737,6 +748,11 @@ $warning: #8a5a00;
 		&__layers ul button {
 			min-height: 44px;
 		}
+
+		// En un teléfono no se arrastran archivos.
+		&__drag-hint {
+			display: none;
+		}
 	}
 
 	// --- Móvil: columnas apiladas (mismo corte que el bloque de columnas) ---
@@ -859,6 +875,25 @@ $warning: #8a5a00;
 			&.has-selection:not(.is-text-selected) .camisama-customizer__tools,
 			&.is-text-selected .camisama-customizer__tabs {
 				display: none;
+			}
+
+			// En la pantalla estrecha solo se nombra la zona activa (los botones
+			// de "Añadir en:" nombran todas): las etiquetas de las mangas no caben
+			// sin montarse sobre el frente.
+			.camisama-customizer__zone:not(.is-active) span {
+				display: none;
+			}
+
+			// La hoja ya es la superficie: sus bloques van sin marco de tarjeta
+			// (tarjeta dentro de hoja), y ganan el ancho que hace falta para que
+			// las pestañas quepan en una fila.
+			.camisama-customizer__tools,
+			.camisama-customizer__selection,
+			.camisama-customizer__layers {
+				padding: 0;
+				border: 0;
+				border-radius: 0;
+				background: none;
 			}
 		}
 

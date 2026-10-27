@@ -9,6 +9,15 @@ conviene recordar.
 
 ## 2026-10-27
 
+### Cambiado
+- **Flujo móvil, tanda 5 (repaso):** en la hoja de herramientas los bloques van sin marco de
+  tarjeta (no hay tarjetas dentro de la hoja) y las pestañas y categorías caben en una fila; en el
+  modo diseño del móvil solo se nombra la zona activa; "o arrástrala aquí" no aparece en pantallas
+  táctiles; "Elegir imagen" muestra el foco con teclado y centra su texto.
+
+### Corregido
+- La etiqueta "Nuca" caía dentro de la zona Espalda.
+
 ### Añadido
 - **Flujo móvil, tanda 4: talla y pago** en una pantalla propia: miniaturas del diseño (o de la
   prenda lisa), "Editar diseño", desglose del precio, **talla en botones sin ninguna marcada**,

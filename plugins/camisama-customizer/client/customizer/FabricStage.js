@@ -65,12 +65,15 @@ function labelPlacement( zone, zones ) {
 	const others = zones.filter( ( other ) => other.id !== zone.id );
 	const below = others.some(
 		( other ) =>
-			// Otra zona justo encima, o empezando a la misma altura.
+			// Otra zona justo encima…
 			( other.rect.y < y &&
 				other.rect.y + other.rect.h > y - 0.06 &&
 				other.rect.x < x + w &&
 				other.rect.x + other.rect.w > x ) ||
-			Math.abs( other.rect.y - y ) < 0.08
+			// …o empezando a la misma altura, al lado (las mangas junto al frente; no la espalda,
+			// que queda justo debajo de la nuca).
+			( Math.abs( other.rect.y - y ) < 0.08 &&
+				( other.rect.x + other.rect.w <= x || other.rect.x >= x + w ) )
 	);
 	return below ? ' is-label-below' : '';
 }
