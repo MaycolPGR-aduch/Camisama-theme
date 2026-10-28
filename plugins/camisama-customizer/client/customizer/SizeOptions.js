@@ -6,11 +6,14 @@
 import { useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
+import { formatMoney } from './format';
+
 export default function SizeOptions( {
 	options,
 	choices,
 	missing,
 	guide,
+	currency,
 	onChoose,
 } ) {
 	const firstRef = useRef( null );
@@ -53,6 +56,12 @@ export default function SizeOptions( {
 								}
 							>
 								{ value.text }
+								{ value.extra > 0 && (
+									<small>
+										+{ ' ' }
+										{ formatMoney( value.extra, currency ) }
+									</small>
+								) }
 							</button>
 						) ) }
 					</div>

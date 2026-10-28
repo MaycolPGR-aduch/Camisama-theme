@@ -10,6 +10,13 @@ conviene recordar.
 ## 2026-10-28
 
 ### Añadido
+- **Precio sin sorpresas** (P2 de la tercera crítica):
+  - El total multiplica la cantidad, con la fila "Por unidad: 2 × S/ 53.90"; en escritorio sigue
+    la cantidad del formulario. El pie del modo diseño y la ficha usan el mismo total.
+  - Junto a "Tamaño", el escalón de la zona y dónde salta: "Frente: Mediano (+ S/ 14.00) hasta
+    20 cm de lado; ahora 18.0 cm. Más grande: Grande (+ S/ 20.00)." En el resumen, "Frente ·
+    Mediano (hasta 20 cm)".
+  - Los botones de talla muestran el recargo de la que cuesta más (XXL + S/ 5.00).
 - **Tercera crítica de la ficha** con Impeccable, ya con el flujo móvil completo: **24/40**
   (antes 23 y 25). Nuevos P1: los avisos del lienzo no se ven en el móvil, los riesgos de calidad
   no llegan al pago y la hoja de herramientas entierra el contenido. Resueltos en esta misma fecha.
@@ -37,6 +44,17 @@ conviene recordar.
 - **Lienzo fijo en escritorio** (pantallas de 600 px de alto o más): se queda arriba, a 55 % del
   alto, mientras se bajan las herramientas, como en el móvil. Los controles del editor guardan
   margen para no quedar debajo al llegar a ellos con el tabulador.
+
+- Lo nuevo (estampado o foto) empieza al 60 % de la zona, salvo que eso pase por poco el límite
+  de un escalón: entonces se queda en el límite (un estampado alto en el frente, 20 cm en lugar
+  de 24, Mediano en lugar de Grande).
+- **"desde" con una sola regla**: solo cuando falta la talla y la talla cambia el precio
+  (`price_varies`); igual en la ficha, el pie del modo diseño, el resumen y talla y pago. La talla
+  que WooCommerce marca por defecto se quita también en el móvil.
+- En el carrito y el pedido, "Recargo de estampado" pasa a "Impresión y estampados" (los pedidos
+  anteriores conservan su etiqueta).
+- Las reglas de los botones de talla y de la guía valen también en escritorio (estaban dentro de
+  la consulta del móvil y la tabla de "¿Qué talla?" salía sin estilo).
 
 ### Decisiones
 - Los botones de talla son un solo componente (`SizeOptions`) para el paso de talla y pago del

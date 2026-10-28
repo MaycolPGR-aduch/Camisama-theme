@@ -28,6 +28,7 @@ export default function BuyStep( {
 	editing,
 	hasDesign,
 	cartUrl,
+	currency,
 	onChoose,
 	onQuantity,
 	onBuy,
@@ -203,6 +204,7 @@ export default function BuyStep( {
 					choices={ choices }
 					missing={ missing }
 					guide={ guide }
+					currency={ currency }
 					onChoose={ onChoose }
 				/>
 

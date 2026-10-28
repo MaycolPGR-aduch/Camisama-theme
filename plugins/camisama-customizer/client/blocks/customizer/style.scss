@@ -1189,35 +1189,6 @@ $warning: #8a5a00;
 			}
 		}
 
-		&__sizes .camisama-customizer__chips button {
-			min-width: 3.25rem;
-		}
-
-		// Guía de tallas: desplegable, con cifras alineadas.
-		&__guide {
-
-			// Sin display: flex, que quitaría el triángulo de desplegar.
-			summary {
-				padding-block: 0.65rem;
-				font-weight: 600;
-				cursor: pointer;
-			}
-
-			table {
-				width: 100%;
-				border-collapse: collapse;
-				font-size: 0.875rem;
-				font-variant-numeric: tabular-nums;
-			}
-
-			th,
-			td {
-				padding: 0.4em 0.5em;
-				border-bottom: 1px solid $line;
-				text-align: left;
-			}
-		}
-
 		&__quantity {
 			display: inline-flex;
 			align-items: center;
@@ -1244,6 +1215,48 @@ $warning: #8a5a00;
 				font-weight: 600;
 				text-align: center;
 			}
+		}
+	}
+
+	// Talla en botones (paso de talla y pago del móvil y columna de compra
+	// del escritorio); la que cuesta más lleva su recargo debajo.
+	&__sizes .camisama-customizer__chips button {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-width: 3.25rem;
+		min-height: 2.75rem;
+
+		small {
+			font-size: 0.75rem;
+			font-weight: 500;
+			line-height: 1.2;
+		}
+	}
+
+	// Guía de tallas: desplegable, con cifras alineadas.
+	&__guide {
+
+		// Sin display: flex, que quitaría el triángulo de desplegar.
+		summary {
+			padding-block: 0.65rem;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.875rem;
+			font-variant-numeric: tabular-nums;
+		}
+
+		th,
+		td {
+			padding: 0.4em 0.5em;
+			border-bottom: 1px solid $line;
+			text-align: left;
 		}
 	}
 

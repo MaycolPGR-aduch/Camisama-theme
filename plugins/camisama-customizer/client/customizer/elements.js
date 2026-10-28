@@ -69,16 +69,29 @@ export function newId() {
 }
 
 /**
- * Tamaño inicial: el 60 % de la zona sin deformar la proporción del contenido.
+ * Tamaño inicial: el 60 % de la zona sin deformar la proporción del contenido. Si eso pasa por
+ * poco el límite de un escalón de precio, se queda en ese límite: lo nuevo no cae en el escalón
+ * caro sin que el cliente lo decida.
  *
- * @param {Object} zone   Zona (size_cm).
+ * @param {Object} zone   Zona (size_cm y, si los hay, sus escalones en tiers).
  * @param {number} aspect Ancho / alto del contenido.
  * @return {{width_cm: number, height_cm: number}} Tamaño en cm.
  */
 export function initialSize( zone, aspect ) {
 	const maxW = zone.size_cm.w * 0.6;
 	const maxH = zone.size_cm.h * 0.6;
-	const width = Math.min( maxW, maxH * aspect );
+	let width = Math.min( maxW, maxH * aspect );
+
+	const longest = Math.max( width, width / aspect );
+	const limit = Math.max(
+		0,
+		...( zone.tiers ?? [] )
+			.map( ( tier ) => tier.max_cm )
+			.filter( ( cm ) => cm < longest && cm >= longest * 0.6 )
+	);
+	if ( limit > 0 ) {
+		width *= limit / longest;
+	}
 
 	return {
 		width_cm: Math.round( width * 100 ) / 100,

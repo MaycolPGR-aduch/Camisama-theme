@@ -79,34 +79,37 @@ final class CustomizerData {
 		}
 
 		return array(
-			'product_id'  => $product_id,
+			'product_id'   => $product_id,
 			// Precio más bajo de la prenda (con impuestos si así se muestran); se reemplaza al elegir variante.
-			'base_price'  => (int) round( (float) wc_get_price_to_display( $product ) * 100 ),
-			'colors'      => ProductColors::for_product( $product_id ),
-			'views'       => $views,
-			'zones'       => array_map(
+			'base_price'   => (int) round( (float) wc_get_price_to_display( $product ) * 100 ),
+			// Si la talla (u otra opción) cambia el precio: solo entonces se dice "desde" sin elegirla.
+			'price_varies' => $product instanceof \WC_Product_Variable
+				&& (float) $product->get_variation_price( 'min', true ) !== (float) $product->get_variation_price( 'max', true ),
+			'colors'       => ProductColors::for_product( $product_id ),
+			'views'        => $views,
+			'zones'        => array_map(
 				static fn ( Zone $zone ): array => $zone->to_array() + array( 'tiers' => $tiers( $prices->tiers_within( $zone->longest_side_cm() ) ) ),
 				$config->zones
 			),
-			'price_tiers' => $prices->to_array(),
-			'fonts'       => Fonts::for_client(),
-			'api'         => array(
+			'price_tiers'  => $prices->to_array(),
+			'fonts'        => Fonts::for_client(),
+			'api'          => array(
 				'root'  => esc_url_raw( rest_url( 'camisama/v1' ) ),
 				'nonce' => wp_create_nonce( 'wp_rest' ),
 			),
 			// Añadir al carrito sin recargar: el editor comprueba el resultado en la Store API.
-			'cart'        => array(
+			'cart'         => array(
 				'api'      => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
 				'url'      => esc_url_raw( wc_get_cart_url() ),
 				'redirect' => 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ),
 			),
 			// Medidas de la prenda por talla para "¿Qué talla?" (paso de talla y pago).
-			'size_guide'  => SizeGuide::for_product( $product_id ),
-			'resolution'  => array(
+			'size_guide'   => SizeGuide::for_product( $product_id ),
+			'resolution'   => array(
 				'target_dpi' => PrintResolution::TARGET_DPI,
 				'min_dpi'    => PrintResolution::MIN_ACCEPTABLE_DPI,
 			),
-			'currency'    => array(
+			'currency'     => array(
 				'code'     => get_woocommerce_currency(),
 				'symbol'   => html_entity_decode( get_woocommerce_currency_symbol() ),
 				'decimals' => wc_get_price_decimals(),

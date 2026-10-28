@@ -89,6 +89,20 @@ describe( 'elementos', () => {
 		} );
 	} );
 
+	it( 'el tamaño inicial no pasa por poco a un escalón más caro', () => {
+		const tiers = [ 10, 20, 30, 40 ].map( ( max ) => ( { max_cm: max } ) );
+		// 12 × 24 cm pasaría de los 20 cm de "Mediano": se queda en 10 × 20.
+		expect( initialSize( { ...front, tiers }, 0.5 ) ).toEqual( {
+			width_cm: 10,
+			height_cm: 20,
+		} );
+		// 18 × 9 cm ya cabe en "Mediano".
+		expect( initialSize( { ...front, tiers }, 2 ) ).toEqual( {
+			width_cm: 18,
+			height_cm: 9,
+		} );
+	} );
+
 	it( 'un estampado nuevo queda centrado con su recargo', () => {
 		const element = designElement( front, {
 			id: 7,

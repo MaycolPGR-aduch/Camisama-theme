@@ -200,7 +200,7 @@ final class CartIntegration {
 			'value' => self::summary( $quote ),
 		);
 		$item_data[] = array(
-			'key'     => __( 'Recargo de estampado', 'camisama-customizer' ),
+			'key'     => __( 'Impresión y estampados', 'camisama-customizer' ),
 			'value'   => self::money( $quote['total'] ),
 			'display' => self::money( $quote['total'] ),
 		);
@@ -269,7 +269,7 @@ final class CartIntegration {
 		$item->add_meta_data( self::META_QUOTE, wp_json_encode( $custom['quote'] ), true );
 		$item->add_meta_data( self::META_PREVIEW, wp_json_encode( $custom['previews'] ), true );
 		$item->add_meta_data( __( 'Personalización', 'camisama-customizer' ), self::summary( $custom['quote'] ), true );
-		$item->add_meta_data( __( 'Recargo de estampado', 'camisama-customizer' ), self::plain_money( $custom['quote']['total'] ), true );
+		$item->add_meta_data( __( 'Impresión y estampados', 'camisama-customizer' ), self::plain_money( $custom['quote']['total'] ), true );
 	}
 
 	/**

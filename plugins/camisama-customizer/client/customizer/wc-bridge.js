@@ -80,24 +80,26 @@ async function addToCart( form, button, api, replace ) {
 /**
  * Conecta el editor con el formulario de variaciones del producto.
  *
- * @param {number}   productId         ID del producto.
- * @param {Object}   cart              Datos del carrito: api (Store API) y url (página).
- * @param {Object}   handlers          Funciones a las que avisar.
- * @param {Function} handlers.onColor  Recibe el slug del color elegido en WooCommerce.
- * @param {Function} handlers.onPrice  Recibe el precio de la variante en céntimos, o null.
- * @param {Function} handlers.onSubmit Antes de enviar al carrito: devuelve (async) los campos
- *                                     ocultos que acompañan al pedido ({ nombre: valor }).
- * @param {Function} handlers.onAdded  Se llama cuando el diseño ya está en el carrito, con la
- *                                     clave de su línea si se puede saber.
- * @param {Function} handlers.onError  Recibe el error si algo falla (el diseño no se añadió).
- * @param {Function} handlers.onBusy   Recibe true mientras se prepara y envía el diseño.
+ * @param {number}   productId           ID del producto.
+ * @param {Object}   cart                Datos del carrito: api (Store API) y url (página).
+ * @param {Object}   handlers            Funciones a las que avisar.
+ * @param {Function} handlers.onColor    Recibe el slug del color elegido en WooCommerce.
+ * @param {Function} handlers.onPrice    Recibe el precio de la variante en céntimos, o null.
+ * @param {Function} handlers.onQuantity Recibe la cantidad cuando el cliente la cambia en el
+ *                                       formulario (escritorio).
+ * @param {Function} handlers.onSubmit   Antes de enviar al carrito: devuelve (async) los campos
+ *                                       ocultos que acompañan al pedido ({ nombre: valor }).
+ * @param {Function} handlers.onAdded    Se llama cuando el diseño ya está en el carrito, con la
+ *                                       clave de su línea si se puede saber.
+ * @param {Function} handlers.onError    Recibe el error si algo falla (el diseño no se añadió).
+ * @param {Function} handlers.onBusy     Recibe true mientras se prepara y envía el diseño.
  * @return {Object} Control del puente: options, choose, guard, buy, prefill, setLabel, setColor, disconnect y
  *                  summaryNode (el hueco del resumen de precio dentro del formulario, o null).
  */
 export function connectVariationForm(
 	productId,
 	cart,
-	{ onColor, onPrice, onSubmit, onAdded, onError, onBusy }
+	{ onColor, onPrice, onQuantity, onSubmit, onAdded, onError, onBusy }
 ) {
 	const $ = window.jQuery;
 	const form =
@@ -157,6 +159,27 @@ export function connectVariationForm(
 		onPrice( Math.round( Number( variation.display_price ) * 100 ) );
 	} );
 	$form.on( 'reset_data.camisama', () => onPrice( null ) );
+	const quantityChanged = () =>
+		onQuantity?.( Math.max( 1, parseInt( quantityField.value, 10 ) || 1 ) );
+	quantityField?.addEventListener( 'input', quantityChanged );
+	quantityField?.addEventListener( 'change', quantityChanged );
+
+	// Recargo de cada valor de una opción frente a la prenda más barata (la XXL cuesta más), con
+	// las variantes que WooCommerce deja en el formulario. Sin ellas (muchas variantes), 0.
+	const variations = $form.data( 'product_variations' ) || [];
+	const cheapest = Math.min(
+		...variations.map( ( variation ) => Number( variation.display_price ) )
+	);
+	const extraFor = ( name, value ) => {
+		const prices = variations
+			.filter( ( variation ) =>
+				[ value, '' ].includes( variation.attributes?.[ name ] )
+			)
+			.map( ( variation ) => Number( variation.display_price ) );
+		return prices.length
+			? Math.round( ( Math.min( ...prices ) - cheapest ) * 100 )
+			: 0;
+	};
 
 	if ( select?.value ) {
 		onColor( select.value );
@@ -248,6 +271,7 @@ export function connectVariationForm(
 						.map( ( option ) => ( {
 							value: option.value,
 							text: option.text,
+							extra: extraFor( field.name, option.value ),
 						} ) ),
 				} ) );
 		},
@@ -294,6 +318,8 @@ export function connectVariationForm(
 		disconnect() {
 			$form.off( '.camisama' );
 			form.removeEventListener( 'submit', submit );
+			quantityField?.removeEventListener( 'input', quantityChanged );
+			quantityField?.removeEventListener( 'change', quantityChanged );
 			summaryNode?.remove();
 			form.classList.remove( 'has-camisama-summary' );
 		},

@@ -290,6 +290,7 @@ export default function App( { data } ) {
 		bridge.current = connectVariationForm( data.product_id, data.cart, {
 			onColor: setColor,
 			onPrice: setVariationPrice,
+			onQuantity: setQuantity,
 			onBusy: setBusy,
 			onSubmit: () => {
 				setSubmitError( null );
@@ -338,11 +339,12 @@ export default function App( { data } ) {
 		return () => bridge.current.disconnect();
 	}, [ data, restored ] );
 
-	// Escritorio: la talla en botones en la columna de compra, sin la que WooCommerce marca por
-	// defecto (se elige a conciencia), y sus desplegables ocultos (style.scss). Si al pulsar
-	// "Añadir al carrito" falta la talla, aviso en la página en lugar del alert() del navegador.
+	// La talla se elige a conciencia: se quita la que WooCommerce marca por defecto (así el precio
+	// es el mismo, con su "desde", en la ficha, el pie y el resumen). En escritorio va en botones
+	// en la columna de compra, con sus desplegables ocultos (style.scss); si al pulsar "Añadir al
+	// carrito" falta, aviso en la página en lugar del alert() del navegador.
 	useEffect( () => {
-		if ( mobile || ! purchaseNode ) {
+		if ( ! purchaseNode ) {
 			return;
 		}
 		const options = bridge.current.options();
@@ -353,6 +355,9 @@ export default function App( { data } ) {
 				latest.current.choices[ option.name ] ?? ''
 			)
 		);
+		if ( mobile ) {
+			return;
+		}
 		return bridge.current.guard( ( event ) => {
 			const current = latest.current.choices;
 			if ( options.some( ( option ) => ! current[ option.name ] ) ) {
@@ -800,11 +805,17 @@ export default function App( { data } ) {
 		commit( () => [] );
 	};
 
+	// Sin talla elegida, la prenda más barata; "desde" solo si la talla cambia el precio.
+	const garmentPrice = variationPrice ?? data.base_price;
+	const priceIsFrom = variationPrice === null && Boolean( data.price_varies );
+
 	const summary = (
 		<Summary
-			garmentPrice={ variationPrice ?? data.base_price }
-			priceIsFrom={ variationPrice === null }
+			garmentPrice={ garmentPrice }
+			priceIsFrom={ priceIsFrom }
 			quote={ priced.quote }
+			quantity={ quantity }
+			tiers={ data.price_tiers }
 			error={ priced.error ?? submitError }
 			currency={ data.currency }
 		/>
@@ -820,6 +831,7 @@ export default function App( { data } ) {
 					choices={ choices }
 					missing={ missingChoice }
 					guide={ data.size_guide ?? [] }
+					currency={ data.currency }
 					onChoose={ chooseOption }
 				/>
 			) }
@@ -943,13 +955,34 @@ export default function App( { data } ) {
 		);
 	};
 
-	const garmentPrice = variationPrice ?? data.base_price;
+	// Escalón de precio de la zona del elemento seleccionado y el siguiente (junto a "Tamaño").
+	const selectedTier = ( () => {
+		const charged = selected
+			? priced.quote?.zones.find(
+					( item ) => item.zone === selected.zone
+				)
+			: null;
+		const tiers = charged
+			? ( zoneById( selected.zone )?.tiers ?? data.price_tiers )
+			: [];
+		const index = tiers.findIndex(
+			( item ) => item.label === charged.tier
+		);
+		return index < 0
+			? null
+			: {
+					zone: charged.label,
+					longest: charged.longest_cm,
+					current: tiers[ index ],
+					next: tiers[ index + 1 ] ?? null,
+				};
+	} )();
+
+	// Mismo total y misma regla de "desde" en la ficha, el pie del modo diseño y el resumen.
 	const totalLabel =
-		( variationPrice === null
-			? __( 'desde', 'camisama-customizer' ) + ' '
-			: '' ) +
+		( priceIsFrom ? __( 'desde', 'camisama-customizer' ) + ' ' : '' ) +
 		formatMoney(
-			garmentPrice + ( priced.quote?.total ?? 0 ),
+			( garmentPrice + ( priced.quote?.total ?? 0 ) ) * quantity,
 			data.currency
 		);
 
@@ -1252,6 +1285,8 @@ export default function App( { data } ) {
 						element={ selected }
 						zone={ zoneById( selected.zone ) }
 						resolution={ data.resolution }
+						tier={ selectedTier }
+						currency={ data.currency }
 						onResize={ ( value ) => resize( selected, value ) }
 						onRotate={ ( angle ) =>
 							updateElement(
@@ -1413,9 +1448,10 @@ export default function App( { data } ) {
 				createPortal(
 					<FlowEntry
 						price={
+							// Sin diseño, FlowEntry ya dice "Desde … + impresión".
 							elements.length
 								? totalLabel
-								: formatMoney( data.base_price, data.currency )
+								: formatMoney( garmentPrice, data.currency )
 						}
 						hasDesign={ elements.length > 0 }
 						onDesign={ openDesign }
@@ -1437,6 +1473,7 @@ export default function App( { data } ) {
 						choices={ choices }
 						missing={ missingChoice }
 						guide={ data.size_guide ?? [] }
+						currency={ data.currency }
 						quantity={ quantity }
 						busy={ busy }
 						error={ submitError }

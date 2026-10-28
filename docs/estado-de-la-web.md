@@ -69,19 +69,19 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Igualar el escritorio al móvil:** talla en botones sin preselección y con la guía, aviso en
       la página en lugar del `alert()`, sin los desplegables duplicados de WooCommerce y lienzo
       fijo arriba mientras se usan las herramientas.
-- [ ] **Precio sin sorpresas (P2 de la tercera crítica):** total × cantidad, escalón visible al
-      ajustar el tamaño, "desde" coherente entre pasos y etiqueta del carrito.
+- [x] **Precio sin sorpresas (P2 de la tercera crítica):** total por la cantidad ("2 × S/ 53.90"),
+      el escalón y su límite junto a "Tamaño" y en el resumen, lo nuevo empieza sin pasar por poco
+      al escalón caro, "desde" con la misma regla en todos los pasos (solo si la talla cambia el
+      precio), el recargo de la XXL en su botón y "Impresión y estampados" en el carrito.
 - [ ] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
       prenda oscura.
 - [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
       nuevo no caiga encima de lo anterior.
-- [ ] **Escalones de precio** (P2): decir qué es "Grande" y colocar los estampados en Mediano.
 - [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
       marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
       `alert()`, en el paso de talla y pago.
-- [ ] **Etiqueta del carrito**: dice "Recargo de estampado" cuando es la impresión por zonas.
-- [ ] **Jerga del editor**: "Traer adelante / Enviar atrás", "Añadir en:", y los escalones de
-      precio ("Mediano", "Grande") sin explicar.
+- [ ] **Jerga del editor**: "Traer adelante / Enviar atrás" y "Añadir en:" (los escalones ya dicen
+      hasta cuántos cm llegan).
 - [ ] **Elementos nuevos siempre en el centro**, encima de los anteriores.
 - [ ] **Probar el gesto táctil en un móvil real**: deslizar sobre el lienzo debe desplazar la
       página y arrastrar el elemento seleccionado debe moverlo (la emulación no lo cubre).

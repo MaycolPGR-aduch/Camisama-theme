@@ -5,6 +5,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { imageQuality } from '../elements';
+import { formatMoney } from '../format';
 
 export function elementLabel( element ) {
 	if ( element.kind === 'text' ) {
@@ -38,6 +39,8 @@ export default function SelectionPanel( {
 	element,
 	zone,
 	resolution,
+	tier,
+	currency,
 	onResize,
 	onRotate,
 	onCenter,
@@ -101,10 +104,41 @@ export default function SelectionPanel( {
 					max={ maxSize }
 					step={ 0.1 }
 					value={ size }
+					aria-describedby={ tier ? 'camisama-size-tier' : undefined }
 					onChange={ ( event ) =>
 						onResize( parseFloat( event.target.value ) )
 					}
 				/>
+				{ /* El precio de la zona va por escalones del lado mayor: dónde está y dónde salta. */ }
+				{ tier && (
+					<p
+						id="camisama-size-tier"
+						className="camisama-customizer__hint"
+					>
+						{ sprintf(
+							/* translators: 1: zona, 2: escalón, 3: su recargo, 4: su límite en cm, 5: lado mayor actual en cm. */
+							__(
+								'%1$s: %2$s (+ %3$s) hasta %4$s cm de lado; ahora %5$s cm.',
+								'camisama-customizer'
+							),
+							tier.zone,
+							tier.current.label,
+							formatMoney( tier.current.amount, currency ),
+							String( tier.current.max_cm ),
+							tier.longest.toFixed( 1 )
+						) }{ ' ' }
+						{ tier.next &&
+							sprintf(
+								/* translators: 1: escalón siguiente, 2: su recargo. */
+								__(
+									'Más grande: %1$s (+ %2$s).',
+									'camisama-customizer'
+								),
+								tier.next.label,
+								formatMoney( tier.next.amount, currency )
+							) }
+					</p>
+				) }
 			</div>
 
 			<div className="camisama-customizer__field">
