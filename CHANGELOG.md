@@ -10,6 +10,10 @@ conviene recordar.
 ## 2026-10-28
 
 ### Añadido
+- **Contraste también para estampados y fotos:** si la mayor parte de una imagen casi no se
+  distingue de la prenda (azul marino sobre negro, un corazón rojo sobre prenda roja), aviso en el
+  lienzo (en el móvil, en la franja bajo el asa) con "Prenda en …", el color donde todo el diseño
+  se ve; también la marca "Revisar" en la capa y el riesgo en "Revisa antes de añadir".
 - **Precio sin sorpresas** (P2 de la tercera crítica):
   - El total multiplica la cantidad, con la fila "Por unidad: 2 × S/ 53.90"; en escritorio sigue
     la cantidad del formulario. El pie del modo diseño y la ficha usan el mismo total.
@@ -45,6 +49,10 @@ conviene recordar.
   alto, mientras se bajan las herramientas, como en el móvil. Los controles del editor guardan
   margen para no quedar debajo al llegar a ellos con el tabulador.
 
+- **Lo nuevo ya no se apila en el centro:** va al hueco libre más cercano de la zona (también al
+  duplicar). Entre los huecos gana el que deja la zona en el escalón de precio más barato; si
+  entero solo cabe pasando a un escalón más caro, entra al 75 % o a la mitad. Si no hay hueco, va
+  a tamaño completo donde menos pise.
 - Lo nuevo (estampado o foto) empieza al 60 % de la zona, salvo que eso pase por poco el límite
   de un escalón: entonces se queda en el límite (un estampado alto en el frente, 20 cm en lugar
   de 24, Mediano en lugar de Grande).
@@ -57,6 +65,10 @@ conviene recordar.
   la consulta del móvil y la tabla de "¿Qué talla?" salía sin estilo).
 
 ### Decisiones
+- Una imagen "no se ve" cuando más de la mitad de sus píxeles visibles contrasta menos de 1,5 con
+  la prenda (muestra de 48 × 48 px, una vez por imagen). Con el catálogo actual avisan la
+  cordillera y la ola sobre azul marino y el corazón sobre rojo; la cordillera sobre negro (42 %)
+  no, porque se distinguen la nieve y el sol.
 - Los botones de talla son un solo componente (`SizeOptions`) para el paso de talla y pago del
   móvil y la columna de compra del escritorio; el formulario de WooCommerce sigue enviando el
   pedido, oculto.

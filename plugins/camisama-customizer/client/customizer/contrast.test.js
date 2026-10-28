@@ -1,8 +1,11 @@
 import {
 	contrastRatio,
+	hiddenShare,
+	isImageVisible,
 	isReadable,
 	MIN_CONTRAST,
 	mostReadable,
+	rgbLuminance,
 } from './contrast';
 
 const TEXT = [ '#16161A', '#FFFFFF', '#D3261C', '#26357F', '#F5B700' ];
@@ -54,5 +57,30 @@ describe( 'mostReadable', () => {
 
 	it( 'devuelve el primero si no se conoce la prenda', () => {
 		expect( mostReadable( undefined, TEXT ) ).toBe( '#16161A' );
+	} );
+} );
+
+describe( 'isImageVisible', () => {
+	const tonesOf = ( ...colors ) =>
+		colors.map( ( [ r, g, b ] ) => rgbLuminance( r, g, b ) );
+	const NAVY = [ 31, 42, 68 ];
+	const WHITE = [ 255, 255, 255 ];
+
+	it( 'un estampado oscuro sobre prenda oscura no se ve', () => {
+		const navy = tonesOf( NAVY, NAVY, NAVY, NAVY );
+		expect( hiddenShare( navy, '#16161A' ) ).toBe( 1 );
+		expect( isImageVisible( navy, '#16161A' ) ).toBe( false );
+		expect( isImageVisible( navy, '#FFFFFF' ) ).toBe( true );
+	} );
+
+	it( 'basta con que la mayor parte se distinga', () => {
+		const wave = tonesOf( NAVY, WHITE, WHITE, WHITE );
+		expect( isImageVisible( wave, '#16161A' ) ).toBe( true );
+	} );
+
+	it( 'sin muestra o sin color de prenda, se da por buena', () => {
+		expect( hiddenShare( null, '#16161A' ) ).toBeNull();
+		expect( isImageVisible( [], '#16161A' ) ).toBe( true );
+		expect( isImageVisible( tonesOf( NAVY ), undefined ) ).toBe( true );
 	} );
 } );

@@ -31,10 +31,12 @@ import {
 	fitToZone,
 	imageQuality,
 	imageElement,
+	placeFree,
 	newId,
 	textElement,
 } from './elements';
-import { isReadable, mostReadable } from './contrast';
+import { isImageVisible, isReadable, mostReadable } from './contrast';
+import { imageTones } from './tones';
 import { loadDraft, saveDraft } from './draft';
 import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
@@ -250,6 +252,8 @@ export default function App( { data } ) {
 	const inCart = addedDesign !== null && addedDesign === elements;
 	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
+	// Tonos de cada imagen del diseño (src → luminancias), para avisar si no se verá en la prenda.
+	const [ tones, setTones ] = useState( {} );
 	const [ message, setMessage ] = useState( '' );
 	const [ submitError, setSubmitError ] = useState( null );
 	// Flujo móvil (docs/flujo-movil.md): ficha → modo diseño a pantalla completa → talla y pago.
@@ -338,6 +342,33 @@ export default function App( { data } ) {
 		}
 		return () => bridge.current.disconnect();
 	}, [ data, restored ] );
+
+	// Tonos de las imágenes nuevas del diseño (una vez por imagen; tones.js guarda el resultado).
+	useEffect( () => {
+		const pending = [
+			...new Set(
+				elements
+					.filter(
+						( element ) => element.src && ! ( element.src in tones )
+					)
+					.map( ( element ) => element.src )
+			),
+		];
+		let cancelled = false;
+		pending.forEach( ( src ) =>
+			imageTones( src ).then( ( found ) => {
+				if ( ! cancelled ) {
+					setTones( ( current ) => ( {
+						...current,
+						[ src ]: found,
+					} ) );
+				}
+			} )
+		);
+		return () => {
+			cancelled = true;
+		};
+	}, [ elements, tones ] );
 
 	// La talla se elige a conciencia: se quita la que WooCommerce marca por defecto (así el precio
 	// es el mismo, con su "desde", en la ficha, el pie y el resumen). En escritorio va en botones
@@ -565,8 +596,10 @@ export default function App( { data } ) {
 			options
 		);
 
+	// Lo nuevo (también lo duplicado) va al hueco libre más cercano: no encima de lo anterior.
 	const add = ( element ) => {
-		const fitted = fitToZone( element, zoneById( element.zone ) );
+		const zone = zoneById( element.zone );
+		const fitted = placeFree( fitToZone( element, zone ), zone, elements );
 		commit( ( list ) => [ ...list, fitted ] );
 		setSelectedId( fitted.id );
 		setMessage(
@@ -868,6 +901,27 @@ export default function App( { data } ) {
 			element.kind === 'text' &&
 			! isReadable( element.color, garment?.hex )
 	);
+	// Estampados y fotos que casi no se ven (azul marino sobre negro). Aquí no hay un color mejor
+	// para la imagen: se ofrece la prenda del color donde todo el diseño se ve.
+	const isPicture = ( element ) =>
+		element.kind === 'design' || element.kind === 'image';
+	const hiddenImages = elements.filter(
+		( element ) =>
+			isPicture( element ) &&
+			! isImageVisible( tones[ element.src ], garment?.hex )
+	);
+	const visibleGarment = hiddenImages.length
+		? data.colors.find(
+				( item ) =>
+					item.hex &&
+					elements.every( ( element ) =>
+						isPicture( element )
+							? isImageVisible( tones[ element.src ], item.hex )
+							: element.kind !== 'text' ||
+								isReadable( element.color, item.hex )
+					)
+			)
+		: null;
 	const readableColor = TEXT_COLORS.find(
 		( item ) =>
 			item.hex ===
@@ -899,6 +953,17 @@ export default function App( { data } ) {
 					)
 				);
 			}
+		}
+		if (
+			isPicture( element ) &&
+			! isImageVisible( tones[ element.src ], garment?.hex )
+		) {
+			found.push(
+				__(
+					'Casi no se ve sobre el color de la prenda.',
+					'camisama-customizer'
+				)
+			);
 		}
 		if ( element.kind === 'text' ) {
 			if ( ! isReadable( element.color, garment?.hex ) ) {
@@ -992,7 +1057,8 @@ export default function App( { data } ) {
 	const hasNotices =
 		Boolean( editKey ) ||
 		( restoredNotice && ! history.past.length ) ||
-		( hiddenTexts.length > 0 && Boolean( garment ) );
+		( hiddenTexts.length > 0 && Boolean( garment ) ) ||
+		( hiddenImages.length > 0 && Boolean( garment ) );
 	const notices = (
 		<>
 			{ editKey && (
@@ -1051,6 +1117,49 @@ export default function App( { data } ) {
 							readableColor.name.toLowerCase()
 						) }
 					</button>
+				</div>
+			) }
+			{ hiddenImages.length > 0 && garment && (
+				<div className="camisama-customizer__contrast" role="status">
+					<p>
+						{ hiddenImages.length === 1
+							? sprintf(
+									/* translators: 1: estampado o foto, 2: color de la prenda. */
+									__(
+										'%1$s casi no se ve sobre una prenda de color %2$s.',
+										'camisama-customizer'
+									),
+									elementLabel( hiddenImages[ 0 ] ),
+									garment.name.toLowerCase()
+								)
+							: sprintf(
+									/* translators: 1: número de estampados y fotos, 2: color de la prenda. */
+									__(
+										'%1$d imágenes casi no se ven sobre una prenda de color %2$s.',
+										'camisama-customizer'
+									),
+									hiddenImages.length,
+									garment.name.toLowerCase()
+								) }
+						{ ! visibleGarment &&
+							' ' +
+								__(
+									'Prueba otro estampado u otro color de prenda.',
+									'camisama-customizer'
+								) }
+					</p>
+					{ visibleGarment && (
+						<button
+							type="button"
+							onClick={ () => chooseColor( visibleGarment.slug ) }
+						>
+							{ sprintf(
+								/* translators: %s: color de la prenda, p. ej. blanco. */
+								__( 'Prenda en %s', 'camisama-customizer' ),
+								visibleGarment.name.toLowerCase()
+							) }
+						</button>
+					) }
 				</div>
 			) }
 		</>

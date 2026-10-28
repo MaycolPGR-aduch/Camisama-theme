@@ -4,7 +4,9 @@ import {
 	imageElement,
 	imageQuality,
 	initialSize,
+	placeFree,
 } from './elements';
+import { elementBounds } from './pricing';
 import {
 	fitsInside,
 	printedBounds,
@@ -147,6 +149,79 @@ describe( 'elementos', () => {
 		expect(
 			imageQuality( { ...photo, width_cm: 30 }, resolution ).level
 		).toBe( 'low' );
+	} );
+} );
+
+describe( 'placeFree', () => {
+	const box = ( id, cx, cy, size ) => ( {
+		id,
+		zone: 'front',
+		cx,
+		cy,
+		width_cm: size,
+		height_cm: size,
+		angle: 0,
+	} );
+	const overlaps = ( a, b ) => {
+		const p = elementBounds( a );
+		const q = elementBounds( b );
+		return (
+			p.left < q.right &&
+			q.left < p.right &&
+			p.top < q.bottom &&
+			q.top < p.bottom
+		);
+	};
+
+	it( 'sin nada debajo, se queda donde iba', () => {
+		const element = box( 'b', 15, 20, 10 );
+		expect( placeFree( element, front, [] ) ).toBe( element );
+		expect(
+			placeFree( element, front, [
+				{ ...box( 'x', 15, 20, 10 ), zone: 'back' },
+			] )
+		).toBe( element );
+	} );
+
+	it( 'lo nuevo no cae encima de lo anterior, y sigue dentro de la zona', () => {
+		const first = box( 'a', 15, 20, 10 );
+		const placed = placeFree( box( 'b', 15, 20, 10 ), front, [ first ] );
+		expect( overlaps( placed, first ) ).toBe( false );
+		expect( placed.width_cm ).toBe( 10 );
+		const bounds = elementBounds( placed );
+		expect( bounds.left ).toBeGreaterThanOrEqual( 0 );
+		expect( bounds.top ).toBeGreaterThanOrEqual( 0 );
+		expect( bounds.right ).toBeLessThanOrEqual( 30 );
+		expect( bounds.bottom ).toBeLessThanOrEqual( 40 );
+		// El hueco más cercano: justo al lado, no en una esquina.
+		expect(
+			Math.hypot( placed.cx - 15, placed.cy - 20 )
+		).toBeLessThanOrEqual( 10.01 );
+	} );
+
+	it( 'entre los huecos libres, el que deja la zona en el escalón más barato', () => {
+		const tiers = [
+			{ label: 'Pequeño', max_cm: 10, amount: 800 },
+			{ label: 'Mediano', max_cm: 20, amount: 1400 },
+			{ label: 'Grande', max_cm: 30, amount: 2000 },
+			{ label: 'Máximo', max_cm: 40, amount: 2500 },
+		];
+		const first = { ...box( 'a', 15, 20, 18 ), height_cm: 16 };
+		const placed = placeFree(
+			{ ...box( 'b', 15, 20, 18 ), height_cm: 16 },
+			{ ...front, tiers },
+			[ first ]
+		);
+		// Entero solo cabría libre a 32 cm de alto (Máximo); al 75 % la zona sigue en Grande.
+		expect( overlaps( placed, first ) ).toBe( false );
+		expect( placed.width_cm ).toBe( 13.5 );
+	} );
+
+	it( 'si no cabe entero, lo prueba más pequeño', () => {
+		const big = box( 'a', 15, 20, 26 );
+		const placed = placeFree( box( 'b', 15, 20, 12 ), front, [ big ] );
+		expect( placed.width_cm ).toBeLessThan( 12 );
+		expect( overlaps( placed, big ) ).toBe( false );
 	} );
 } );
 

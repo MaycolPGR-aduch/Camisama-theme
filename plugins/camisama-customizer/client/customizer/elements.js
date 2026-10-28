@@ -1,7 +1,7 @@
 /**
  * Creación de elementos del diseño y reglas que no dependen del lienzo.
  */
-import { elementBounds } from './pricing';
+import { elementBounds, tierFor } from './pricing';
 
 let counter = 0;
 
@@ -192,4 +192,138 @@ export function imageQuality( element, resolution ) {
 	}
 
 	return { dpi, level };
+}
+
+// Paso (cm) con el que se buscan huecos en la zona, y tamaños que se prueban si no cabe entero.
+const PLACE_STEP = 0.5;
+const PLACE_SCALES = [ 1, 0.75, 0.5 ];
+
+/**
+ * Área (cm²) que comparten dos rectángulos.
+ *
+ * @param {Object} a Límites (left, top, right, bottom).
+ * @param {Object} b Límites.
+ * @return {number} Área común.
+ */
+function overlapArea( a, b ) {
+	const w = Math.min( a.right, b.right ) - Math.max( a.left, b.left );
+	const h = Math.min( a.bottom, b.bottom ) - Math.max( a.top, b.top );
+	return w > 0 && h > 0 ? w * h : 0;
+}
+
+/**
+ * Coloca un elemento nuevo donde no pise a los que ya hay en su zona. Entre los huecos libres
+ * gana el que deja la zona en el escalón de precio más barato (el precio va por el lado mayor de
+ * todo lo que hay en ella); a igualdad, el elemento más grande y, después, el más cercano a donde
+ * iba (el centro). Prueba el tamaño completo, el 75 % y la mitad; si no cabe libre en ninguno, lo
+ * deja a tamaño completo donde menos se solape. Sin nada debajo, no lo mueve.
+ *
+ * @param {Object}   element Elemento nuevo, ya dentro de la zona (fitToZone).
+ * @param {Object}   zone    Zona (size_cm y, si los hay, sus escalones en tiers).
+ * @param {Object[]} others  Elementos del diseño (se miran solo los de la misma zona).
+ * @return {Object} Elemento colocado (el mismo objeto si no hacía falta moverlo).
+ */
+export function placeFree( element, zone, others ) {
+	const boxes = others
+		.filter( ( item ) => item.zone === element.zone )
+		.map( elementBounds );
+	if ( ! boxes.length ) {
+		return element;
+	}
+	const union = boxes.reduce( ( all, box ) => ( {
+		left: Math.min( all.left, box.left ),
+		top: Math.min( all.top, box.top ),
+		right: Math.max( all.right, box.right ),
+		bottom: Math.max( all.bottom, box.bottom ),
+	} ) );
+
+	// Cómo queda un sitio: cuánto pisa y qué escalón cobra la zona (sin escalones, no cuenta).
+	const rate = ( candidate ) => {
+		const bounds = elementBounds( candidate );
+		const overlap = boxes.reduce(
+			( sum, box ) => sum + overlapArea( bounds, box ),
+			0
+		);
+		const longest = Math.max(
+			Math.max( union.right, bounds.right ) -
+				Math.min( union.left, bounds.left ),
+			Math.max( union.bottom, bounds.bottom ) -
+				Math.min( union.top, bounds.top )
+		);
+		let cost = 0;
+		if ( zone.tiers?.length ) {
+			cost = tierFor( zone.tiers, longest )?.amount ?? Infinity;
+		}
+		return {
+			candidate,
+			overlap,
+			cost,
+			distance: Math.hypot(
+				candidate.cx - element.cx,
+				candidate.cy - element.cy
+			),
+		};
+	};
+	if ( rate( element ).overlap === 0 ) {
+		return element;
+	}
+
+	let free = null;
+	let fallback = null;
+	for ( const scale of PLACE_SCALES ) {
+		const sized =
+			scale === 1
+				? element
+				: {
+						...element,
+						width_cm: round( element.width_cm * scale ),
+						height_cm: round( element.height_cm * scale ),
+						...( element.font_size_cm && {
+							font_size_cm: round( element.font_size_cm * scale ),
+						} ),
+					};
+		const bounds = elementBounds( sized );
+		const halfW = ( bounds.right - bounds.left ) / 2;
+		const halfH = ( bounds.bottom - bounds.top ) / 2;
+		for (
+			let y = halfH;
+			y <= zone.size_cm.h - halfH + 0.001;
+			y += PLACE_STEP
+		) {
+			for (
+				let x = halfW;
+				x <= zone.size_cm.w - halfW + 0.001;
+				x += PLACE_STEP
+			) {
+				const spot = rate( {
+					...sized,
+					cx: round( x ),
+					cy: round( y ),
+				} );
+				// Libre: el más barato; a igualdad gana el tamaño anterior (más grande) y el más cercano.
+				if (
+					spot.overlap < 0.001 &&
+					( ! free ||
+						spot.cost < free.cost ||
+						( spot.cost === free.cost &&
+							spot.candidate.width_cm ===
+								free.candidate.width_cm &&
+							spot.distance < free.distance ) )
+				) {
+					free = spot;
+				}
+				if (
+					scale === 1 &&
+					( ! fallback ||
+						spot.overlap < fallback.overlap - 0.001 ||
+						( spot.overlap <= fallback.overlap + 0.001 &&
+							spot.distance < fallback.distance ) )
+				) {
+					fallback = spot;
+				}
+			}
+		}
+	}
+
+	return ( free ?? fallback )?.candidate ?? element;
 }

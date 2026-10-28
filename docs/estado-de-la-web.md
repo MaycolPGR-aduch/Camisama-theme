@@ -73,16 +73,16 @@ local, 45 pruebas de JS y lint limpio.
       el escalón y su límite junto a "Tamaño" y en el resumen, lo nuevo empieza sin pasar por poco
       al escalón caro, "desde" con la misma regla en todos los pasos (solo si la talla cambia el
       precio), el recargo de la XXL en su botón y "Impresión y estampados" en el carrito.
-- [ ] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
-      prenda oscura.
-- [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
-      nuevo no caiga encima de lo anterior.
+- [x] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
+      prenda oscura: lo nuevo va al hueco libre que deja la zona en el escalón más barato, y los
+      estampados y fotos que casi no se ven avisan con "Prenda en …".
+- [ ] **Texto en vivo** (P1): que aparezca al escribir y "Nuevo texto" siempre visible (lo nuevo
+      ya no cae encima de lo anterior).
 - [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
       marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
       `alert()`, en el paso de talla y pago.
 - [ ] **Jerga del editor**: "Traer adelante / Enviar atrás" y "Añadir en:" (los escalones ya dicen
       hasta cuántos cm llegan).
-- [ ] **Elementos nuevos siempre en el centro**, encima de los anteriores.
 - [ ] **Probar el gesto táctil en un móvil real**: deslizar sobre el lienzo debe desplazar la
       página y arrastrar el elemento seleccionado debe moverlo (la emulación no lo cubre).
 
