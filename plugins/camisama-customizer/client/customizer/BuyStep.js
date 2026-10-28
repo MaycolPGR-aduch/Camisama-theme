@@ -5,13 +5,15 @@
  * tallas, cantidad y "Añadir al carrito". El pedido lo sigue enviando el formulario de
  * WooCommerce (oculto), que este paso maneja a través de wc-bridge.js.
  */
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 const MAX_QUANTITY = 99;
 
 export default function BuyStep( {
 	previews,
+	risks,
+	onFix,
 	summary,
 	options,
 	choices,
@@ -32,6 +34,8 @@ export default function BuyStep( {
 	onStartOver,
 } ) {
 	const rootRef = useRef( null );
+	// Miniatura ampliada (al tocarla) para revisar el diseño antes de pagar.
+	const [ enlarged, setEnlarged ] = useState( null );
 	const closeRef = useRef( null );
 	const firstSizeRef = useRef( null );
 
@@ -122,18 +126,33 @@ export default function BuyStep( {
 				<div className="camisama-customizer__previews">
 					{ previews ? (
 						previews.map( ( preview ) => (
-							<img
+							<button
 								key={ preview.id }
-								src={ preview.src }
-								alt={ sprintf(
-									/* translators: %s: vista de la prenda, p. ej. Frente. */
+								type="button"
+								className={
+									enlarged === preview.id
+										? 'is-enlarged'
+										: undefined
+								}
+								aria-pressed={ enlarged === preview.id }
+								aria-label={ sprintf(
+									/* translators: %s: vista de la prenda, p. ej. frente. */
 									__(
-										'Tu prenda, %s',
+										'Ver en grande: tu prenda, %s',
 										'camisama-customizer'
 									),
 									preview.label.toLowerCase()
 								) }
-							/>
+								onClick={ () =>
+									setEnlarged(
+										enlarged === preview.id
+											? null
+											: preview.id
+									)
+								}
+							>
+								<img src={ preview.src } alt="" />
+							</button>
 						) )
 					) : (
 						<p className="camisama-customizer__hint">
@@ -153,6 +172,39 @@ export default function BuyStep( {
 						? __( 'Editar diseño', 'camisama-customizer' )
 						: __( 'Personalizar', 'camisama-customizer' ) }
 				</button>
+
+				{ risks.length > 0 && (
+					<section
+						className="camisama-customizer__review"
+						aria-labelledby="camisama-review-title"
+					>
+						<h3 id="camisama-review-title">
+							{ __(
+								'Revisa antes de añadir',
+								'camisama-customizer'
+							) }
+						</h3>
+						<ul>
+							{ risks.map( ( risk ) => (
+								<li key={ risk.key }>
+									<p>
+										<strong>{ risk.title }</strong>{ ' ' }
+										{ risk.text }
+									</p>
+									<button
+										type="button"
+										onClick={ () => onFix( risk.id ) }
+									>
+										{ __(
+											'Corregir',
+											'camisama-customizer'
+										) }
+									</button>
+								</li>
+							) ) }
+						</ul>
+					</section>
+				) }
 
 				{ summary }
 

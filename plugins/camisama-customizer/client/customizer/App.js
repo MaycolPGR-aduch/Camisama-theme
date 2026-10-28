@@ -28,6 +28,7 @@ import UploadPanel from './panels/UploadPanel';
 import {
 	designElement,
 	fitToZone,
+	imageQuality,
 	imageElement,
 	newId,
 	textElement,
@@ -206,6 +207,9 @@ function useMediaQuery( query ) {
 	}, [ query ] );
 	return matches;
 }
+
+// Letra por debajo de este alto (cm) puede no leerse en la prenda.
+const MIN_TEXT_CM = 0.6;
 
 const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
@@ -624,7 +628,7 @@ export default function App( { data } ) {
 		if ( ! editingElement ) {
 			return;
 		}
-		setSheet( ( current ) => ( current === 'min' ? 'half' : current ) );
+		setSheet( 'half' );
 		if ( selected.kind === 'text' ) {
 			setTab( 'text' );
 		}
@@ -825,6 +829,74 @@ export default function App( { data } ) {
 				TEXT_COLORS.map( ( option ) => option.hex )
 			)
 	);
+	// Riesgos que el cliente debe ver antes de pagar (paso de talla y pago y lista de capas):
+	// foto que se verá pixelada, texto que casi no se ve sobre la prenda y letra diminuta.
+	const risks = elements.flatMap( ( element ) => {
+		const zone = zoneById( element.zone );
+		const found = [];
+		if ( element.kind === 'image' ) {
+			const quality = imageQuality( element, data.resolution );
+			if ( quality.level === 'low' ) {
+				found.push(
+					sprintf(
+						/* translators: 1: zona, 2: ancho máximo en cm. */
+						__(
+							'Se verá pixelada en %1$s. Redúcela a %2$s cm de ancho o menos, o usa una foto más grande.',
+							'camisama-customizer'
+						),
+						zone?.label.toLowerCase() ?? '',
+						(
+							( element.pixel_width / data.resolution.min_dpi ) *
+							2.54
+						).toFixed( 1 )
+					)
+				);
+			}
+		}
+		if ( element.kind === 'text' ) {
+			if ( ! isReadable( element.color, garment?.hex ) ) {
+				found.push(
+					__(
+						'Casi no se ve sobre el color de la prenda.',
+						'camisama-customizer'
+					)
+				);
+			}
+			if ( element.font_size_cm < MIN_TEXT_CM ) {
+				found.push(
+					sprintf(
+						/* translators: %s: alto de la letra en cm. */
+						__(
+							'La letra mide %s cm y puede no leerse: hazla más grande o acorta el texto.',
+							'camisama-customizer'
+						),
+						element.font_size_cm.toFixed( 1 )
+					)
+				);
+			}
+		}
+		return found.map( ( text, index ) => ( {
+			key: `${ element.id }-${ index }`,
+			id: element.id,
+			title: elementLabel( element ),
+			text,
+		} ) );
+	} );
+	const riskyIds = new Set( risks.map( ( risk ) => risk.id ) );
+
+	// "Corregir" desde talla y pago: vuelve al diseño con ese elemento seleccionado (y acercado).
+	const fixRisk = ( id ) => {
+		const element = elements.find( ( item ) => item.id === id );
+		const zone = element && zoneById( element.zone );
+		if ( ! zone ) {
+			return;
+		}
+		setViewId( zone.view );
+		setActiveZoneId( zone.id );
+		setScreen( 'design' );
+		setSelectedId( id );
+	};
+
 	const fixContrast = () => {
 		const ids = new Set( hiddenTexts.map( ( element ) => element.id ) );
 		commit( ( list ) =>
@@ -845,6 +917,76 @@ export default function App( { data } ) {
 			garmentPrice + ( priced.quote?.total ?? 0 ),
 			data.currency
 		);
+
+	// Avisos del diseño (editar desde el carrito, borrador recuperado, texto que no se ve). En el
+	// modo diseño del móvil van en una franja fija bajo el asa de la hoja: en la columna del lienzo
+	// quedaban tapados por la hoja sin pista de que hubiera algo debajo.
+	const hasNotices =
+		Boolean( editKey ) ||
+		( restoredNotice && ! history.past.length ) ||
+		( hiddenTexts.length > 0 && Boolean( garment ) );
+	const notices = (
+		<>
+			{ editKey && (
+				<div className="camisama-customizer__restored" role="status">
+					<p>
+						{ __(
+							'Estás editando un diseño de tu carrito: al guardar, lo reemplazas.',
+							'camisama-customizer'
+						) }
+					</p>
+					<a href={ data.cart.url }>
+						{ __( 'Volver al carrito', 'camisama-customizer' ) }
+					</a>
+				</div>
+			) }
+			{ restoredNotice && ! history.past.length && (
+				<div className="camisama-customizer__restored" role="status">
+					<p>
+						{ __(
+							'Recuperamos el diseño que dejaste a medias.',
+							'camisama-customizer'
+						) }
+					</p>
+					<button type="button" onClick={ startOver }>
+						{ __( 'Empezar de cero', 'camisama-customizer' ) }
+					</button>
+				</div>
+			) }
+			{ hiddenTexts.length > 0 && garment && (
+				<div className="camisama-customizer__contrast" role="status">
+					<p>
+						{ hiddenTexts.length === 1
+							? sprintf(
+									/* translators: 1: texto, p. ej. Texto «Feliz cumple», 2: color de la prenda. */
+									__(
+										'%1$s casi no se ve sobre una prenda de color %2$s.',
+										'camisama-customizer'
+									),
+									elementLabel( hiddenTexts[ 0 ] ),
+									garment.name.toLowerCase()
+								)
+							: sprintf(
+									/* translators: 1: número de textos, 2: color de la prenda. */
+									__(
+										'%1$d textos casi no se ven sobre una prenda de color %2$s.',
+										'camisama-customizer'
+									),
+									hiddenTexts.length,
+									garment.name.toLowerCase()
+								) }
+					</p>
+					<button type="button" onClick={ fixContrast }>
+						{ sprintf(
+							/* translators: %s: color del texto, p. ej. blanco. */
+							__( 'Cambiar a %s', 'camisama-customizer' ),
+							readableColor.name.toLowerCase()
+						) }
+					</button>
+				</div>
+			) }
+		</>
+	);
 
 	return (
 		<div
@@ -1007,73 +1149,7 @@ export default function App( { data } ) {
 						</p>
 					) }
 				</FabricStage>
-				{ editKey && (
-					<div
-						className="camisama-customizer__restored"
-						role="status"
-					>
-						<p>
-							{ __(
-								'Estás editando un diseño de tu carrito: al guardar, lo reemplazas.',
-								'camisama-customizer'
-							) }
-						</p>
-						<a href={ data.cart.url }>
-							{ __( 'Volver al carrito', 'camisama-customizer' ) }
-						</a>
-					</div>
-				) }
-				{ restoredNotice && ! history.past.length && (
-					<div
-						className="camisama-customizer__restored"
-						role="status"
-					>
-						<p>
-							{ __(
-								'Recuperamos el diseño que dejaste a medias.',
-								'camisama-customizer'
-							) }
-						</p>
-						<button type="button" onClick={ startOver }>
-							{ __( 'Empezar de cero', 'camisama-customizer' ) }
-						</button>
-					</div>
-				) }
-				{ hiddenTexts.length > 0 && garment && (
-					<div
-						className="camisama-customizer__contrast"
-						role="status"
-					>
-						<p>
-							{ hiddenTexts.length === 1
-								? sprintf(
-										/* translators: 1: texto, p. ej. Texto «Feliz cumple», 2: color de la prenda. */
-										__(
-											'%1$s casi no se ve sobre una prenda de color %2$s.',
-											'camisama-customizer'
-										),
-										elementLabel( hiddenTexts[ 0 ] ),
-										garment.name.toLowerCase()
-									)
-								: sprintf(
-										/* translators: 1: número de textos, 2: color de la prenda. */
-										__(
-											'%1$d textos casi no se ven sobre una prenda de color %2$s.',
-											'camisama-customizer'
-										),
-										hiddenTexts.length,
-										garment.name.toLowerCase()
-									) }
-						</p>
-						<button type="button" onClick={ fixContrast }>
-							{ sprintf(
-								/* translators: %s: color del texto, p. ej. blanco. */
-								__( 'Cambiar a %s', 'camisama-customizer' ),
-								readableColor.name.toLowerCase()
-							) }
-						</button>
-					</div>
-				) }
+				{ ! ( mobile && designing ) && notices }
 			</div>
 
 			<p className="camisama-customizer__sr-only" aria-live="polite">
@@ -1085,6 +1161,11 @@ export default function App( { data } ) {
 			<div className="camisama-customizer__sheet">
 				{ mobile && designing && (
 					<SheetHandle step={ sheet } onChange={ setSheet } />
+				) }
+				{ mobile && designing && hasNotices && (
+					<div className="camisama-customizer__notices">
+						{ notices }
+					</div>
 				) }
 
 				<div
@@ -1256,6 +1337,16 @@ export default function App( { data } ) {
 										>
 											{ elementLabel( element ) }
 											<small>
+												{ riskyIds.has(
+													element.id
+												) && (
+													<span className="camisama-customizer__risk">
+														{ __(
+															'Revisar',
+															'camisama-customizer'
+														) }
+													</span>
+												) }
 												{
 													zoneById( element.zone )
 														?.label
@@ -1304,6 +1395,8 @@ export default function App( { data } ) {
 				createPortal(
 					<BuyStep
 						previews={ previews }
+						risks={ risks }
+						onFix={ fixRisk }
 						summary={ summary }
 						options={ buyOptions }
 						choices={ choices }

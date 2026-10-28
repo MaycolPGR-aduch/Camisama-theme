@@ -592,6 +592,13 @@ $warning: #8a5a00;
 		}
 	}
 
+	// Marca de las capas con algo que revisar (foto pixelada, texto que no se ve).
+	&__risk {
+		margin-right: 0.4em;
+		color: $warning;
+		font-weight: 700;
+	}
+
 	&__layers ul {
 		display: grid;
 		gap: 0.35rem;
@@ -871,7 +878,7 @@ $warning: #8a5a00;
 
 			// Elemento seleccionado: la hoja muestra solo sus ajustes; si es un
 			// texto, también el panel para cambiarlo (sin las pestañas).
-			&.has-selection .camisama-customizer__sheet > :not(.camisama-customizer__handle, .camisama-customizer__selection, .camisama-customizer__tools),
+			&.has-selection .camisama-customizer__sheet > :not(.camisama-customizer__handle, .camisama-customizer__notices, .camisama-customizer__selection, .camisama-customizer__tools),
 			&.has-selection:not(.is-text-selected) .camisama-customizer__tools,
 			&.is-text-selected .camisama-customizer__tabs {
 				display: none;
@@ -881,6 +888,12 @@ $warning: #8a5a00;
 			// de "Añadir en:" nombran todas): las etiquetas de las mangas no caben
 			// sin montarse sobre el frente.
 			.camisama-customizer__zone:not(.is-active) span {
+				display: none;
+			}
+
+			// Con la zona acercada, su etiqueta caería bajo la hoja; la zona ya
+			// llena la vista.
+			.camisama-customizer__zones[style] span {
 				display: none;
 			}
 
@@ -895,6 +908,62 @@ $warning: #8a5a00;
 				border-radius: 0;
 				background: none;
 			}
+		}
+
+		// Orden de la hoja: lo que se añade (pestañas y su contenido) va pronto;
+		// la zona en una sola fila encima y el color de la prenda al final.
+		&.is-designing .camisama-customizer__sheet {
+
+			> .camisama-customizer__handle {
+				order: -3;
+			}
+
+			> .camisama-customizer__notices {
+				order: -2;
+			}
+
+			> .camisama-customizer__zone-picker {
+				order: -1;
+			}
+
+			> .camisama-customizer__layers {
+				order: 1;
+			}
+
+			> .camisama-customizer__colors {
+				order: 2;
+			}
+
+			> .camisama-customizer__summary {
+				order: 3;
+			}
+		}
+
+		// "Añadir en:" en una fila que se desplaza de lado, de borde a borde.
+		// min-height: con overflow, la rejilla de la hoja la aplastaba a 0 px.
+		&.is-designing .camisama-customizer__zone-picker {
+			flex-wrap: nowrap;
+			min-height: 2.75rem;
+			margin-inline: calc(-1 * var(--wp--preset--spacing--50, 1.25rem));
+			padding-inline: var(--wp--preset--spacing--50, 1.25rem);
+			overflow-x: auto;
+			scrollbar-width: none;
+
+			> * {
+				flex: none;
+			}
+		}
+
+		// Avisos: fijos bajo el asa mientras se desplaza la hoja.
+		&__notices {
+			position: sticky;
+			top: 44px;
+			z-index: 1;
+			display: grid;
+			gap: 0.5rem;
+			margin-inline: calc(-1 * var(--wp--preset--spacing--50, 1.25rem));
+			padding: 0 var(--wp--preset--spacing--50, 1.25rem) 0.5rem;
+			background: $paper;
 		}
 
 		// Asa de la hoja: barra corta centrada; fija arriba al desplazar la hoja.
@@ -1046,18 +1115,77 @@ $warning: #8a5a00;
 			}
 		}
 
+		// Miniaturas: al tocar una, se ve a todo el ancho para revisarla.
 		&__previews {
 			display: flex;
 			justify-content: center;
 			gap: 0.5rem;
 
-			img {
+			// Lado a lado (se encogen); con una ampliada, la otra pasa debajo.
+			&:has(.is-enlarged) {
+				flex-wrap: wrap;
+			}
+
+			button {
 				flex: 0 1 12rem;
 				min-width: 0;
+				padding: 0;
+				border: 0;
+				border-radius: 16px;
+				background: $surface;
+				cursor: zoom-in;
+
+				&.is-enlarged {
+					flex-basis: 100%;
+					cursor: zoom-out;
+				}
+			}
+
+			img {
+				display: block;
+				width: 100%;
 				aspect-ratio: 1;
 				object-fit: contain;
 				border-radius: 16px;
-				background: $surface;
+			}
+		}
+
+		// "Revisa antes de añadir": mismos tonos que el aviso de contraste.
+		&__review {
+			padding: 0.75rem;
+			border-radius: 10px;
+			background: #fff4d6;
+			color: $warning;
+
+			h3 {
+				margin: 0 0 0.5rem;
+				font-size: 1rem;
+			}
+
+			ul {
+				display: grid;
+				gap: 0.75rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			li {
+				display: grid;
+				gap: 0.4rem;
+			}
+
+			p {
+				margin: 0;
+				font-size: 0.875rem;
+			}
+
+			button {
+
+				@include pill;
+				justify-self: start;
+				border-color: currentcolor;
+				color: inherit;
 			}
 		}
 

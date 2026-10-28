@@ -34,7 +34,6 @@ export default function SheetHandle( { step, onChange } ) {
 		<button
 			type="button"
 			className="camisama-customizer__handle"
-			aria-expanded={ step !== 'min' }
 			aria-label={ LABELS[ step ] }
 			onPointerDown={ ( event ) => {
 				start.current = event.clientY;

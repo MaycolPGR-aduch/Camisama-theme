@@ -64,7 +64,14 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Construir el flujo móvil** por tandas (ver flujo-movil.md): tandas 1 a 4 hechas (ficha,
       modo diseño con hoja, acercar la zona al seleccionar, paso de talla y pago). Falta la 5:
       repaso y crítica nueva.
-- [ ] **Lienzo fijo en escritorio** (resto del P1 "lienzo y herramientas").
+- [x] **P1 de la tercera crítica (24/40):** avisos visibles en el móvil, "Revisa antes de añadir"
+      en el paso de talla y pago y hoja de herramientas reordenada.
+- [ ] **Igualar el escritorio al móvil:** talla sin preselección, sin color duplicado y lienzo fijo
+      (resto del P1 "lienzo y herramientas").
+- [ ] **Precio sin sorpresas (P2 de la tercera crítica):** total × cantidad, escalón visible al
+      ajustar el tamaño, "desde" coherente entre pasos y etiqueta del carrito.
+- [ ] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
+      prenda oscura.
 - [ ] **Texto en vivo** (P1): que aparezca al escribir, "Nuevo texto" siempre visible y que lo
       nuevo no caiga encima de lo anterior.
 - [ ] **Escalones de precio** (P2): decir qué es "Grande" y colocar los estampados en Mediano.

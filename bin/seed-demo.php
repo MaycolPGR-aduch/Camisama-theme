@@ -25,6 +25,7 @@ use Camisama\Customizer\Config\Zone;
 use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Media\SvgSupport;
 use Camisama\Customizer\Products\ColorSwatchField;
+use Camisama\Customizer\Products\SizeGuide;
 use Camisama\Customizer\Security\SvgSanitizer;
 
 if ( ! defined( 'WP_CLI' ) || ! class_exists( 'WooCommerce' ) || ! class_exists( Presets::class ) ) {
@@ -63,6 +64,14 @@ const CAMISAMA_DEMO_PRODUCTS = array(
 		'price'      => '49.90',
 		'colors'     => array( 'negro', 'blanco', 'arena' ),
 		'sizes'      => array( 'S', 'M', 'L', 'XL' ),
+		// Guía de tallas de referencia del corte holgado (ancho de pecho y largo, cm); las demás
+		// prendas usan las de SizeGuide. Se sustituye por las medidas reales cuando las haya.
+		'size_guide' => array(
+			's'  => array( 54, 71 ),
+			'm'  => array( 57, 73 ),
+			'l'  => array( 60, 75 ),
+			'xl' => array( 63, 77 ),
+		),
 		'categories' => array( 'camisetas' ),
 		'short'      => 'Hombro caído y caída amplia, algodón 100 % de 220 g/m². Estilo urbano con mucho espacio para estampar.',
 		'long'       => 'Tela más gruesa y estructurada, ideal para diseños grandes en la espalda. Corte holgado unisex: si prefieres un calce más ajustado, elige una talla menos.',
@@ -155,6 +164,10 @@ function camisama_demo_sleeves( string $shape ): array {
  * @param array<string, mixed> $spec       Datos de CAMISAMA_DEMO_PRODUCTS.
  */
 function camisama_demo_configure( int $product_id, array $spec ): void {
+	if ( ! empty( $spec['size_guide'] ) && ! get_post_meta( $product_id, SizeGuide::META, true ) ) {
+		update_post_meta( $product_id, SizeGuide::META, wp_json_encode( $spec['size_guide'] ) );
+	}
+
 	if ( get_post_meta( $product_id, ProductConfigRepository::META_KEY, true ) ) {
 		return;
 	}

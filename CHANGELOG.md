@@ -12,7 +12,23 @@ conviene recordar.
 ### Añadido
 - **Tercera crítica de la ficha** con Impeccable, ya con el flujo móvil completo: **24/40**
   (antes 23 y 25). Nuevos P1: los avisos del lienzo no se ven en el móvil, los riesgos de calidad
-  no llegan al pago y la hoja de herramientas entierra el contenido.
+  no llegan al pago y la hoja de herramientas entierra el contenido. Resueltos en esta misma fecha.
+- **"Revisa antes de añadir"** en el paso de talla y pago: lista los riesgos del diseño (foto que
+  se verá pixelada, con el ancho máximo para que se vea bien; texto que casi no se ve; letra de
+  menos de 0,6 cm) con "Corregir", que vuelve al diseño con ese elemento seleccionado y acercado.
+  Las capas con algo que revisar llevan la marca "Revisar" (también en escritorio).
+- Miniaturas del paso de talla y pago que se ven en grande al tocarlas.
+- Guía de tallas de referencia propia de la oversize (S 54/71, M 57/73, L 60/75, XL 63/77), como
+  dato del producto (`_camisama_size_guide`), también en los datos de demostración.
+
+### Cambiado
+- **Avisos visibles en el móvil:** contraste, "Estás editando…" y "Recuperamos…" van en una franja
+  fija bajo el asa de la hoja (antes quedaban tapados bajo la hoja).
+- **Hoja de herramientas reordenada:** "Añadir en:" en una fila que se desplaza de lado, las
+  pestañas y el catálogo justo debajo (ya se ve el primer estampado a media altura) y el color de
+  la prenda al final. Al seleccionar un elemento la hoja vuelve siempre a media altura.
+- Con la zona acercada no se muestra su etiqueta (quedaba cortada bajo la hoja); el asa ya no se
+  anuncia a la vez como "ampliar" y como desplegada.
 
 ## 2026-10-27
 
