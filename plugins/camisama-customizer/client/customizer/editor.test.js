@@ -5,6 +5,7 @@ import {
 	imageQuality,
 	initialSize,
 	placeFree,
+	tierFit,
 } from './elements';
 import { elementBounds } from './pricing';
 import {
@@ -89,6 +90,18 @@ describe( 'elementos', () => {
 			width_cm: 12,
 			height_cm: 24,
 		} );
+	} );
+
+	it( 'tierFit deja lo previsto en el límite del escalón si lo pasa por poco', () => {
+		const zone = {
+			tiers: [ 10, 20, 30, 40 ].map( ( max ) => ( { max_cm: max } ) ),
+		};
+		// Un texto de 12 letras a 4 cm (28,8 cm) se queda en 20 cm.
+		expect( tierFit( zone, 28.8 ) ).toBeCloseTo( 20 / 28.8 );
+		expect( tierFit( zone, 18 ) ).toBe( 1 );
+		// 36 cm pasa por poco de los 30 cm de "Grande": se queda en 30.
+		expect( tierFit( zone, 36 ) ).toBeCloseTo( 30 / 36 );
+		expect( tierFit( {}, 28.8 ) ).toBe( 1 );
 	} );
 
 	it( 'el tamaño inicial no pasa por poco a un escalón más caro', () => {

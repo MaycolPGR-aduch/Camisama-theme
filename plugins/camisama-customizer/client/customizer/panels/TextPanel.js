@@ -1,9 +1,11 @@
 /**
- * Texto: añadir uno nuevo o editar el seleccionado (contenido, fuente, color y alineación).
+ * Texto: escribir uno nuevo o editar el seleccionado (contenido, fuente, color y alineación).
  *
- * Mientras el cliente no elige color, el texto nuevo toma el que más contrasta con la prenda.
+ * Lo escrito aparece en la prenda al teclear la primera letra y se edita en vivo; borrarlo todo
+ * lo quita. Mientras el cliente no elige color, el texto nuevo toma el que más contrasta con la
+ * prenda.
  */
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { isReadable, mostReadable } from '../contrast';
@@ -32,7 +34,10 @@ export default function TextPanel( {
 	garment,
 	onAdd,
 	onChange,
+	onRemove,
+	onNew,
 } ) {
+	const textRef = useRef( null );
 	// color null: automático, el más legible sobre la prenda (y sigue al cambiarla).
 	const [ draft, setDraft ] = useState( {
 		text: '',
@@ -47,6 +52,17 @@ export default function TextPanel( {
 	}, [ fonts ] );
 
 	const editing = selected?.kind === 'text';
+
+	// Al crearse el texto (o elegir otro) mientras se escribe, el panel del elemento aparece
+	// encima y empuja el campo: se mantiene a la vista para seguir escribiendo.
+	useEffect( () => {
+		if (
+			textRef.current === textRef.current?.ownerDocument.activeElement
+		) {
+			textRef.current.scrollIntoView( { block: 'nearest' } );
+		}
+	}, [ editing, selected?.id ] );
+
 	const values = editing
 		? selected
 		: {
@@ -69,19 +85,55 @@ export default function TextPanel( {
 					{ __( 'Texto', 'camisama-customizer' ) }
 				</label>
 				<textarea
+					ref={ textRef }
 					id="camisama-text"
 					rows={ 2 }
 					maxLength={ MAX_TEXT }
 					value={ values.text }
+					aria-describedby="camisama-text-hint"
 					placeholder={ __( 'Escribe aquí', 'camisama-customizer' ) }
 					onChange={ ( event ) => {
-						// Un texto vacío no se puede imprimir: se mantiene al menos un carácter al editar.
-						if ( editing && ! event.target.value.trim() ) {
+						const text = event.target.value;
+						if ( editing ) {
+							// Sin nada que imprimir, el texto sale de la prenda; su estilo
+							// queda para el siguiente.
+							if ( ! text.trim() ) {
+								setDraft( {
+									text: '',
+									font: selected.font,
+									color: selected.color,
+									align: selected.align,
+								} );
+								onRemove();
+								return;
+							}
+							onChange( { text } );
 							return;
 						}
-						update( { text: event.target.value } );
+						// Con la primera letra nace el texto en la prenda; desde ahí se edita ese
+						// texto y el borrador queda vacío para el siguiente.
+						if ( text.trim() ) {
+							setDraft( { ...draft, text: '' } );
+							onAdd( { ...values, text } );
+							return;
+						}
+						setDraft( { ...draft, text } );
 					} }
 				/>
+				<p
+					id="camisama-text-hint"
+					className="camisama-customizer__hint"
+				>
+					{ editing
+						? __(
+								'Los cambios se ven al momento en la prenda.',
+								'camisama-customizer'
+							)
+						: __(
+								'Lo que escribas aparece en la prenda.',
+								'camisama-customizer'
+							) }
+				</p>
 			</div>
 
 			<div className="camisama-customizer__field">
@@ -170,17 +222,23 @@ export default function TextPanel( {
 				</div>
 			</fieldset>
 
-			{ ! editing && (
+			{ /* Con un texto en la prenda, otro aparte (con el mismo estilo) sin tener que deseleccionar. */ }
+			{ editing && (
 				<button
 					type="button"
 					className="camisama-customizer__button"
-					disabled={ ! draft.text.trim() }
 					onClick={ () => {
-						onAdd( { ...values, text: draft.text.trim() } );
-						setDraft( { ...draft, text: '' } );
+						setDraft( {
+							text: '',
+							font: selected.font,
+							color: selected.color,
+							align: selected.align,
+						} );
+						onNew();
+						textRef.current?.focus();
 					} }
 				>
-					{ __( 'Añadir texto', 'camisama-customizer' ) }
+					{ __( 'Nuevo texto', 'camisama-customizer' ) }
 				</button>
 			) }
 		</div>

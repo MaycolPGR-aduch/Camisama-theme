@@ -69,9 +69,27 @@ export function newId() {
 }
 
 /**
- * Tamaño inicial: el 60 % de la zona sin deformar la proporción del contenido. Si eso pasa por
- * poco el límite de un escalón de precio, se queda en ese límite: lo nuevo no cae en el escalón
- * caro sin que el cliente lo decida.
+ * Factor para que algo nuevo no pase por poco el límite de un escalón de precio: si su lado
+ * mayor lo supera en menos de lo que le queda (hasta un 40 % más), se queda en ese límite. Lo
+ * nuevo no cae en el escalón caro sin que el cliente lo decida.
+ *
+ * @param {Object} zone    Zona (si los hay, sus escalones en tiers).
+ * @param {number} longest Lado mayor previsto en cm.
+ * @return {number} Factor entre 0,6 y 1.
+ */
+export function tierFit( zone, longest ) {
+	const limit = Math.max(
+		0,
+		...( zone.tiers ?? [] )
+			.map( ( tier ) => tier.max_cm )
+			.filter( ( cm ) => cm < longest && cm >= longest * 0.6 )
+	);
+	return limit > 0 ? limit / longest : 1;
+}
+
+/**
+ * Tamaño inicial: el 60 % de la zona sin deformar la proporción del contenido, ajustado al
+ * límite del escalón si lo pasa por poco (tierFit).
  *
  * @param {Object} zone   Zona (size_cm y, si los hay, sus escalones en tiers).
  * @param {number} aspect Ancho / alto del contenido.
@@ -81,17 +99,7 @@ export function initialSize( zone, aspect ) {
 	const maxW = zone.size_cm.w * 0.6;
 	const maxH = zone.size_cm.h * 0.6;
 	let width = Math.min( maxW, maxH * aspect );
-
-	const longest = Math.max( width, width / aspect );
-	const limit = Math.max(
-		0,
-		...( zone.tiers ?? [] )
-			.map( ( tier ) => tier.max_cm )
-			.filter( ( cm ) => cm < longest && cm >= longest * 0.6 )
-	);
-	if ( limit > 0 ) {
-		width *= limit / longest;
-	}
+	width *= tierFit( zone, Math.max( width, width / aspect ) );
 
 	return {
 		width_cm: Math.round( width * 100 ) / 100,

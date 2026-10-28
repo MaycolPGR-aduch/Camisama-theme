@@ -76,8 +76,9 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
       prenda oscura: lo nuevo va al hueco libre que deja la zona en el escalón más barato, y los
       estampados y fotos que casi no se ven avisan con "Prenda en …".
-- [ ] **Texto en vivo** (P1): que aparezca al escribir y "Nuevo texto" siempre visible (lo nuevo
-      ya no cae encima de lo anterior).
+- [x] **Texto en vivo** (P1): aparece en la prenda con la primera letra y se edita al momento,
+      borrarlo todo lo quita, "Nuevo texto" siempre a mano y lo nuevo no cae encima de lo
+      anterior.
 - [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
       marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
       `alert()`, en el paso de talla y pago.

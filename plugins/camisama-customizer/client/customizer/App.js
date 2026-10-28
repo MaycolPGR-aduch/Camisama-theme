@@ -33,6 +33,7 @@ import {
 	imageElement,
 	placeFree,
 	newId,
+	tierFit,
 	textElement,
 } from './elements';
 import { isImageVisible, isReadable, mostReadable } from './contrast';
@@ -213,6 +214,9 @@ function useMediaQuery( query ) {
 
 // Letra por debajo de este alto (cm) puede no leerse en la prenda.
 const MIN_TEXT_CM = 0.6;
+
+// Caracteres para los que se busca hueco al nacer un texto que se está escribiendo.
+const RESERVED_TEXT = 12;
 
 const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
@@ -596,10 +600,15 @@ export default function App( { data } ) {
 			options
 		);
 
-	// Lo nuevo (también lo duplicado) va al hueco libre más cercano: no encima de lo anterior.
-	const add = ( element ) => {
+	// Lo nuevo (también lo duplicado) va al hueco libre más cercano: no encima de lo anterior. Un
+	// texto que se está escribiendo nace con una letra: su hueco se busca para reserveChars.
+	const add = ( element, { reserveChars = 0 } = {} ) => {
 		const zone = zoneById( element.zone );
-		const fitted = placeFree( fitToZone( element, zone ), zone, elements );
+		const fitted = placeFrom(
+			fitToZone( element, zone ),
+			zone,
+			reserveChars
+		);
 		commit( ( list ) => [ ...list, fitted ] );
 		setSelectedId( fitted.id );
 		setMessage(
@@ -610,6 +619,43 @@ export default function App( { data } ) {
 				activeZone.label
 			)
 		);
+	};
+
+	const placeFrom = ( element, zone, reserveChars ) => {
+		if ( ! reserveChars || element.kind !== 'text' ) {
+			return placeFree( element, zone, elements );
+		}
+		const reserved = fitToZone(
+			{
+				...element,
+				width_cm: Math.max(
+					element.width_cm,
+					( element.width_cm / element.text.length ) * reserveChars
+				),
+			},
+			zone
+		);
+		// Con la letra inicial, el texto previsto no debe caer por poco en un escalón más caro.
+		const fit = tierFit(
+			zone,
+			Math.max( reserved.width_cm, reserved.height_cm )
+		);
+		const probe = {
+			...reserved,
+			width_cm: reserved.width_cm * fit,
+			height_cm: reserved.height_cm * fit,
+			font_size_cm: reserved.font_size_cm * fit,
+		};
+		const placed = placeFree( probe, zone, elements );
+		const factor = placed.font_size_cm / element.font_size_cm;
+		return {
+			...element,
+			cx: placed.cx,
+			cy: placed.cy,
+			font_size_cm: placed.font_size_cm,
+			width_cm: element.width_cm * factor,
+			height_cm: element.height_cm * factor,
+		};
 	};
 
 	const remove = ( id ) => {
@@ -696,9 +742,14 @@ export default function App( { data } ) {
 		if ( selected.kind === 'text' ) {
 			setTab( 'text' );
 		}
-		rootRef.current
-			?.querySelector( '.camisama-customizer__sheet' )
-			?.scrollTo( { top: 0 } );
+		// Si el texto nace mientras se escribe, la hoja no salta arriba (TextPanel lo mantiene).
+		if (
+			rootRef.current?.ownerDocument.activeElement?.id !== 'camisama-text'
+		) {
+			rootRef.current
+				?.querySelector( '.camisama-customizer__sheet' )
+				?.scrollTo( { top: 0 } );
+		}
 		// Solo al cambiar de elemento, no con cada ajuste de ese elemento.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ editingElement, selectedId ] );
@@ -1474,7 +1525,9 @@ export default function App( { data } ) {
 								selected={ selected }
 								garment={ garment?.hex }
 								onAdd={ ( style ) =>
-									add( textElement( activeZone, style ) )
+									add( textElement( activeZone, style ), {
+										reserveChars: RESERVED_TEXT,
+									} )
 								}
 								onChange={ ( change ) =>
 									updateElement( selected.id, change, {
@@ -1482,6 +1535,8 @@ export default function App( { data } ) {
 										key: `text-${ selected.id }`,
 									} )
 								}
+								onRemove={ () => remove( selected.id ) }
+								onNew={ () => setSelectedId( null ) }
 							/>
 						) }
 						{ tab === 'image' && (

@@ -10,6 +10,11 @@ conviene recordar.
 ## 2026-10-28
 
 ### Añadido
+- **Texto en vivo** (P1 de la segunda crítica): el texto aparece en la prenda con la primera letra
+  y cada cambio se ve al momento (ya no hay "Añadir texto"); borrarlo todo lo quita de la prenda.
+  Con un texto seleccionado, "Nuevo texto" empieza otro con el mismo estilo (antes, en táctil,
+  había que tocar un hueco del lienzo). Mientras se escribe, el campo no pierde el foco ni se sale
+  de la vista, y la hoja del móvil no salta arriba al crearse el texto.
 - **Contraste también para estampados y fotos:** si la mayor parte de una imagen casi no se
   distingue de la prenda (azul marino sobre negro, un corazón rojo sobre prenda roja), aviso en el
   lienzo (en el móvil, en la franja bajo el asa) con "Prenda en …", el color donde todo el diseño
@@ -49,6 +54,9 @@ conviene recordar.
   alto, mientras se bajan las herramientas, como en el móvil. Los controles del editor guardan
   margen para no quedar debajo al llegar a ellos con el tabulador.
 
+- El texto que se empieza a escribir reserva hueco para unas 12 letras, y su letra inicial se
+  ajusta para que ese texto previsto no pase por poco a un escalón más caro ("Feliz cumple" solo
+  en el frente: 2,8 cm de letra, Mediano, en lugar de 4 cm y Grande).
 - **Lo nuevo ya no se apila en el centro:** va al hueco libre más cercano de la zona (también al
   duplicar). Entre los huecos gana el que deja la zona en el escalón de precio más barato; si
   entero solo cabe pasando a un escalón más caro, entra al 75 % o a la mitad. Si no hay hueco, va
