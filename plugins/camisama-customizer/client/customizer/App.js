@@ -663,19 +663,16 @@ export default function App( { data } ) {
 		setSelectedId( null );
 	};
 
+	// "Poner encima" (1) o "Poner debajo" (-1): por encima o por debajo de todo lo de su zona (lo
+	// de otras zonas no se solapa con él, así que da igual dónde quede).
 	const moveLayer = ( id, direction ) =>
 		commit( ( list ) => {
-			const index = list.findIndex( ( element ) => element.id === id );
-			const target = index + direction;
-			if ( target < 0 || target >= list.length ) {
+			const element = list.find( ( item ) => item.id === id );
+			if ( ! element ) {
 				return list;
 			}
-			const next = [ ...list ];
-			[ next[ index ], next[ target ] ] = [
-				next[ target ],
-				next[ index ],
-			];
-			return next;
+			const rest = list.filter( ( item ) => item.id !== id );
+			return direction > 0 ? [ ...rest, element ] : [ element, ...rest ];
 		} );
 
 	const select = ( id ) => {
@@ -868,7 +865,7 @@ export default function App( { data } ) {
 		} catch {
 			return {
 				error: __(
-					'El diseño es más grande que el tamaño máximo a la venta.',
+					'El diseño es más grande de lo que podemos imprimir: hazlo un poco más pequeño.',
 					'camisama-customizer'
 				),
 			};
@@ -1470,6 +1467,19 @@ export default function App( { data } ) {
 								cy: selected.cy + 1,
 							} )
 						}
+						layer={ ( () => {
+							const stack = elements.filter(
+								( item ) => item.zone === selected.zone
+							);
+							return stack.length > 1
+								? {
+										top:
+											stack[ stack.length - 1 ].id ===
+											selected.id,
+										bottom: stack[ 0 ].id === selected.id,
+									}
+								: null;
+						} )() }
 						onLayer={ ( direction ) =>
 							moveLayer( selected.id, direction )
 						}

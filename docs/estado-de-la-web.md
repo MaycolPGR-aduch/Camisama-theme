@@ -82,8 +82,9 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
       marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
       `alert()`, en el paso de talla y pago.
-- [ ] **Jerga del editor**: "Traer adelante / Enviar atrás" y "Añadir en:" (los escalones ya dicen
-      hasta cuántos cm llegan).
+- [x] **Jerga del editor**: "Poner encima / Poner debajo" (por encima o por debajo de todo lo de
+      su zona, solo cuando hay algo más en ella) y un aviso claro si el diseño es más grande de lo
+      que se imprime. "Añadir en:" se mantiene (decisión de la primera crítica).
 - [ ] **Probar el gesto táctil en un móvil real**: deslizar sobre el lienzo debe desplazar la
       página y arrastrar el elemento seleccionado debe moverlo (la emulación no lo cubre).
 

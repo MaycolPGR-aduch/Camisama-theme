@@ -38,6 +38,11 @@ conviene recordar.
   dato del producto (`_camisama_size_guide`), también en los datos de demostración.
 
 ### Cambiado
+- **Jerga del editor:** "Traer adelante / Enviar atrás" pasan a "Poner encima / Poner debajo" y
+  llevan el elemento por encima o por debajo de todo lo de su zona; se desactivan si ya está
+  arriba o abajo del todo y no aparecen si está solo en la zona. "El diseño es más grande que el
+  tamaño máximo a la venta" pasa a "El diseño es más grande de lo que podemos imprimir: hazlo un
+  poco más pequeño".
 - **Avisos visibles en el móvil:** contraste, "Estás editando…" y "Recuperamos…" van en una franja
   fija bajo el asa de la hoja (antes quedaban tapados bajo la hoja).
 - **Hoja de herramientas reordenada:** "Añadir en:" en una fila que se desplaza de lado, las
@@ -71,6 +76,10 @@ conviene recordar.
   anteriores conservan su etiqueta).
 - Las reglas de los botones de talla y de la guía valen también en escritorio (estaban dentro de
   la consulta del móvil y la tabla de "¿Qué talla?" salía sin estilo).
+
+### Corregido
+- Cambiar el orden de un elemento lo movía un puesto en la lista de todo el diseño: a veces se
+  cruzaba con algo de otra zona y en la prenda no cambiaba nada.
 
 ### Decisiones
 - Una imagen "no se ve" cuando más de la mitad de sus píxeles visibles contrasta menos de 1,5 con

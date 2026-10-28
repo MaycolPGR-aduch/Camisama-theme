@@ -45,6 +45,7 @@ export default function SelectionPanel( {
 	onRotate,
 	onCenter,
 	onDuplicate,
+	layer,
 	onLayer,
 	onRemove,
 	onDone,
@@ -188,12 +189,33 @@ export default function SelectionPanel( {
 				<button type="button" onClick={ onDuplicate }>
 					{ __( 'Duplicar', 'camisama-customizer' ) }
 				</button>
-				<button type="button" onClick={ () => onLayer( 1 ) }>
-					{ __( 'Traer adelante', 'camisama-customizer' ) }
-				</button>
-				<button type="button" onClick={ () => onLayer( -1 ) }>
-					{ __( 'Enviar atrás', 'camisama-customizer' ) }
-				</button>
+				{ /* Solo con algo más en la zona, que es cuando puede taparlo o quedar tapado. */ }
+				{ layer && (
+					<>
+						<button
+							type="button"
+							disabled={ layer.top }
+							title={ __(
+								'Por encima de lo demás de esta zona',
+								'camisama-customizer'
+							) }
+							onClick={ () => onLayer( 1 ) }
+						>
+							{ __( 'Poner encima', 'camisama-customizer' ) }
+						</button>
+						<button
+							type="button"
+							disabled={ layer.bottom }
+							title={ __(
+								'Por debajo de lo demás de esta zona',
+								'camisama-customizer'
+							) }
+							onClick={ () => onLayer( -1 ) }
+						>
+							{ __( 'Poner debajo', 'camisama-customizer' ) }
+						</button>
+					</>
+				) }
 				<button
 					type="button"
 					className="is-destructive"
