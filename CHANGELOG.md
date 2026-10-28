@@ -7,6 +7,13 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-10-28
+
+### Añadido
+- **Tercera crítica de la ficha** con Impeccable, ya con el flujo móvil completo: **24/40**
+  (antes 23 y 25). Nuevos P1: los avisos del lienzo no se ven en el móvil, los riesgos de calidad
+  no llegan al pago y la hoja de herramientas entierra el contenido.
+
 ## 2026-10-27
 
 ### Cambiado
