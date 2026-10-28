@@ -91,7 +91,7 @@ async function addToCart( form, button, api, replace ) {
  *                                     clave de su línea si se puede saber.
  * @param {Function} handlers.onError  Recibe el error si algo falla (el diseño no se añadió).
  * @param {Function} handlers.onBusy   Recibe true mientras se prepara y envía el diseño.
- * @return {Object} Control del puente: options, choose, buy, prefill, setLabel, setColor, disconnect y
+ * @return {Object} Control del puente: options, choose, guard, buy, prefill, setLabel, setColor, disconnect y
  *                  summaryNode (el hueco del resumen de precio dentro del formulario, o null).
  */
 export function connectVariationForm(
@@ -109,6 +109,7 @@ export function connectVariationForm(
 		return {
 			options: () => [],
 			choose: () => {},
+			guard: () => () => {},
 			buy: () => {},
 			prefill: () => {},
 			setLabel: () => {},
@@ -251,6 +252,12 @@ export function connectVariationForm(
 				} ) );
 		},
 		choose,
+		// Antes de que actúe WooCommerce al pulsar su botón (escritorio): si falta la talla, el
+		// editor avisa en la página en lugar del alert() del navegador. Devuelve cómo quitarlo.
+		guard( handler ) {
+			button?.addEventListener( 'click', handler, true );
+			return () => button?.removeEventListener( 'click', handler, true );
+		},
 		// Paso de talla y pago del móvil: elige las opciones y la cantidad y envía el formulario
 		// (que adjunta el diseño y lo añade sin recargar, como el botón de WooCommerce).
 		buy( choices, quantity ) {

@@ -20,6 +20,7 @@ import FabricStage from './FabricStage';
 import FlowEntry from './FlowEntry';
 import PurchaseBar from './PurchaseBar';
 import SheetHandle from './SheetHandle';
+import SizeOptions from './SizeOptions';
 import Summary from './Summary';
 import DesignsPanel from './panels/DesignsPanel';
 import SelectionPanel, { elementLabel } from './panels/SelectionPanel';
@@ -283,7 +284,7 @@ export default function App( { data } ) {
 	const bridge = useRef( null );
 	// El puente se crea una vez; al enviar necesita el diseño y el color de ese momento.
 	const latest = useRef( {} );
-	latest.current = { elements, color, editKey };
+	latest.current = { elements, color, editKey, choices };
 
 	useEffect( () => {
 		bridge.current = connectVariationForm( data.product_id, data.cart, {
@@ -336,6 +337,31 @@ export default function App( { data } ) {
 		}
 		return () => bridge.current.disconnect();
 	}, [ data, restored ] );
+
+	// Escritorio: la talla en botones en la columna de compra, sin la que WooCommerce marca por
+	// defecto (se elige a conciencia), y sus desplegables ocultos (style.scss). Si al pulsar
+	// "Añadir al carrito" falta la talla, aviso en la página en lugar del alert() del navegador.
+	useEffect( () => {
+		if ( mobile || ! purchaseNode ) {
+			return;
+		}
+		const options = bridge.current.options();
+		setBuyOptions( options );
+		options.forEach( ( option ) =>
+			bridge.current.choose(
+				option.name,
+				latest.current.choices[ option.name ] ?? ''
+			)
+		);
+		return bridge.current.guard( ( event ) => {
+			const current = latest.current.choices;
+			if ( options.some( ( option ) => ! current[ option.name ] ) ) {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				setMissingChoice( true );
+			}
+		} );
+	}, [ mobile, purchaseNode ] );
 
 	// Hueco del paso 1 junto al formulario: view.js lo dejó con "Preparando el editor…".
 	useEffect( () => {
@@ -788,6 +814,15 @@ export default function App( { data } ) {
 	// minicarrito muestra además la miniatura del diseño.
 	const purchase = (
 		<>
+			{ ! mobile && (
+				<SizeOptions
+					options={ buyOptions }
+					choices={ choices }
+					missing={ missingChoice }
+					guide={ data.size_guide ?? [] }
+					onChoose={ chooseOption }
+				/>
+			) }
 			{ summary }
 			{ inCart && (
 				<div className="camisama-customizer__added" role="status">

@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 27 de octubre de 2026.
+falta para abrirla al público. Actualizado el 28 de octubre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).
@@ -61,13 +61,14 @@ local, 45 pruebas de JS y lint limpio.
       cantidad; "Guardar cambios" sustituye la línea.
 - [x] **Plan del flujo de tres pasos en el móvil**: aprobado en [flujo-movil.md](flujo-movil.md)
       (ficha → diseño a pantalla completa → talla y pago).
-- [ ] **Construir el flujo móvil** por tandas (ver flujo-movil.md): tandas 1 a 4 hechas (ficha,
-      modo diseño con hoja, acercar la zona al seleccionar, paso de talla y pago). Falta la 5:
-      repaso y crítica nueva.
+- [x] **Construir el flujo móvil** por tandas (ver flujo-movil.md): las 5 tandas hechas (ficha,
+      modo diseño con hoja, acercar la zona al seleccionar, paso de talla y pago, y repaso), y
+      tercera crítica: 24/40.
 - [x] **P1 de la tercera crítica (24/40):** avisos visibles en el móvil, "Revisa antes de añadir"
       en el paso de talla y pago y hoja de herramientas reordenada.
-- [ ] **Igualar el escritorio al móvil:** talla sin preselección, sin color duplicado y lienzo fijo
-      (resto del P1 "lienzo y herramientas").
+- [x] **Igualar el escritorio al móvil:** talla en botones sin preselección y con la guía, aviso en
+      la página en lugar del `alert()`, sin los desplegables duplicados de WooCommerce y lienzo
+      fijo arriba mientras se usan las herramientas.
 - [ ] **Precio sin sorpresas (P2 de la tercera crítica):** total × cantidad, escalón visible al
       ajustar el tamaño, "desde" coherente entre pasos y etiqueta del carrito.
 - [ ] **Elementos nuevos apilados en el centro** y contraste también para estampados oscuros sobre
@@ -78,8 +79,6 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Talla sin preselección y guía de tallas en el móvil** (P2): botones de talla sin ninguna
       marcada, "¿Qué talla?" con medidas de referencia y mensaje en la página en lugar del
       `alert()`, en el paso de talla y pago.
-- [ ] **Lo mismo en escritorio**: allí sigue el formulario de WooCommerce con la M por defecto, el
-      desplegable de color duplicado y el `alert()`.
 - [ ] **Etiqueta del carrito**: dice "Recargo de estampado" cuando es la impresión por zonas.
 - [ ] **Jerga del editor**: "Traer adelante / Enviar atrás", "Añadir en:", y los escalones de
       precio ("Mediano", "Grande") sin explicar.

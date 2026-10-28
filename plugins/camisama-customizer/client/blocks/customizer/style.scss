@@ -1254,6 +1254,42 @@ $warning: #8a5a00;
 			display: none;
 		}
 	}
+
+	// Escritorio con alto suficiente: el lienzo se queda a la vista mientras
+	// se bajan las herramientas, igual que en el móvil; más bajo, para que
+	// quepan debajo los controles que se están tocando.
+	@media (min-width: 782px) and (min-height: 600px) {
+
+		&__canvas {
+			position: sticky;
+			top: 0;
+			z-index: 2;
+			padding-block: 0.5rem;
+			background: $paper;
+		}
+
+		&__stage {
+			width: min(100%, 55vh);
+			width: min(100%, 55svh);
+		}
+
+		// Al llegar con el tabulador (o al llevar un control a la vista), que
+		// no quede debajo del lienzo fijo.
+		:is(button, input, select, textarea, summary, label, [tabindex]) {
+			scroll-margin-top: calc(55svh + 5rem);
+		}
+
+		&__canvas :is(button, input, select, textarea, summary, label, [tabindex]) {
+			scroll-margin-top: 0;
+		}
+	}
+}
+
+// Con el editor montado, la talla va en botones (SizeOptions) y el color en
+// la paleta del editor: los desplegables de WooCommerce y su "Limpiar"
+// sobran. Siguen funcionando ocultos; el editor los maneja.
+.variations_form.has-camisama-summary table.variations {
+	display: none;
 }
 
 // Flujo móvil: el formulario de compra de WooCommerce no se ve; lo maneja el

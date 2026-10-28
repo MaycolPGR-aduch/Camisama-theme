@@ -8,6 +8,8 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
+import SizeOptions from './SizeOptions';
+
 const MAX_QUANTITY = 99;
 
 export default function BuyStep( {
@@ -37,14 +39,8 @@ export default function BuyStep( {
 	// Miniatura ampliada (al tocarla) para revisar el diseño antes de pagar.
 	const [ enlarged, setEnlarged ] = useState( null );
 	const closeRef = useRef( null );
-	const firstSizeRef = useRef( null );
 
 	useEffect( () => closeRef.current?.focus(), [] );
-	useEffect( () => {
-		if ( missing ) {
-			firstSizeRef.current?.focus();
-		}
-	}, [ missing ] );
 
 	// Diálogo: Esc lo cierra y el tabulador no sale de él.
 	const onKeyDown = ( event ) => {
@@ -72,12 +68,6 @@ export default function BuyStep( {
 			first.focus();
 		}
 	};
-
-	// Nombre visible de cada talla de la guía ("m" → "M").
-	const sizeOption = options[ 0 ];
-	const sizeText = ( slug ) =>
-		sizeOption?.values.find( ( value ) => value.value === slug )?.text ??
-		slug;
 
 	let action = __( 'Añadir al carrito', 'camisama-customizer' );
 	if ( busy ) {
@@ -208,93 +198,13 @@ export default function BuyStep( {
 
 				{ summary }
 
-				{ options.map( ( option, index ) => (
-					<fieldset
-						key={ option.name }
-						className="camisama-customizer__field camisama-customizer__sizes"
-					>
-						<legend>{ option.label }</legend>
-						<div className="camisama-customizer__chips">
-							{ option.values.map( ( value, position ) => (
-								<button
-									key={ value.value }
-									type="button"
-									ref={
-										index === 0 && position === 0
-											? firstSizeRef
-											: undefined
-									}
-									aria-pressed={
-										choices[ option.name ] === value.value
-									}
-									onClick={ () =>
-										onChoose( option.name, value.value )
-									}
-								>
-									{ value.text }
-								</button>
-							) ) }
-						</div>
-						{ missing && ! choices[ option.name ] && (
-							<p
-								className="camisama-customizer__error"
-								role="alert"
-							>
-								{ sprintf(
-									/* translators: %s: opción que falta, p. ej. talla. */
-									__(
-										'Elige una %s.',
-										'camisama-customizer'
-									),
-									option.label.toLowerCase()
-								) }
-							</p>
-						) }
-					</fieldset>
-				) ) }
-
-				{ guide.length > 0 && (
-					<details className="camisama-customizer__guide">
-						<summary>
-							{ __( '¿Qué talla?', 'camisama-customizer' ) }
-						</summary>
-						<table>
-							<thead>
-								<tr>
-									<th scope="col">
-										{ __( 'Talla', 'camisama-customizer' ) }
-									</th>
-									<th scope="col">
-										{ __(
-											'Ancho de pecho',
-											'camisama-customizer'
-										) }
-									</th>
-									<th scope="col">
-										{ __( 'Largo', 'camisama-customizer' ) }
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{ guide.map( ( row ) => (
-									<tr key={ row.size }>
-										<th scope="row">
-											{ sizeText( row.size ) }
-										</th>
-										<td>{ row.width_cm } cm</td>
-										<td>{ row.length_cm } cm</td>
-									</tr>
-								) ) }
-							</tbody>
-						</table>
-						<p className="camisama-customizer__hint">
-							{ __(
-								'Medidas de referencia de la prenda extendida, de axila a axila y del hombro al borde. Pueden variar unos 2 cm.',
-								'camisama-customizer'
-							) }
-						</p>
-					</details>
-				) }
+				<SizeOptions
+					options={ options }
+					choices={ choices }
+					missing={ missing }
+					guide={ guide }
+					onChoose={ onChoose }
+				/>
 
 				<div className="camisama-customizer__field">
 					<span id="camisama-quantity-label">

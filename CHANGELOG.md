@@ -29,6 +29,19 @@ conviene recordar.
   la prenda al final. Al seleccionar un elemento la hoja vuelve siempre a media altura.
 - Con la zona acercada no se muestra su etiqueta (quedaba cortada bajo la hoja); el asa ya no se
   anuncia a la vez como "ampliar" y como desplegada.
+- **Escritorio igualado al móvil:** la talla va en botones en la columna de compra, sin ninguna
+  marcada (WooCommerce marcaba la M), con la guía "¿Qué talla?"; al editar desde el carrito se
+  conserva la de la línea. Sin talla, "Añadir al carrito" muestra "Elige una talla." en la página
+  y lleva el foco a la primera, en lugar del `alert()` del navegador. Se ocultan los desplegables
+  de WooCommerce (el color repetía la paleta del editor) y su "Limpiar".
+- **Lienzo fijo en escritorio** (pantallas de 600 px de alto o más): se queda arriba, a 55 % del
+  alto, mientras se bajan las herramientas, como en el móvil. Los controles del editor guardan
+  margen para no quedar debajo al llegar a ellos con el tabulador.
+
+### Decisiones
+- Los botones de talla son un solo componente (`SizeOptions`) para el paso de talla y pago del
+  móvil y la columna de compra del escritorio; el formulario de WooCommerce sigue enviando el
+  pedido, oculto.
 
 ## 2026-10-27
 
