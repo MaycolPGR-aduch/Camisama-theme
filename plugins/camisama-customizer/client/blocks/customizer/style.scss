@@ -119,6 +119,26 @@ $warning: #8a5a00;
 		font-size: 0.875rem;
 	}
 
+	// Zonas con el mismo trazo discontinuo que tienen sobre la prenda.
+	&__zone-picker button:not([aria-pressed="true"]) {
+		border-style: dashed;
+		border-color: $muted;
+	}
+
+	// Filtro discreto: no compite con las pestañas ni con las zonas.
+	&__categories button {
+		border-color: $line;
+		font-weight: 500;
+
+		&[aria-pressed="true"] {
+			border-color: $ink;
+			background: transparent;
+			color: $ink;
+			box-shadow: inset 0 0 0 1px $ink;
+			font-weight: 600;
+		}
+	}
+
 	// --- Lienzo ---
 
 	&__canvas {
@@ -234,13 +254,12 @@ $warning: #8a5a00;
 	&__colors {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 0.5rem;
-		margin: 0;
-		padding: 0;
-		border: 0;
 
-		legend {
-			margin-bottom: 0.5rem;
+		> span {
+			flex-basis: 100%;
+			font-size: 0.875rem;
 			font-weight: 600;
 		}
 	}
@@ -271,8 +290,21 @@ $warning: #8a5a00;
 		background: $surface;
 	}
 
+	// Pestañas: una sola pieza con tres partes (control segmentado).
 	&__tabs {
+		flex-wrap: nowrap;
+		gap: 0;
 		margin-bottom: 1rem;
+		border: 1.5px solid $ink;
+		border-radius: 999px;
+
+		button {
+			flex: 1 1 0;
+			min-width: 0;
+			padding-inline: 0.5em;
+			border: 0;
+			white-space: nowrap;
+		}
 	}
 
 	&__panel {
@@ -914,16 +946,27 @@ $warning: #8a5a00;
 			}
 		}
 
-		// Orden de la hoja: lo que se añade (pestañas y su contenido) va pronto;
-		// la zona en una sola fila encima y el color de la prenda al final.
+		// Orden de la hoja: el color y la zona en una fila cada uno, y enseguida
+		// lo que se añade (pestañas y su contenido).
 		&.is-designing .camisama-customizer__sheet {
 
+			gap: 0.5rem;
+
 			> .camisama-customizer__handle {
-				order: -3;
+				order: -4;
 			}
 
 			> .camisama-customizer__notices {
+				order: -3;
+			}
+
+			> .camisama-customizer__colors {
 				order: -2;
+				flex-wrap: nowrap;
+
+				> span {
+					flex: 1 1 0;
+				}
 			}
 
 			> .camisama-customizer__zone-picker {
@@ -934,12 +977,8 @@ $warning: #8a5a00;
 				order: 1;
 			}
 
-			> .camisama-customizer__colors {
-				order: 2;
-			}
-
 			> .camisama-customizer__summary {
-				order: 3;
+				order: 2;
 			}
 		}
 

@@ -26,6 +26,13 @@ conviene recordar.
   izquierda y acompaña al bajar, con las herramientas a su lado, de modo que nada queda debajo de
   él. El editor ocupa dos tercios de la ficha y la compra, uno. Por debajo de 1100 px (tabletas)
   sigue apilado con el lienzo fijo.
+- **Jerarquía de herramientas** (P2 de la cuarta crítica):
+  - El color de la prenda va primero, en móvil y en escritorio: es lo que más cambia el resultado
+    (en el móvil estaba al final de la hoja).
+  - Las pestañas Estampados, Texto y Tu imagen son una sola pieza con tres partes, y responden a
+    las flechas, Inicio y Fin (solo la activa está en el tabulador).
+  - Las zonas llevan el mismo borde discontinuo que tienen sobre la prenda, con la activa rellena.
+  - Las categorías de estampados son más discretas: no compiten con pestañas ni zonas.
 - Todos los controles del editor miden 44 px en cualquier pantalla (antes solo en las táctiles):
   píldoras, muestras de color y deslizadores.
 

@@ -56,7 +56,7 @@ export default function DesignsPanel( { api, currency, onAdd } ) {
 		<div className="camisama-customizer__panel">
 			{ categories.length > 0 && (
 				<div
-					className="camisama-customizer__chips"
+					className="camisama-customizer__chips camisama-customizer__categories"
 					role="group"
 					aria-label={ __( 'Categorías', 'camisama-customizer' ) }
 				>

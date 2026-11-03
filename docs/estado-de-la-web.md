@@ -90,7 +90,7 @@ local, 45 pruebas de JS y lint limpio.
       no se pierde al añadir ni con "Listo", el fondo queda inerte y "Elige una talla." se ve.
 - [x] **Escritorio en dos columnas** (P2): lienzo fijo a la izquierda y herramientas al lado, y
       controles de 44 px también en escritorio.
-- [ ] **Jerarquía de herramientas** (P2): color de la prenda arriba, pestañas como control
+- [x] **Jerarquía de herramientas** (P2): color de la prenda arriba, pestañas como control
       segmentado con flechas y la zona con estilo propio.
 - [ ] **Extremos del recorrido** (P2): estampados para empezar con un toque y confirmación propia
       al añadir en lugar del minicarrito de WooCommerce.

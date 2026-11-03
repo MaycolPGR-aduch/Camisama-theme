@@ -788,6 +788,24 @@ export default function App( { data } ) {
 
 	// --- Selección de color y vista -----------------------------------------------------
 
+	// Pestañas: flechas, Inicio y Fin cambian de pestaña (solo la activa está en el tabulador).
+	const onTabKey = ( event ) => {
+		const index = TABS.findIndex( ( item ) => item.id === tab );
+		const next = {
+			ArrowRight: ( index + 1 ) % TABS.length,
+			ArrowLeft: ( index - 1 + TABS.length ) % TABS.length,
+			Home: 0,
+			End: TABS.length - 1,
+		}[ event.key ];
+		if ( next === undefined ) {
+			return;
+		}
+		event.preventDefault();
+		event.stopPropagation();
+		setTab( TABS[ next ].id );
+		event.currentTarget.parentElement.children[ next ].focus();
+	};
+
 	const chooseColor = ( slug ) => {
 		setColor( slug );
 		bridge.current?.setColor( slug );
@@ -1465,6 +1483,34 @@ export default function App( { data } ) {
 					</div>
 				) }
 
+				{ /* Primero el color: es lo que más cambia el resultado. */ }
+				{ data.colors.length > 1 && (
+					<div
+						className="camisama-customizer__colors"
+						role="group"
+						aria-labelledby="camisama-colors-label"
+					>
+						<span id="camisama-colors-label">
+							{ __(
+								'Color de la prenda',
+								'camisama-customizer'
+							) }
+						</span>
+						{ data.colors.map( ( item ) => (
+							<button
+								key={ item.slug }
+								type="button"
+								className="camisama-customizer__swatch"
+								style={ { '--swatch': item.hex ?? '#ffffff' } }
+								aria-pressed={ item.slug === color }
+								aria-label={ item.name }
+								title={ item.name }
+								onClick={ () => chooseColor( item.slug ) }
+							/>
+						) ) }
+					</div>
+				) }
+
 				<div
 					className="camisama-customizer__zone-picker"
 					role="group"
@@ -1485,29 +1531,6 @@ export default function App( { data } ) {
 						</button>
 					) ) }
 				</div>
-
-				{ data.colors.length > 1 && (
-					<fieldset className="camisama-customizer__colors">
-						<legend>
-							{ __(
-								'Color de la prenda',
-								'camisama-customizer'
-							) }
-						</legend>
-						{ data.colors.map( ( item ) => (
-							<button
-								key={ item.slug }
-								type="button"
-								className="camisama-customizer__swatch"
-								style={ { '--swatch': item.hex ?? '#ffffff' } }
-								aria-pressed={ item.slug === color }
-								aria-label={ item.name }
-								title={ item.name }
-								onClick={ () => chooseColor( item.slug ) }
-							/>
-						) ) }
-					</fieldset>
-				) }
 
 				{ selected && (
 					<SelectionPanel
@@ -1580,8 +1603,14 @@ export default function App( { data } ) {
 								type="button"
 								role="tab"
 								aria-selected={ tab === item.id }
-								aria-controls={ `camisama-panel-${ item.id }` }
+								aria-controls={
+									tab === item.id
+										? `camisama-panel-${ item.id }`
+										: undefined
+								}
+								tabIndex={ tab === item.id ? 0 : -1 }
 								onClick={ () => setTab( item.id ) }
+								onKeyDown={ onTabKey }
 							>
 								{ item.label }
 							</button>
