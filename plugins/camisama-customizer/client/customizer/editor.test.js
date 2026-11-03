@@ -239,6 +239,23 @@ describe( 'placeFree', () => {
 } );
 
 describe( 'fitToZone', () => {
+	it( 'con margen, deja aire en cada borde', () => {
+		const wide = {
+			id: 't',
+			zone: 'front',
+			kind: 'text',
+			cx: 15,
+			cy: 20,
+			width_cm: 40,
+			height_cm: 4,
+			font_size_cm: 3.3,
+			angle: 0,
+		};
+		const fitted = fitToZone( wide, front, 0.3 );
+		expect( fitted.width_cm ).toBeCloseTo( 29.4 );
+		expect( fitted.cx - fitted.width_cm / 2 ).toBeCloseTo( 0.3 );
+	} );
+
 	const sleeve = { id: 'sleeve', size_cm: { w: 9, h: 9 } };
 
 	it( 'no toca lo que ya cabe', () => {

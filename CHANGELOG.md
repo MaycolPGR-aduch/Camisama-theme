@@ -7,6 +7,31 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-03
+
+### Añadido
+- **Cuarta crítica de la ficha** con Impeccable: **27/40** (antes 23, 25 y 24). Nuevos P1: el texto
+  largo se rompe en silencio y el móvil pierde su sitio (el diálogo se desplaza, el foco se pierde
+  y la talla queda bajo el pliegue). Informe en `.impeccable/critique/`.
+- **Texto largo sin sorpresas** (primer P1 de la cuarta crítica):
+  - Contador de caracteres bajo el campo ("48/60") y aviso al llegar al máximo.
+  - Si la letra se queda pequeña en una sola línea (menos de 1,5 cm) o el texto ocupa todo el
+    ancho, "Partir en dos líneas y agrandar" lo parte por el espacio más cercano a la mitad y
+    agranda la letra (el lienzo la vuelve a encajar en la zona).
+  - Al pasar a un escalón más caro mientras se ajusta o se escribe: "Frente pasó a Grande:
+    + S/ 6.00 más."
+
+### Corregido
+- Un texto nunca toca el borde de la zona (0,3 cm de aire): pegado al borde se le cortaban los
+  remates de las letras.
+- El texto que crece mientras se escribe ya no queda encima de otro elemento: pasa al hueco libre
+  más cercano sin encogerse (si no hay, se queda donde está).
+- Una frase pegada de una vez ya no nace con la letra diminuta: se encaja en la zona y va donde
+  menos pise, sin encogerse para ahorrar escalón (eso queda para el hueco que se reserva al
+  empezar a escribir).
+- Las medidas del lienzo que llegan tarde (de un dibujo anterior) se descartan: aplicadas a un
+  texto que ya había cambiado lo encogían de más.
+
 ## 2026-10-28
 
 ### Añadido

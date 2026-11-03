@@ -9,18 +9,20 @@ const round = ( value ) => Math.round( value * 100 ) / 100;
 
 /**
  * Encaja un elemento en su zona: lo encoge si no cabe (también el tamaño de letra de un texto)
- * y lo desplaza lo mínimo para que quede dentro.
+ * y lo desplaza lo mínimo para que quede dentro. Con margen, deja ese aire en cada borde (a un
+ * texto pegado al borde se le cortan los remates de las letras).
  *
  * @param {Object} element Elemento.
  * @param {Object} zone    Zona (size_cm).
+ * @param {number} inset   Margen en cm en cada borde.
  * @return {Object} Elemento ajustado (el mismo objeto si ya cabía).
  */
-export function fitToZone( element, zone ) {
+export function fitToZone( element, zone, inset = 0 ) {
 	const bounds = elementBounds( element );
 	const factor = Math.min(
 		1,
-		zone.size_cm.w / ( bounds.right - bounds.left ),
-		zone.size_cm.h / ( bounds.bottom - bounds.top )
+		( zone.size_cm.w - 2 * inset ) / ( bounds.right - bounds.left ),
+		( zone.size_cm.h - 2 * inset ) / ( bounds.bottom - bounds.top )
 	);
 
 	let result = element;
@@ -38,15 +40,15 @@ export function fitToZone( element, zone ) {
 	const fitted = elementBounds( result );
 	let dx = 0;
 	let dy = 0;
-	if ( fitted.left < 0 ) {
-		dx = -fitted.left;
-	} else if ( fitted.right > zone.size_cm.w ) {
-		dx = zone.size_cm.w - fitted.right;
+	if ( fitted.left < inset ) {
+		dx = inset - fitted.left;
+	} else if ( fitted.right > zone.size_cm.w - inset ) {
+		dx = zone.size_cm.w - inset - fitted.right;
 	}
-	if ( fitted.top < 0 ) {
-		dy = -fitted.top;
-	} else if ( fitted.bottom > zone.size_cm.h ) {
-		dy = zone.size_cm.h - fitted.bottom;
+	if ( fitted.top < inset ) {
+		dy = inset - fitted.top;
+	} else if ( fitted.bottom > zone.size_cm.h - inset ) {
+		dy = zone.size_cm.h - inset - fitted.bottom;
 	}
 
 	return dx || dy
@@ -226,14 +228,28 @@ function overlapArea( a, b ) {
  * iba (el centro). Prueba el tamaño completo, el 75 % y la mitad; si no cabe libre en ninguno, lo
  * deja a tamaño completo donde menos se solape. Sin nada debajo, no lo mueve.
  *
- * @param {Object}   element Elemento nuevo, ya dentro de la zona (fitToZone).
- * @param {Object}   zone    Zona (size_cm y, si los hay, sus escalones en tiers).
- * @param {Object[]} others  Elementos del diseño (se miran solo los de la misma zona).
+ * Sin shrink no se prueba más pequeño (un texto pegado ya tiene su tamaño). Con keepSize (un
+ * texto que crece mientras se escribe) tampoco, y solo se mueve si hay un hueco libre; si no lo
+ * hay, se queda donde está.
+ *
+ * @param {Object}   element          Elemento nuevo, ya dentro de la zona (fitToZone).
+ * @param {Object}   zone             Zona (size_cm y, si los hay, sus escalones en tiers).
+ * @param {Object[]} others           Elementos del diseño (se miran solo los de la misma zona).
+ * @param {Object}   options          Opciones.
+ * @param {boolean}  options.shrink   Probar tamaños menores si entero no cabe libre.
+ * @param {boolean}  options.keepSize Sin encoger y sin moverlo si no hay hueco libre.
  * @return {Object} Elemento colocado (el mismo objeto si no hacía falta moverlo).
  */
-export function placeFree( element, zone, others ) {
+export function placeFree(
+	element,
+	zone,
+	others,
+	{ shrink = true, keepSize = false } = {}
+) {
 	const boxes = others
-		.filter( ( item ) => item.zone === element.zone )
+		.filter(
+			( item ) => item.zone === element.zone && item.id !== element.id
+		)
 		.map( elementBounds );
 	if ( ! boxes.length ) {
 		return element;
@@ -278,7 +294,7 @@ export function placeFree( element, zone, others ) {
 
 	let free = null;
 	let fallback = null;
-	for ( const scale of PLACE_SCALES ) {
+	for ( const scale of shrink && ! keepSize ? PLACE_SCALES : [ 1 ] ) {
 		const sized =
 			scale === 1
 				? element
@@ -333,5 +349,8 @@ export function placeFree( element, zone, others ) {
 		}
 	}
 
+	if ( keepSize ) {
+		return free?.candidate ?? element;
+	}
 	return ( free ?? fallback )?.candidate ?? element;
 }

@@ -6,7 +6,7 @@
  * prenda.
  */
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { isReadable, mostReadable } from '../contrast';
 import { loadFont } from '../fonts';
@@ -28,6 +28,41 @@ const ALIGNS = [
 
 export const MAX_TEXT = 60;
 
+// Al partir una línea en dos, cada una mide la mitad: la letra puede casi doblarse.
+const SPLIT_GROWTH = 1.8;
+
+/**
+ * El texto partido en dos líneas por el espacio más cercano a la mitad de su línea más larga, o
+ * null si no hay dónde partirlo.
+ *
+ * @param {string} text Texto.
+ * @return {?string} Texto con un salto de línea más.
+ */
+export function splitLines( text ) {
+	const lines = text.split( '\n' );
+	const longest = lines.reduce(
+		( best, line, index ) =>
+			line.length > lines[ best ].length ? index : best,
+		0
+	);
+	const line = lines[ longest ];
+	const middle = line.length / 2;
+	let cut = -1;
+	for ( let i = 0; i < line.length; i++ ) {
+		if (
+			line[ i ] === ' ' &&
+			( cut < 0 || Math.abs( i - middle ) < Math.abs( cut - middle ) )
+		) {
+			cut = i;
+		}
+	}
+	if ( cut <= 0 ) {
+		return null;
+	}
+	lines[ longest ] = line.slice( 0, cut ) + '\n' + line.slice( cut + 1 );
+	return lines.join( '\n' );
+}
+
 export default function TextPanel( {
 	fonts,
 	selected,
@@ -36,6 +71,7 @@ export default function TextPanel( {
 	onChange,
 	onRemove,
 	onNew,
+	cramped,
 } ) {
 	const textRef = useRef( null );
 	// color null: automático, el más legible sobre la prenda (y sigue al cambiarla).
@@ -132,8 +168,67 @@ export default function TextPanel( {
 						: __(
 								'Lo que escribas aparece en la prenda.',
 								'camisama-customizer'
-							) }
+							) }{ ' ' }
+					<span className="camisama-customizer__count">
+						{ sprintf(
+							/* translators: 1: caracteres escritos, 2: máximo. */
+							__( '%1$d/%2$d', 'camisama-customizer' ),
+							values.text.length,
+							MAX_TEXT
+						) }
+					</span>
 				</p>
+				{ values.text.length >= MAX_TEXT && (
+					<p className="camisama-customizer__contrast" role="status">
+						{ sprintf(
+							/* translators: %d: máximo de caracteres. */
+							__(
+								'Has llegado al máximo de %d caracteres.',
+								'camisama-customizer'
+							),
+							MAX_TEXT
+						) }
+					</p>
+				) }
+				{ /* Una línea larga deja la letra pequeña: en dos líneas puede crecer (el lienzo la
+				vuelve a encajar en la zona si se pasa). */ }
+				{ editing && cramped && (
+					<div
+						className="camisama-customizer__contrast"
+						role="status"
+					>
+						<p>
+							{ sprintf(
+								/* translators: %s: alto de la letra en cm. */
+								__(
+									'En una sola línea la letra se queda en %s cm.',
+									'camisama-customizer'
+								),
+								selected.font_size_cm.toFixed( 1 )
+							) }
+						</p>
+						{ splitLines( selected.text ) && (
+							<button
+								type="button"
+								onClick={ () =>
+									onChange( {
+										text: splitLines( selected.text ),
+										font_size_cm:
+											selected.font_size_cm *
+											SPLIT_GROWTH,
+										width_cm: selected.width_cm * 0.9,
+										height_cm: selected.height_cm * 3.6,
+									} )
+								}
+							>
+								{ __(
+									'Partir en dos líneas y agrandar',
+									'camisama-customizer'
+								) }
+							</button>
+						) }
+					</div>
+				) }
 			</div>
 
 			<div className="camisama-customizer__field">

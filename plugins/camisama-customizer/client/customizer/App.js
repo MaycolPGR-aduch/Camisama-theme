@@ -218,6 +218,12 @@ const MIN_TEXT_CM = 0.6;
 // Caracteres para los que se busca hueco al nacer un texto que se está escribiendo.
 const RESERVED_TEXT = 12;
 
+// Aire (cm) entre un texto y el borde de su zona.
+const TEXT_INSET = 0.3;
+
+// Letra por debajo de este alto (cm): se propone partir el texto en líneas para agrandarla.
+const SMALL_TEXT_CM = 1.5;
+
 const isTyping = ( target ) =>
 	[ 'INPUT', 'TEXTAREA', 'SELECT' ].includes( target.tagName );
 
@@ -625,6 +631,16 @@ export default function App( { data } ) {
 		if ( ! reserveChars || element.kind !== 'text' ) {
 			return placeFree( element, zone, elements );
 		}
+		// Un texto pegado de una vez ya es el que se imprime: solo se encaja (con aire en los
+		// bordes) y va donde menos pise, sin encogerse para ahorrar escalón.
+		if ( element.text.length >= reserveChars ) {
+			return placeFree(
+				fitToZone( element, zone, TEXT_INSET ),
+				zone,
+				elements,
+				{ shrink: false }
+			);
+		}
 		const reserved = fitToZone(
 			{
 				...element,
@@ -656,6 +672,31 @@ export default function App( { data } ) {
 			width_cm: element.width_cm * factor,
 			height_cm: element.height_cm * factor,
 		};
+	};
+
+	// Tamaño real que da el lienzo. Un texto nunca toca el borde de la zona (se le cortarían los
+	// remates); si el que se está escribiendo crece encima de otro elemento, pasa al hueco libre
+	// más cercano sin encogerse (si no hay, se queda).
+	const measured = ( element, size, list, from ) => {
+		// Medida de un dibujo anterior (se escribió o se encogió después): llegará otra.
+		if (
+			from &&
+			( from.text !== element.text ||
+				from.font_size_cm !== element.font_size_cm )
+		) {
+			return element;
+		}
+		const zone = zoneById( element.zone );
+		const isText = element.kind === 'text';
+		const fitted = fitToZone(
+			{ ...element, ...size },
+			zone,
+			isText ? TEXT_INSET : 0
+		);
+		const grew = size.width_cm > element.width_cm + 0.05;
+		return isText && grew && element.id === selectedId
+			? placeFree( fitted, zone, list, { keepSize: true } )
+			: fitted;
 	};
 
 	const remove = ( id ) => {
@@ -1337,16 +1378,13 @@ export default function App( { data } ) {
 							)
 						)
 					}
-					onMeasure={ ( id, size ) =>
+					onMeasure={ ( id, size, from ) =>
 						dispatch( {
 							type: 'patch',
 							update: ( list ) =>
 								list.map( ( element ) =>
 									element.id === id
-										? fitToZone(
-												{ ...element, ...size },
-												zoneById( element.zone )
-											)
+										? measured( element, size, list, from )
 										: element
 								),
 						} )
@@ -1547,6 +1585,15 @@ export default function App( { data } ) {
 								}
 								onRemove={ () => remove( selected.id ) }
 								onNew={ () => setSelectedId( null ) }
+								cramped={
+									selected?.kind === 'text' &&
+									( selected.font_size_cm < SMALL_TEXT_CM ||
+										selected.width_cm >=
+											zoneById( selected.zone ).size_cm
+												.w -
+												2 * TEXT_INSET -
+												0.1 )
+								}
 							/>
 						) }
 						{ tab === 'image' && (

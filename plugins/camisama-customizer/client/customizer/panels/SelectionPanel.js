@@ -2,6 +2,7 @@
  * Elemento seleccionado: tamaño, giro, capa, duplicar y borrar, sin necesidad de arrastrar
  * (accesible con teclado y cómodo en móvil). Para las fotos, aviso de calidad de impresión.
  */
+import { useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 import { imageQuality } from '../elements';
@@ -50,6 +51,16 @@ export default function SelectionPanel( {
 	onRemove,
 	onDone,
 } ) {
+	// Escalón con el que se seleccionó el elemento: si sube mientras se ajusta, se avisa.
+	const start = useRef( { id: null, amount: 0 } );
+	if ( start.current.id !== element.id ) {
+		start.current = { id: element.id, amount: tier?.current.amount ?? 0 };
+	}
+	const raised =
+		tier && tier.current.amount > start.current.amount
+			? tier.current.amount - start.current.amount
+			: 0;
+
 	const isText = element.kind === 'text';
 	const maxSize = isText
 		? Math.min( zone.size_cm.h, 30 )
@@ -111,6 +122,21 @@ export default function SelectionPanel( {
 					}
 				/>
 				{ /* El precio de la zona va por escalones del lado mayor: dónde está y dónde salta. */ }
+				{ /* Al pasar a un escalón más caro mientras se ajusta (o se escribe), se dice. */ }
+				{ tier && raised > 0 && (
+					<p className="camisama-customizer__contrast" role="status">
+						{ sprintf(
+							/* translators: 1: zona, 2: escalón nuevo, 3: diferencia de precio. */
+							__(
+								'%1$s pasó a %2$s: + %3$s más.',
+								'camisama-customizer'
+							),
+							tier.zone,
+							tier.current.label,
+							formatMoney( raised, currency )
+						) }
+					</p>
+				) }
 				{ tier && (
 					<p
 						id="camisama-size-tier"

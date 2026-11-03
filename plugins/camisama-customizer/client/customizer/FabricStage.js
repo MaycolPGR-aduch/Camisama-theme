@@ -330,7 +330,8 @@ export default function FabricStage( {
 				Math.abs( drawn.width_cm - element.width_cm ) > 0.05 ||
 				Math.abs( drawn.height_cm - element.height_cm ) > 0.05
 			) {
-				latest.current.onMeasure( element.id, drawn );
+				// Con lo dibujado: si el elemento cambió entretanto, esta medida ya no le sirve.
+				latest.current.onMeasure( element.id, drawn, element );
 			}
 		};
 
