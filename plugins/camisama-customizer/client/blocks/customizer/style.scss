@@ -40,10 +40,8 @@ $warning: #8a5a00;
 		cursor: not-allowed;
 	}
 
-	// Objetivo táctil de 44 px aunque la píldora se vea más baja.
-	@media (pointer: coarse) {
-		min-height: 44px;
-	}
+	// 44 px en cualquier pantalla: también hay portátiles táctiles.
+	min-height: 44px;
 }
 
 .camisama-customizer {
@@ -738,23 +736,23 @@ $warning: #8a5a00;
 		}
 	}
 
-	// --- Pantallas táctiles: objetivos de 44 px ---
+	// --- Objetivos de 44 px en cualquier pantalla ---
+
+	&__swatch,
+	&__custom-color input {
+		width: 2.75rem;
+		height: 2.75rem;
+	}
+
+	&__field input[type="range"] {
+		height: 44px;
+	}
+
+	&__layers ul button {
+		min-height: 44px;
+	}
 
 	@media (pointer: coarse) {
-
-		&__swatch,
-		&__custom-color input {
-			width: 2.75rem;
-			height: 2.75rem;
-		}
-
-		&__field input[type="range"] {
-			height: 44px;
-		}
-
-		&__layers ul button {
-			min-height: 44px;
-		}
 
 		// En un teléfono no se arrastran archivos.
 		&__drag-hint {
@@ -1274,10 +1272,10 @@ $warning: #8a5a00;
 		}
 	}
 
-	// Escritorio con alto suficiente: el lienzo se queda a la vista mientras
-	// se bajan las herramientas, igual que en el móvil; más bajo, para que
-	// quepan debajo los controles que se están tocando.
-	@media (min-width: 782px) and (min-height: 600px) {
+	// Tabletas con alto suficiente: el lienzo se queda a la vista mientras se
+	// bajan las herramientas, igual que en el móvil; más bajo, para que quepan
+	// debajo los controles que se están tocando.
+	@media (min-width: 782px) and (max-width: 1099px) and (min-height: 600px) {
 
 		&__canvas {
 			position: sticky;
@@ -1301,6 +1299,41 @@ $warning: #8a5a00;
 		&__canvas :is(button, input, select, textarea, summary, label, [tabindex]) {
 			scroll-margin-top: 0;
 		}
+	}
+
+	// Escritorio: lienzo y herramientas lado a lado. El lienzo acompaña al bajar
+	// por las herramientas y nada queda debajo de él.
+	@media (min-width: 1100px) {
+
+		&.is-flow {
+			grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+			align-items: start;
+		}
+
+		&.is-flow > &__canvas {
+			position: sticky;
+			top: var(--wp--preset--spacing--50, 1.25rem);
+		}
+
+		&.is-flow > &__sheet {
+			display: grid;
+			gap: var(--wp--preset--spacing--40, 1rem);
+			min-width: 0;
+		}
+	}
+}
+
+// Dos columnas dentro del editor: necesita más ancho que la compra, a la que
+// le basta un tercio. Sin editor (no cargó), la ficha queda como siempre.
+// !important: la plantilla fija el reparto en línea (bloque de columnas).
+@media (min-width: 1100px) {
+
+	.wp-block-column:has(> .wp-block-camisama-customizer.is-ready) {
+		flex-basis: 68% !important;
+	}
+
+	.wp-block-column:has(> .wp-block-camisama-customizer.is-ready) + .is-product-buy {
+		flex-basis: 32% !important;
 	}
 }
 

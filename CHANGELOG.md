@@ -21,6 +21,14 @@ conviene recordar.
   - Al pasar a un escalón más caro mientras se ajusta o se escribe: "Frente pasó a Grande:
     + S/ 6.00 más."
 
+### Cambiado
+- **Escritorio en dos columnas** (P2 de la cuarta crítica): desde 1100 px, el lienzo va a la
+  izquierda y acompaña al bajar, con las herramientas a su lado, de modo que nada queda debajo de
+  él. El editor ocupa dos tercios de la ficha y la compra, uno. Por debajo de 1100 px (tabletas)
+  sigue apilado con el lienzo fijo.
+- Todos los controles del editor miden 44 px en cualquier pantalla (antes solo en las táctiles):
+  píldoras, muestras de color y deslizadores.
+
 ### Corregido
 - Un texto nunca toca el borde de la zona (0,3 cm de aire): pegado al borde se le cortaban los
   remates de las letras.
