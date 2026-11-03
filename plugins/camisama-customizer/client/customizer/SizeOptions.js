@@ -18,10 +18,14 @@ export default function SizeOptions( {
 } ) {
 	const firstRef = useRef( null );
 
-	// Al pedir comprar sin talla, el foco va a la primera para elegirla.
+	// Al pedir comprar sin talla, su grupo (con el aviso) se lleva a la vista y el foco va a la
+	// primera para elegirla.
 	useEffect( () => {
 		if ( missing ) {
-			firstRef.current?.focus();
+			firstRef.current?.focus( { preventScroll: true } );
+			firstRef.current
+				?.closest( 'fieldset' )
+				?.scrollIntoView( { block: 'center' } );
 		}
 	}, [ missing ] );
 
@@ -38,6 +42,20 @@ export default function SizeOptions( {
 					className="camisama-customizer__field camisama-customizer__sizes"
 				>
 					<legend>{ option.label }</legend>
+					{ /* Encima de los botones: visible junto a la talla que recibe el foco. */ }
+					{ missing && ! choices[ option.name ] && (
+						<p
+							id={ `camisama-missing-${ index }` }
+							className="camisama-customizer__error"
+							role="alert"
+						>
+							{ sprintf(
+								/* translators: %s: opción que falta, p. ej. talla. */
+								__( 'Elige una %s.', 'camisama-customizer' ),
+								option.label.toLowerCase()
+							) }
+						</p>
+					) }
 					<div className="camisama-customizer__chips">
 						{ option.values.map( ( value, position ) => (
 							<button
@@ -50,6 +68,11 @@ export default function SizeOptions( {
 								}
 								aria-pressed={
 									choices[ option.name ] === value.value
+								}
+								aria-describedby={
+									missing && ! choices[ option.name ]
+										? `camisama-missing-${ index }`
+										: undefined
 								}
 								onClick={ () =>
 									onChoose( option.name, value.value )
@@ -65,15 +88,6 @@ export default function SizeOptions( {
 							</button>
 						) ) }
 					</div>
-					{ missing && ! choices[ option.name ] && (
-						<p className="camisama-customizer__error" role="alert">
-							{ sprintf(
-								/* translators: %s: opción que falta, p. ej. talla. */
-								__( 'Elige una %s.', 'camisama-customizer' ),
-								option.label.toLowerCase()
-							) }
-						</p>
-					) }
 				</fieldset>
 			) ) }
 

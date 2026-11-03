@@ -86,9 +86,8 @@ local, 45 pruebas de JS y lint limpio.
       dos columnas, jerarquía de herramientas y los extremos del recorrido.
 - [x] **Texto largo** (P1 de la cuarta crítica): contador, "Partir en dos líneas y agrandar",
       aviso de cambio de escalón, aire en los bordes y sin pisar lo anterior al crecer.
-- [ ] **El móvil pierde su sitio** (P1 de la cuarta crítica): el diálogo de diseño se desplaza por
-      la etiqueta oculta "Otro color", el foco se pierde al añadir o con "Listo", y en "Talla y
-      pago" la talla queda bajo el pliegue y "Elige una talla." fuera de la vista.
+- [x] **El móvil pierde su sitio** (P1 de la cuarta crítica): el diálogo ya no se desplaza, el foco
+      no se pierde al añadir ni con "Listo", el fondo queda inerte y "Elige una talla." se ve.
 - [ ] **Escritorio en dos columnas** (P2): lienzo fijo a la izquierda y herramientas al lado, y
       controles de 44 px también en escritorio.
 - [ ] **Jerarquía de herramientas** (P2): color de la prenda arriba, pestañas como control

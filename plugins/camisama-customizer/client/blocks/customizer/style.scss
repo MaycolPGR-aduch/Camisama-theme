@@ -816,7 +816,10 @@ $warning: #8a5a00;
 			display: flex;
 			flex-direction: column;
 			gap: 0;
+			// clip y no hidden: con hidden, el navegador desplazaba el diálogo
+			// entero al llevar a la vista un control de la hoja.
 			overflow: hidden;
+			overflow: clip;
 			padding: 0 0 4.5rem;
 			background: $paper;
 
@@ -865,6 +868,9 @@ $warning: #8a5a00;
 				flex: 0 0 var(--sheet);
 				align-content: start;
 				gap: var(--wp--preset--spacing--40, 1rem);
+				// Lo posicionado de dentro (p. ej. la etiqueta oculta "Otro color")
+				// se queda en la hoja y no alarga el diálogo.
+				position: relative;
 				overflow-y: auto;
 				overscroll-behavior: contain;
 				padding: 0 var(--wp--preset--spacing--50, 1.25rem) 1rem;

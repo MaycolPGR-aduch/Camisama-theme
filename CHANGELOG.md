@@ -31,6 +31,17 @@ conviene recordar.
   empezar a escribir).
 - Las medidas del lienzo que llegan tarde (de un dibujo anterior) se descartan: aplicadas a un
   texto que ya había cambiado lo encogían de más.
+- **El móvil ya no pierde su sitio** (segundo P1 de la cuarta crítica):
+  - El modo diseño no se desplaza entero al llevar a la vista un control de la hoja: la etiqueta
+    oculta "Otro color" alargaba el diálogo (la hoja no estaba posicionada) y el diálogo admitía
+    desplazamiento (`overflow: clip` en lugar de `hidden`).
+  - Al añadir un elemento con el teclado o pulsar "Listo", el foco ya no cae al cuerpo de la
+    página: va al elemento seleccionado o a la pestaña activa.
+  - Con el modo diseño o "Talla y pago" abiertos, el resto de la página queda inerte: ni el
+    tabulador ni un lector de pantalla salen del diálogo (el minicarrito sigue funcionando en
+    "Talla y pago").
+  - "Elige una talla." va encima de los botones, ligado a ellos, y su grupo se lleva a la vista
+    (antes quedaba bajo el pliegue con "Revisa antes de añadir" visible).
 
 ## 2026-10-28
 

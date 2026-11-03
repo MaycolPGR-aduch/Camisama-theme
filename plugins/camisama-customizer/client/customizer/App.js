@@ -38,6 +38,7 @@ import {
 } from './elements';
 import { isImageVisible, isReadable, mostReadable } from './contrast';
 import { imageTones } from './tones';
+import { inertOutside } from './inert';
 import { loadDraft, saveDraft } from './draft';
 import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
@@ -478,6 +479,39 @@ export default function App( { data } ) {
 			closeRef.current?.focus();
 		}
 	}, [ mobile, designing ] );
+	useEffect(
+		() =>
+			mobile && designing ? inertOutside( rootRef.current ) : undefined,
+		[ mobile, designing ]
+	);
+
+	// En el modo diseño, si el control enfocado desaparece (el estampado que se acaba de añadir,
+	// "Listo"), el foco va al elemento seleccionado o, sin él, a la pestaña activa.
+	useEffect( () => {
+		if ( ! mobile || ! designing ) {
+			return;
+		}
+		const timer = window.setTimeout( () => {
+			const root = rootRef.current;
+			const active = root?.ownerDocument.activeElement;
+			// Perdido: en el cuerpo de la página o en un control que ya no se ve (el navegador
+			// tarda un poco en soltarlo).
+			const lost =
+				! active ||
+				active === active.ownerDocument.body ||
+				! active.getClientRects().length;
+			if ( ! root || ! lost ) {
+				return;
+			}
+			(
+				root.querySelector( '.camisama-customizer__selection h3' ) ??
+				root.querySelector(
+					'.camisama-customizer__tabs [aria-selected="true"]'
+				)
+			)?.focus();
+		} );
+		return () => window.clearTimeout( timer );
+	}, [ mobile, designing, selectedId ] );
 
 	// Al entrar en talla y pago: las opciones del formulario (sin la talla por defecto de
 	// WooCommerce, que se elige a conciencia) y las miniaturas del diseño.

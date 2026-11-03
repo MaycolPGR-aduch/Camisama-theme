@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 import SizeOptions from './SizeOptions';
+import { inertOutside, KEEP_DRAWER } from './inert';
 
 const MAX_QUANTITY = 99;
 
@@ -42,6 +43,8 @@ export default function BuyStep( {
 	const closeRef = useRef( null );
 
 	useEffect( () => closeRef.current?.focus(), [] );
+	// Aquí se añade al carrito: el minicarrito que se abre encima no queda inerte.
+	useEffect( () => inertOutside( rootRef.current, KEEP_DRAWER ), [] );
 
 	// Diálogo: Esc lo cierra y el tabulador no sale de él.
 	const onKeyDown = ( event ) => {

@@ -76,7 +76,8 @@ export default function SelectionPanel( {
 		>
 			{ /* "Listo" solo en el modo diseño del móvil: suelta el elemento y vuelve a las herramientas. */ }
 			<div className="camisama-customizer__selection-head">
-				<h3>{ elementLabel( element ) }</h3>
+				{ /* Enfocable por programa: ahí vuelve el foco tras añadir un elemento en el móvil. */ }
+				<h3 tabIndex={ -1 }>{ elementLabel( element ) }</h3>
 				{ onDone && (
 					<button
 						type="button"
