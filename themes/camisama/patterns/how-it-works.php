@@ -19,7 +19,7 @@ $camisama_steps = array(
 	),
 	array(
 		'title' => __( 'Lo estampamos y te llega', 'camisama' ),
-		'text'  => __( 'Imprimimos tu diseño en DTF a todo color, lo planchamos sobre la prenda y te lo enviamos.', 'camisama' ),
+		'text'  => __( 'Imprimimos tu diseño en DTF a todo color, lo planchamos sobre la prenda y te lo llevamos en Lima, o lo recoges en el taller.', 'camisama' ),
 	),
 );
 ?>

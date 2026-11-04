@@ -10,6 +10,11 @@ conviene recordar.
 ## 2026-11-04
 
 ### Añadido
+- **Crítica del resto de la web** (portada, tienda, carrito y pago): **18/40**. El problema más grave:
+  el pago no ofrecía ninguna entrega. Informe en `.impeccable/critique/`.
+- **Entrega en el pago** (P0 de esa crítica): "¿Cómo lo recibes?" con "Envío en Lima" y "Recojo en el
+  taller". `bin/seed-delivery.php` la configura y `setup-local` lo ejecuta. **Tarifa, dirección y
+  horario son provisionales** y lo dicen en pantalla.
 - **Los extremos del recorrido** (P2 de la cuarta crítica):
   - En la ficha del móvil, "O empieza con uno:" ofrece tres estampados sin recargo: un toque abre el
     editor con ese estampado puesto. "Comprar sin diseño" pasa a enlace discreto.
@@ -20,6 +25,11 @@ conviene recordar.
 ### Cambiado
 - El minicarrito ya no se abre solo al añadir: lo sustituye la confirmación. Sigue en la cabecera,
   con su contador al día.
+- **Dirección adaptada a Perú:** "Distrito" y "Referencia" en lugar de "Localidad" y "colonia", sin
+  región (se reparte solo en Lima; el pedido guarda Lima como región de entrega) ni código postal,
+  y teléfono obligatorio para coordinar la entrega. La dirección de envío va primero y se puede
+  facturar a otra (regalos).
+- La portada ya no dice solo "te lo enviamos": "te lo llevamos en Lima o lo recoges en el taller".
 - **Repaso final de la cuarta crítica** (`polish`):
   - "Talla y pago" pasa a "Talla y cantidad" (ahí no se paga) e "Ir a talla y pago", a "Elegir
     talla".
@@ -31,6 +41,11 @@ conviene recordar.
   - Hoja de herramientas: en altura mínima solo queda el asa y la prenda se centra en el hueco; en
     altura completa el lienzo conserva unos 140 px.
   - "Añadir al carrito" sin talla ya no se ve apagado: se puede pulsar y dice qué falta.
+
+### Decisiones
+- La zona de envío cubre todo Perú aunque se reparta solo en Lima: el pago no pide región, y una
+  zona por región dejaría sin envío a quien escribe su dirección. El límite real es que no se puede
+  elegir otra región.
 
 ### Corregido
 - El recuadro de la zona medía unos 4 px más que el área de impresión.

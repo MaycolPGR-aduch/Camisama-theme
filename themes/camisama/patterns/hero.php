@@ -21,7 +21,7 @@
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"textColor":"muted","fontSize":"large"} -->
-<p class="has-muted-color has-text-color has-large-font-size"><?php esc_html_e( 'Elige el modelo y el color, y diseña el frente, la espalda y las mangas con nuestros estampados, tus textos o tus propias imágenes. Lo imprimimos a todo color y te lo enviamos.', 'camisama' ); ?></p>
+<p class="has-muted-color has-text-color has-large-font-size"><?php esc_html_e( 'Elige el modelo y el color, y diseña el frente, la espalda y las mangas con nuestros estampados, tus textos o tus propias imágenes. Lo imprimimos a todo color: te lo llevamos en Lima o lo recoges en el taller.', 'camisama' ); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}}} -->

@@ -120,10 +120,19 @@ local, 45 pruebas de JS y lint limpio.
 
 ### Resto de la web
 
-- [ ] Crítica y repaso de la **portada**, la **tienda**, el **carrito** y el **checkout** (solo
-      se ha trabajado la ficha de producto).
-- [ ] Ajustar la **entrega**: hoy WooCommerce permite envíos a todo el Perú; debe ser solo Lima
-      Metropolitana y recojo en el taller, con tarifas, plazos, dirección y horario.
+- [x] **Crítica de la portada, la tienda, el carrito y el pago**: 18/40. Plan acordado, del pago
+      hacia atrás, por tandas:
+  - [x] **Entrega** (P0): envío en Lima y recojo en el taller, dirección adaptada a Perú.
+  - [ ] **Legales y confianza** (P1): borradores de cambios, privacidad y términos para revisar,
+        enlaces reales, contacto y "Pago seguro".
+  - [ ] **Formulario del pago** (P1): errores bien escritos y ligados a su campo, h1, resumen móvil
+        con teclado y botón de 44 px.
+  - [ ] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión" y desglose en el carrito.
+  - [ ] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
+        tabulador, deshacer al eliminar, desborde a 320 px y carrito vacío con voz propia.
+  - [ ] **Portada y tarjetas** con los estampados de demostración, y repaso final.
+- [ ] **Datos reales de la entrega**: tarifa, dirección y horario del taller. Hoy son provisionales
+      (WooCommerce > Ajustes > Envío). Sin plazos comprometidos todavía.
 
 ### Fase 5: funciones del personalizador
 
