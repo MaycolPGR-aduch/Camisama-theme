@@ -125,8 +125,8 @@ local, 45 pruebas de JS y lint limpio.
   - [x] **Entrega** (P0): envío en Lima y recojo en el taller, dirección adaptada a Perú.
   - [x] **Legales y confianza** (P1): borradores de cambios, privacidad, términos y contacto,
         enlaces reales y sin "Pago seguro" mientras no haya pasarela.
-  - [ ] **Formulario del pago** (P1): errores bien escritos y ligados a su campo, h1, resumen móvil
-        con teclado y botón de 44 px.
+  - [x] **Formulario del pago** (P1): errores bien escritos y ligados a su campo, h1, botón de 48 px
+        y prenda mayor en el resumen. (El resumen móvil ya se abre con el teclado: es de WooCommerce.)
   - [ ] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión" y desglose en el carrito.
   - [ ] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
         tabulador, deshacer al eliminar, desborde a 320 px y carrito vacío con voz propia.

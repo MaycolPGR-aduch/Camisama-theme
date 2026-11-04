@@ -18,6 +18,7 @@ use Camisama\Customizer\Cart\OrderDisplay;
 use Camisama\Customizer\Cart\ProductionPage;
 use Camisama\Customizer\Cart\PreviewStore;
 use Camisama\Customizer\Checkout\Delivery;
+use Camisama\Customizer\Checkout\Texts;
 use Camisama\Customizer\Config\ProductConfigRepository;
 use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Designs\DesignRepository;
@@ -107,6 +108,7 @@ final class Plugin {
 		( new CartEdit() )->register();
 		( new OrderDisplay() )->register();
 		( new Delivery() )->register();
+		( new Texts() )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
 			UploadStore::CLEANUP_HOOK,

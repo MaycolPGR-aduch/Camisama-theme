@@ -34,6 +34,16 @@ conviene recordar.
   región (se reparte solo en Lima; el pedido guarda Lima como región de entrega) ni código postal,
   y teléfono obligatorio para coordinar la entrega. La dirección de envío va primero y se puede
   facturar a otra (regalos).
+- **Formulario del pago** (P1 de la crítica del resto de la web):
+  - Errores que se entienden: "Revisa este dato: dirección" en lugar de "introduce un dirección".
+    Se corrigen filtrando la traducción de WooCommerce (`Checkout\Texts`), sin tocar el plugin.
+  - "Política de privacidad" con tilde, "Ir al pago" en lugar de "Proceder al pago" y "Total" en
+    lugar de "Total estimado".
+  - El pago tiene título ("Finalizar compra"), un h1 que faltaba; el país, que era una sola opción,
+    no se muestra.
+  - "Realizar el pedido" mide 48 px, y al saltar a un error el campo queda a la vista, con su
+    etiqueta.
+  - La prenda del resumen se ve a 88 px (antes, unos 40).
 - "Pago seguro" desaparece de la cabecera del pago, el pie y la ficha mientras solo haya una
   transferencia de prueba: "¿Dudas? Escríbenos" y "Precios en soles, con IGV". Las instrucciones de la
   transferencia dicen que los datos de la cuenta llegan por correo.
@@ -49,6 +59,10 @@ conviene recordar.
   - Hoja de herramientas: en altura mínima solo queda el asa y la prenda se centra en el hueco; en
     altura completa el lienzo conserva unos 140 px.
   - "Añadir al carrito" sin talla ya no se ve apagado: se puede pulsar y dice qué falta.
+
+### Corregido
+- Cada error del pago queda ligado a su campo (`aria-describedby`), para que lo lea un lector de
+  pantalla.
 
 ### Decisiones
 - La zona de envío cubre todo Perú aunque se reparta solo en Lima: el pago no pide región, y una

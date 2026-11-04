@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 defined( 'ABSPATH' ) || exit;
 
+require_once __DIR__ . '/inc/home.php';
+
 /**
  * Soportes del tema.
  */
@@ -32,6 +34,17 @@ function camisama_enqueue_styles(): void {
 		array(),
 		wp_get_theme()->get( 'Version' ) . ( $modified ? '.' . $modified : '' )
 	);
+
+	if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+		$script = '/assets/js/checkout.js';
+		wp_enqueue_script(
+			'camisama-checkout',
+			get_stylesheet_directory_uri() . $script,
+			array(),
+			(string) filemtime( get_stylesheet_directory() . $script ),
+			array( 'in_footer' => true )
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'camisama_enqueue_styles' );
 

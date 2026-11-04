@@ -266,3 +266,31 @@ h3 {
 	background: var(--wp--preset--color--surface);
 	font-size: var(--wp--preset--font-size--small);
 }
+
+/*
+ * Pago. Solo se entrega en Perú: el país no es una decisión. Al volver a un
+ * campo con error, que no quede pegado al borde de la pantalla. La prenda se
+ * ve en el resumen: es lo que se está pagando.
+ */
+.wc-block-checkout .wc-block-components-address-form__country {
+	display: none;
+}
+
+.wc-block-checkout input,
+.wc-block-checkout select {
+	scroll-margin-top: 6rem;
+}
+
+.wc-block-checkout .wc-block-components-checkout-place-order-button {
+	min-height: 48px;
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item__image,
+.wc-block-components-order-summary .wc-block-components-order-summary-item__image > img {
+	width: 5.5rem;
+	max-width: 5.5rem;
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item__image > img {
+	border-radius: 10px;
+}
