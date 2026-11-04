@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" fill="none">
+<g stroke="#F7F4EE" stroke-width="2.5" stroke-linejoin="round"><path d="M120 64Q170 99 220 64L280 86L318 150L271 176L249 144V288H91V144L69 176L22 150L60 86Z"/><path d="M460 64Q510 86 560 64L620 86L658 150L611 176L589 144V288H431V144L409 176L362 150L400 86Z"/></g>
+<g stroke="#F5B700" stroke-width="2" stroke-dasharray="6 5"><rect x="127" y="130" width="86" height="115" rx="3"/><rect x="48" y="114" width="34" height="34" rx="3" transform="rotate(-27 65 131)"/><rect x="258" y="114" width="34" height="34" rx="3" transform="rotate(27 275 131)"/><rect x="467" y="130" width="86" height="115" rx="3"/><rect x="488" y="91" width="44" height="26" rx="3"/></g>
+<g fill="#F7F4EE" font-family="Inter, sans-serif" font-size="16" text-anchor="middle"><text x="170" y="193">Frente</text><text x="510" y="193">Espalda</text><text x="170" y="331">Vista frontal</text><text x="510" y="331">Vista posterior</text><text x="510" y="46">Nuca</text><text x="65" y="46">Mangas</text></g>
+<g stroke="#F7F4EE" stroke-width="1.5"><path d="M510 53V85"/><path d="M65 53V104"/></g>
+</svg>

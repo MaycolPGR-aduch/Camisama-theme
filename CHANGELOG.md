@@ -10,6 +10,9 @@ conviene recordar.
 ## 2026-11-04
 
 ### Añadido
+- **Portada nueva** ([docs/home.md](docs/home.md)): ejemplos de catálogo, texto y foto, modelos, pasos,
+  zonas con precio de ejemplo calculado con las tarifas reales (bloque `camisama/home-price`), preguntas
+  frecuentes y llamada final. `bin/check-home.php` comprueba el precio. Su crítica: 25/32.
 - **Crítica del resto de la web** (portada, tienda, carrito y pago): **18/40**. El problema más grave:
   el pago no ofrecía ninguna entrega. Informe en `.impeccable/critique/`.
 - **Páginas de confianza** (P1 de esa crítica): Política de privacidad, Cambios y devoluciones,

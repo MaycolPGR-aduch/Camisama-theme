@@ -1,0 +1,554 @@
+/* La portada hereda los tokens del tema. No cambia el editor ni el checkout. */
+.camisama-home {
+	--home-space: clamp(3rem, 6vw, 5.5rem);
+	--home-gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.camisama-home > .alignfull {
+	margin-block: 0;
+}
+
+.camisama-home-wrap {
+	box-sizing: border-box;
+	width: min(100%, 1280px);
+	margin-inline: auto;
+	padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+.camisama-home-section {
+	padding-block: var(--home-space);
+	scroll-margin-top: 1.5rem;
+}
+
+.camisama-home h2 {
+	max-width: 20ch;
+	margin: 0;
+	font-size: clamp(2rem, 3.5vw, 3rem);
+	line-height: 1.1;
+}
+
+.camisama-home h3 {
+	margin: 0;
+	font-size: 1.25rem;
+	line-height: 1.3;
+}
+
+.camisama-home p {
+	max-width: 65ch;
+}
+
+.camisama-hero {
+	padding-block: clamp(2rem, 4vw, 4rem);
+}
+
+.camisama-hero__layout {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	gap: var(--home-gap);
+}
+
+.camisama-hero h1 {
+	margin: 0 0 1.25rem;
+	font-size: clamp(3.5rem, 7.2vw, 6rem);
+	line-height: 0.98;
+	letter-spacing: -0.03em;
+}
+
+.camisama-hero__copy > p:not(.camisama-home-note) {
+	max-width: 42ch;
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-hero__copy .camisama-hero__intro {
+	color: var(--wp--preset--color--contrast);
+	font-size: clamp(1.125rem, 2vw, 1.4rem);
+	font-weight: 600;
+}
+
+.camisama-home-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem 1.5rem;
+	margin-top: 1.75rem;
+}
+
+.camisama-home-button {
+	display: inline-flex;
+	box-sizing: border-box;
+	min-height: 48px;
+	align-items: center;
+	justify-content: center;
+	padding: 0.85rem 1.5rem;
+	border: 2px solid transparent;
+	border-radius: 999px;
+	background: var(--wp--preset--color--primary);
+	color: var(--wp--preset--color--surface);
+	font-weight: 600;
+	line-height: 1.3;
+	text-align: center;
+	text-decoration: none;
+}
+
+.camisama-home-button:hover {
+	background: var(--wp--preset--color--primary-dark);
+	color: var(--wp--preset--color--surface);
+}
+
+.camisama-text-link {
+	display: inline-flex;
+	min-height: 44px;
+	align-items: center;
+	font-weight: 600;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.3em;
+}
+
+.camisama-home .camisama-home-note {
+	color: var(--wp--preset--color--muted);
+	font-size: 0.875rem;
+	line-height: 1.6;
+}
+
+.camisama-hero__delivery {
+	margin-top: 1.25rem;
+}
+
+.camisama-hero__visual,
+.camisama-examples figure {
+	min-width: 0;
+	margin: 0;
+}
+
+.camisama-hero__visual figcaption {
+	margin-top: -1rem;
+	position: relative;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 1.125rem;
+	font-weight: 600;
+	text-align: center;
+}
+
+.camisama-hero__visual small {
+	display: block;
+	margin-top: 0.35rem;
+	color: var(--wp--preset--color--muted);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: 0.875rem;
+	font-weight: 400;
+}
+
+.camisama-tee {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 1;
+	border-radius: 24px;
+	background: var(--wp--preset--color--base);
+}
+
+.camisama-tee__base {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	mix-blend-mode: multiply;
+	transform: scale(1.4);
+}
+
+.camisama-tee__print {
+	position: absolute;
+	top: 37%;
+	left: 50%;
+	width: 26%;
+	height: auto;
+	transform: translateX(-50%);
+}
+
+.camisama-tee__print--text {
+	top: 42%;
+	width: 36%;
+	color: var(--wp--preset--color--base);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(0.875rem, 1.5vw, 1.25rem);
+	font-weight: 800;
+	line-height: 1.15;
+	text-align: center;
+}
+
+.camisama-tee__print--photo {
+	top: 35%;
+	width: 29%;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.camisama-tee__print--hero {
+	top: 32%;
+	width: 33%;
+	color: var(--wp--preset--color--base);
+	text-align: center;
+}
+
+.camisama-tee__print--hero img {
+	display: block;
+	width: 48%;
+	height: auto;
+	margin: 0 auto 0.5rem;
+}
+
+.camisama-tee__print--hero span {
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(1.5rem, 3vw, 2.5rem);
+	font-weight: 800;
+	line-height: 0.95;
+}
+
+.camisama-examples {
+	background: var(--wp--preset--color--surface);
+}
+
+.camisama-section-heading {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: var(--home-gap);
+	margin-bottom: 2rem;
+}
+
+.camisama-section-heading > p {
+	max-width: 34ch;
+	margin: 0;
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-examples__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--home-gap);
+}
+
+.camisama-examples figcaption {
+	margin-top: 1.25rem;
+}
+
+.camisama-examples figcaption p {
+	margin: 0.5rem 0 0;
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-examples__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem 1.5rem;
+	margin-top: 1.75rem;
+}
+
+.camisama-models .wc-block-product-template {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--home-gap);
+}
+
+.camisama-models .wc-block-product {
+	display: flex;
+	flex-direction: column;
+}
+
+.camisama-models .wp-block-woocommerce-product-button {
+	margin-top: auto;
+}
+
+.camisama-models .wp-block-post-title {
+	min-height: 2.6em;
+}
+
+.camisama-models .wp-block-woocommerce-product-summary {
+	min-height: 4.5em;
+	margin-block: 0.5rem 1rem;
+	color: var(--wp--preset--color--muted);
+	font-size: 0.875rem;
+}
+
+.camisama-models .wp-block-woocommerce-product-price {
+	margin-block: 0.25rem 1rem;
+	font-size: 1.125rem;
+}
+
+.camisama-models .wc-block-components-product-button__button {
+	min-height: 44px;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+}
+
+.camisama-models .wc-block-components-product-button__button:hover {
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+.camisama-steps {
+	border-top: 1px solid var(--wp--preset--color--border);
+}
+
+.camisama-steps__layout,
+.camisama-faq__layout {
+	display: grid;
+	grid-template-columns: 0.8fr 1.2fr;
+	gap: clamp(2rem, 6vw, 5rem);
+}
+
+.camisama-steps__list {
+	display: grid;
+	gap: 1.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: steps;
+}
+
+.camisama-steps__list li {
+	position: relative;
+	padding-left: 3.5rem;
+	counter-increment: steps;
+}
+
+.camisama-steps__list li::before {
+	position: absolute;
+	left: 0;
+	color: var(--wp--preset--color--primary);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1;
+	content: counter(steps);
+}
+
+.camisama-steps__list p {
+	margin: 0.5rem 0 0;
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-print {
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+.camisama-print .camisama-section-heading > p {
+	color: inherit;
+}
+
+.camisama-print__layout {
+	display: grid;
+	grid-template-columns: 1.15fr 0.85fr;
+	align-items: start;
+	gap: clamp(2rem, 5vw, 4rem);
+}
+
+.camisama-print__zones > img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.camisama-print__zones details {
+	margin-block: 1.25rem 2rem;
+	border-block: 1px solid var(--wp--preset--color--muted);
+}
+
+.camisama-print a {
+	color: inherit;
+}
+
+.camisama-print__rules p {
+	color: var(--wp--preset--color--border);
+}
+
+.camisama-price-example {
+	padding: clamp(1.5rem, 3vw, 2.5rem);
+	border-radius: 20px;
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+}
+
+.camisama-price-example__model {
+	margin-top: 0.5rem;
+	color: var(--wp--preset--color--muted);
+	font-size: 0.875rem;
+}
+
+.camisama-price-example dl {
+	margin-block: 1.75rem;
+}
+
+.camisama-price-example dl > div {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 1rem;
+	padding-block: 0.65rem;
+}
+
+.camisama-price-example dd {
+	margin: 0;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.camisama-price-example dl > .camisama-price-example__total {
+	align-items: center;
+	margin-top: 1rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--wp--preset--color--border);
+	font-weight: 600;
+}
+
+.camisama-price-example__total dd {
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.camisama-print .camisama-price-example a {
+	color: var(--wp--preset--color--secondary);
+}
+
+.camisama-home details > summary {
+	min-height: 48px;
+	box-sizing: border-box;
+	padding-block: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.camisama-home details > summary:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+.camisama-home details > p {
+	margin-top: 0;
+	padding-bottom: 0.5rem;
+}
+
+.camisama-faq__intro > p,
+.camisama-faq__list details > p {
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-faq__list details {
+	border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+.camisama-faq__list details:first-child {
+	border-top: 1px solid var(--wp--preset--color--border);
+}
+
+.camisama-home-close {
+	background: var(--wp--preset--color--primary);
+	color: var(--wp--preset--color--surface);
+}
+
+.camisama-home-close__layout {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+.camisama-home-close p {
+	margin-bottom: 0;
+}
+
+.camisama-home-button--paper {
+	flex-shrink: 0;
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+}
+
+.camisama-home-button--paper:hover {
+	border-color: var(--wp--preset--color--base);
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+@media (max-width: 900px) {
+
+	.camisama-models .wc-block-product-template {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.camisama-section-heading {
+		align-items: start;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.camisama-print__layout {
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+	}
+}
+
+@media (max-width: 600px) {
+
+	.camisama-hero__layout,
+	.camisama-steps__layout,
+	.camisama-print__layout,
+	.camisama-faq__layout {
+		grid-template-columns: 1fr;
+	}
+
+	.camisama-hero h1 {
+		font-size: clamp(3.4rem, 15vw, 5rem);
+	}
+
+	.camisama-hero__visual {
+		width: min(100%, 340px);
+		margin-inline: auto;
+	}
+
+	.camisama-hero__visual figcaption {
+		font-size: 1rem;
+	}
+
+	.camisama-tee__print--hero span {
+		font-size: clamp(1.5rem, 7vw, 2rem);
+	}
+
+	.camisama-examples__grid {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+
+	.camisama-examples figure {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.camisama-examples figcaption {
+		margin-top: 0;
+	}
+
+	.camisama-examples h3 {
+		font-size: 1.125rem;
+	}
+
+	.camisama-examples figcaption p {
+		font-size: 0.875rem;
+	}
+
+	.camisama-tee__print--text {
+		font-size: clamp(0.5rem, 2.5vw, 0.875rem);
+	}
+
+	.camisama-tee {
+		border-radius: 16px;
+	}
+
+	.camisama-home-close__layout {
+		align-items: start;
+		flex-direction: column;
+	}
+}

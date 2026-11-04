@@ -9,15 +9,15 @@
  */
 
 ?>
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)"><!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
+<!-- wp:group {"anchor":"modelos","align":"full","className":"camisama-home-section camisama-models","layout":{"type":"constrained"}} -->
+<div id="modelos" class="wp-block-group alignfull camisama-home-section camisama-models"><!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
 <div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"constrained","contentSize":"560px","justifyContent":"left"}} -->
 <div class="wp-block-group"><!-- wp:heading -->
-<h2 class="wp-block-heading"><?php esc_html_e( 'Elige tu modelo', 'camisama' ); ?></h2>
+<h2 class="wp-block-heading"><?php esc_html_e( 'Primero, tu camiseta.', 'camisama' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"textColor":"muted"} -->
-<p class="has-muted-color has-text-color"><?php esc_html_e( 'Prendas de algodón listas para tu diseño. El precio final depende de las zonas que estampes.', 'camisama' ); ?></p>
+<p class="has-muted-color has-text-color"><?php esc_html_e( 'Elige el corte que va contigo. Los precios son de la prenda sin impresión; tu diseño se suma después.', 'camisama' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -34,7 +34,15 @@
 
 <!-- wp:post-title {"level":3,"isLink":true,"fontSize":"large","__woocommerceNamespace":"woocommerce/product-collection/product-title"} /-->
 
+<!-- wp:woocommerce/product-summary {"isDescendentOfQueryLoop":true,"summaryLength":13,"showLink":false} /-->
+
+<!-- wp:paragraph {"className":"camisama-home-note"} -->
+<p class="camisama-home-note"><?php esc_html_e( 'Prenda sin impresión', 'camisama' ); ?></p>
+<!-- /wp:paragraph -->
+
 <!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true} /-->
+
+<!-- wp:woocommerce/product-button {"isDescendentOfQueryLoop":true,"className":"is-style-outline"} /-->
 <!-- /wp:woocommerce/product-template --></div>
 <!-- /wp:woocommerce/product-collection --></div>
 <!-- /wp:group -->

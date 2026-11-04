@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "camisama/home-price",
+	"title": "Zonas y precio actual",
+	"category": "widgets",
+	"icon": "tag",
+	"description": "Ejemplo de personalización calculado con una variante y las tarifas actuales.",
+	"textdomain": "camisama",
+	"supports": { "html": false }
+}
