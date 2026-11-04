@@ -206,6 +206,7 @@ $warning: #8a5a00;
 	// Contorno claro con sombra oscura: se ve sobre prendas de cualquier color.
 	&__zone {
 		position: absolute;
+		box-sizing: border-box;
 		border: calc(1.5px / var(--zoom, 1)) dashed rgba(255, 255, 255, 0.9);
 		border-radius: 4px;
 		--line: calc(1px / var(--zoom, 1));
@@ -654,6 +655,7 @@ $warning: #8a5a00;
 		}
 
 		small {
+			flex: none;
 			color: $muted;
 		}
 	}
@@ -854,12 +856,17 @@ $warning: #8a5a00;
 			background: $paper;
 
 			&.is-sheet-full {
-				--sheet: calc(100dvh - 14rem);
+				--sheet: calc(100dvh - 18rem);
 			}
 
-			// Mínima: solo el asa (44 px), para ver la prenda entera.
+			// Mínima: solo el asa (44 px), para ver la prenda entera, centrada en
+			// el hueco que queda.
 			&.is-sheet-min {
 				--sheet: 2.75rem;
+
+				.camisama-customizer__stage {
+					margin-block: auto;
+				}
 			}
 
 			// Con la hoja casi completa el lienzo es una miniatura: sin la
@@ -908,7 +915,13 @@ $warning: #8a5a00;
 				border-radius: 20px 20px 0 0;
 			}
 
+			// Mínima: solo el asa, sin nada cortado asomando debajo.
+			&.is-sheet-min .camisama-customizer__sheet > :not(.camisama-customizer__handle) {
+				display: none;
+			}
+
 			&.is-sheet-min .camisama-customizer__sheet {
+				padding-bottom: 0;
 				overflow: hidden;
 			}
 
@@ -1138,7 +1151,7 @@ $warning: #8a5a00;
 			}
 		}
 
-		// Paso 3, talla y pago: pantalla propia.
+		// Paso 3, talla y cantidad: pantalla propia.
 		&__buy {
 			position: fixed;
 			inset: 0;
@@ -1290,7 +1303,7 @@ $warning: #8a5a00;
 		}
 	}
 
-	// Talla en botones (paso de talla y pago del móvil y columna de compra
+	// Talla en botones (paso de talla y cantidad del móvil y columna de compra
 	// del escritorio); la que cuesta más lleva su recargo debajo.
 	&__sizes .camisama-customizer__chips button {
 		display: inline-flex;
@@ -1512,8 +1525,15 @@ $warning: #8a5a00;
 	display: none;
 }
 
+// Sin talla, el botón se puede pulsar y dice qué falta (SizeOptions): no debe
+// verse apagado, como lo deja WooCommerce.
+.variations_form.has-camisama-summary .single_add_to_cart_button.disabled.wc-variation-selection-needed {
+	opacity: 1;
+	cursor: pointer;
+}
+
 // Flujo móvil: el formulario de compra de WooCommerce no se ve; lo maneja el
-// paso de talla y pago (BuyStep). Con una pantalla abierta, la página de
+// paso de talla y cantidad (BuyStep). Con una pantalla abierta, la página de
 // debajo no se desplaza. (Sin editor, view.js quita camisama-flow.)
 @media (max-width: 781px) {
 

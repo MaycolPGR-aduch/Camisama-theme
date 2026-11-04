@@ -20,6 +20,24 @@ conviene recordar.
 ### Cambiado
 - El minicarrito ya no se abre solo al añadir: lo sustituye la confirmación. Sigue en la cabecera,
   con su contador al día.
+- **Repaso final de la cuarta crítica** (`polish`):
+  - "Talla y pago" pasa a "Talla y cantidad" (ahí no se paga) e "Ir a talla y pago", a "Elegir
+    talla".
+  - Resumen: "2 unidades × S/ 53.90" en lugar de "Por unidad: 2 × S/ 53.90", y "desde" solo en el
+    total.
+  - Carrito, minicarrito y resumen del pago: cada dato de la línea en su renglón, sin barras. En el
+    carrito, miniatura de 144 px en escritorio y 88 px en el móvil, y total dentro de los márgenes.
+  - Acercar una zona llega a 2,5× como máximo (a 4× la manga se veía pixelada y sin contexto).
+  - Hoja de herramientas: en altura mínima solo queda el asa y la prenda se centra en el hueco; en
+    altura completa el lienzo conserva unos 140 px.
+  - "Añadir al carrito" sin talla ya no se ve apagado: se puede pulsar y dice qué falta.
+
+### Corregido
+- El recuadro de la zona medía unos 4 px más que el área de impresión.
+- "Frente" ya no se parte en la lista de capas cuando aparece "Revisar".
+- "100 %" ya no se parte en dos líneas en el extracto del producto.
+- El aviso de contraste del panel de texto ahora se anuncia a los lectores de pantalla.
+- Una prenda sin diseño ya no dice "Tu diseño está en el carrito".
 
 ## 2026-11-03
 

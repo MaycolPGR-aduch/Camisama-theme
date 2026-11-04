@@ -94,8 +94,12 @@ local, 45 pruebas de JS y lint limpio.
       segmentado con flechas y la zona con estilo propio.
 - [x] **Extremos del recorrido** (P2): estampados para empezar con un toque y confirmación propia
       al añadir en lugar del minicarrito de WooCommerce.
-- [ ] **Repaso final** (`polish`) de la cuarta crítica: rótulos, recuadro de zona, acercamiento de
-      la manga y el carrito de WooCommerce con los datos en lista y una miniatura mayor.
+- [x] **Repaso final** (`polish`) de la cuarta crítica: rótulos, recuadro de zona, acercamiento de
+      la manga, alturas de la hoja y el carrito con los datos en lista y una miniatura mayor.
+- [ ] **Quinta crítica** para medir el resultado (última: 27/40, antes de estos arreglos).
+- [ ] **Menores que quedan de la cuarta crítica:** "Manga izquierda" aparece a la derecha de quien
+      mira, "Poner encima" desactivado sin explicar por qué y lo de la otra cara no sale en "En
+      esta vista".
 - [x] **Jerga del editor**: "Poner encima / Poner debajo" (por encima o por debajo de todo lo de
       su zona, solo cuando hay algo más en ella) y un aviso claro si el diseño es más grande de lo
       que se imprime. "Añadir en:" se mantiene (decisión de la primera crítica).

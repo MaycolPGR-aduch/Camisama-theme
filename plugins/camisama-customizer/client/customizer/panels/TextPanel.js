@@ -292,7 +292,7 @@ export default function TextPanel( {
 					</span>
 				</div>
 				{ ! readable && (
-					<p className="camisama-customizer__contrast">
+					<p className="camisama-customizer__contrast" role="status">
 						{ __(
 							'Este color casi no se verá sobre la prenda. Elige uno que contraste más.',
 							'camisama-customizer'

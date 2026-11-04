@@ -58,6 +58,17 @@ function camisama_register_block_styles(): void {
 add_action( 'init', 'camisama_register_block_styles' );
 
 /**
+ * Que un porcentaje no se parta entre dos líneas ("100 %") en los extractos de producto.
+ *
+ * @param string $excerpt Extracto.
+ * @return string Extracto con espacio no separable antes de "%".
+ */
+function camisama_keep_percent( string $excerpt ): string {
+	return (string) preg_replace( '/(\d) %/u', "$1\u{00A0}%", $excerpt );
+}
+add_filter( 'get_the_excerpt', 'camisama_keep_percent' );
+
+/**
  * URL de una página de WooCommerce (shop, cart, checkout, myaccount, refund_returns) para los patrones.
  *
  * Si WooCommerce no está activo o la página no existe, devuelve la portada.

@@ -1,6 +1,6 @@
 /**
  * Talla (y demás opciones del producto aparte del color) en botones, sin ninguna marcada, con la
- * guía "¿Qué talla?". La usan el paso de talla y pago del móvil y la columna de compra del
+ * guía "¿Qué talla?". La usan el paso de talla y cantidad del móvil y la columna de compra del
  * escritorio; las elecciones manejan el formulario de WooCommerce a través de wc-bridge.js.
  */
 import { useEffect, useRef } from '@wordpress/element';

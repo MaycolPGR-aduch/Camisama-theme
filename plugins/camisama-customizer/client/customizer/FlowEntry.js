@@ -1,7 +1,7 @@
 /**
  * Paso 1 del flujo móvil (docs/flujo-movil.md), junto al título del producto: el precio de
  * partida, unos estampados para empezar con un toque y la entrada al editor o, con la acción
- * secundaria, al paso de talla y pago.
+ * secundaria, al paso de talla y cantidad.
  */
 import { __ } from '@wordpress/i18n';
 
@@ -81,7 +81,7 @@ export default function FlowEntry( {
 				onClick={ onBuy }
 			>
 				{ hasDesign
-					? __( 'Ir a talla y pago', 'camisama-customizer' )
+					? __( 'Elegir talla', 'camisama-customizer' )
 					: __( 'Comprar sin diseño', 'camisama-customizer' ) }
 			</button>
 		</>

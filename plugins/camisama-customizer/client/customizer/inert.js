@@ -1,5 +1,5 @@
 /**
- * Diálogo a pantalla completa (modo diseño y "Talla y pago" en el móvil): el resto de la página
+ * Diálogo a pantalla completa (modo diseño y "Talla y cantidad" en el móvil): el resto de la página
  * queda inerte, así ni el tabulador ni un lector de pantalla salen del diálogo.
  */
 

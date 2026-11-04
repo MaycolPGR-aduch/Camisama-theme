@@ -290,14 +290,14 @@ export default function App( { data } ) {
 	const [ tones, setTones ] = useState( {} );
 	const [ message, setMessage ] = useState( '' );
 	const [ submitError, setSubmitError ] = useState( null );
-	// Flujo móvil (docs/flujo-movil.md): ficha → modo diseño a pantalla completa → talla y pago.
+	// Flujo móvil (docs/flujo-movil.md): ficha → modo diseño a pantalla completa → talla y cantidad.
 	// Al editar desde el carrito se entra directamente en el modo diseño.
 	const mobile = useMediaQuery( MOBILE );
-	// Pantalla abierta en el móvil: 'design' (modo diseño) o 'buy' (talla y pago); null, la ficha.
+	// Pantalla abierta en el móvil: 'design' (modo diseño) o 'buy' (talla y cantidad); null, la ficha.
 	const [ screen, setScreen ] = useState( data.edit ? 'design' : null );
 	const designing = screen === 'design';
 	const buying = screen === 'buy';
-	// Paso de talla y pago: opciones elegidas a conciencia (sin la de por defecto), cantidad,
+	// Paso de talla y cantidad: opciones elegidas a conciencia (sin la de por defecto), cantidad,
 	// miniaturas y si el envío está en marcha.
 	const [ choices, setChoices ] = useState( () =>
 		Object.fromEntries(
@@ -494,7 +494,7 @@ export default function App( { data } ) {
 		return () => node.remove();
 	}, [] );
 
-	// Con una pantalla abierta (diseño o talla y pago) la página de debajo no se desplaza.
+	// Con una pantalla abierta (diseño o talla y cantidad) la página de debajo no se desplaza.
 	useEffect( () => {
 		document.documentElement.classList.toggle(
 			'camisama-designing',
@@ -576,7 +576,7 @@ export default function App( { data } ) {
 		return () => window.clearTimeout( timer );
 	}, [ mobile, designing, selectedId ] );
 
-	// Al entrar en talla y pago: las opciones del formulario (sin la talla por defecto de
+	// Al entrar en talla y cantidad: las opciones del formulario (sin la talla por defecto de
 	// WooCommerce, que se elige a conciencia) y las miniaturas del diseño.
 	useEffect( () => {
 		if ( ! mobile || ! buying ) {
@@ -1067,15 +1067,21 @@ export default function App( { data } ) {
 			{ inCart && (
 				<div className="camisama-customizer__added" role="status">
 					<p>
-						{ editKey
-							? __(
-									'Cambios guardados en tu carrito.',
-									'camisama-customizer'
-								)
-							: __(
-									'Tu diseño está en el carrito.',
-									'camisama-customizer'
-								) }
+						{ editKey &&
+							__(
+								'Cambios guardados en tu carrito.',
+								'camisama-customizer'
+							) }
+						{ ! editKey &&
+							( elements.length
+								? __(
+										'Tu diseño está en el carrito.',
+										'camisama-customizer'
+									)
+								: __(
+										'Tu prenda está en el carrito.',
+										'camisama-customizer'
+									) ) }
 					</p>
 					<a href={ data.cart.url }>
 						{ __( 'Ver carrito', 'camisama-customizer' ) }
@@ -1125,7 +1131,7 @@ export default function App( { data } ) {
 				TEXT_COLORS.map( ( option ) => option.hex )
 			)
 	);
-	// Riesgos que el cliente debe ver antes de pagar (paso de talla y pago y lista de capas):
+	// Riesgos que el cliente debe ver antes de pagar (paso de talla y cantidad y lista de capas):
 	// foto que se verá pixelada, texto que casi no se ve sobre la prenda y letra diminuta.
 	const risks = elements.flatMap( ( element ) => {
 		const zone = zoneById( element.zone );
@@ -1191,7 +1197,7 @@ export default function App( { data } ) {
 	} );
 	const riskyIds = new Set( risks.map( ( risk ) => risk.id ) );
 
-	// "Corregir" desde talla y pago: vuelve al diseño con ese elemento seleccionado (y acercado).
+	// "Corregir" desde talla y cantidad: vuelve al diseño con ese elemento seleccionado (y acercado).
 	const fixRisk = ( id ) => {
 		const element = elements.find( ( item ) => item.id === id );
 		const zone = element && zoneById( element.zone );
@@ -1831,7 +1837,7 @@ export default function App( { data } ) {
 						cartUrl={ data.cart.url }
 						onClose={ () => {
 							setConfirmation( null );
-							// El botón de añadir ya no está en talla y pago: el foco va a "Ver carrito".
+							// El botón de añadir ya no está en talla y cantidad: el foco va a "Ver carrito".
 							window.setTimeout( () => {
 								const { activeElement, body } = document;
 								if ( activeElement === body ) {

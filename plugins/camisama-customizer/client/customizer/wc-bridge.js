@@ -282,7 +282,7 @@ export function connectVariationForm(
 			button?.addEventListener( 'click', handler, true );
 			return () => button?.removeEventListener( 'click', handler, true );
 		},
-		// Paso de talla y pago del móvil: elige las opciones y la cantidad y envía el formulario
+		// Paso de talla y cantidad del móvil: elige las opciones y la cantidad y envía el formulario
 		// (que adjunta el diseño y lo añade sin recargar, como el botón de WooCommerce).
 		buy( choices, quantity ) {
 			for ( const [ name, value ] of Object.entries( choices ) ) {

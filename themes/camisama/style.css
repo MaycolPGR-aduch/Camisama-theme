@@ -204,3 +204,56 @@ h3 {
 	border-radius: 24px;
 	background: var(--wp--preset--color--surface);
 }
+
+/*
+ * Carrito, minicarrito y resumen del pago: cada dato de la línea en su propio
+ * renglón (WooCommerce los seguía uno tras otro, separados por barras).
+ */
+.wc-block-components-product-metadata .wc-block-components-product-details > span {
+	display: block;
+}
+
+.wc-block-components-product-metadata .wc-block-components-product-details > span > [aria-hidden="true"] {
+	display: none;
+}
+
+/*
+ * Carrito: miniatura mayor. Es donde se comprueba el diseño antes de pagar.
+ * table-layout fijo en la tabla: el ancho va en la cabecera de la columna.
+ */
+.wc-block-cart .wc-block-cart-items .wc-block-cart-items__header-image {
+	width: 10rem;
+}
+
+.wc-block-cart .wc-block-cart-items .wc-block-cart-item__image {
+	width: 9rem;
+}
+
+.wc-block-cart .wc-block-cart-items .wc-block-cart-item__image img {
+	width: 100%;
+	max-width: none;
+	height: auto;
+	border-radius: 12px;
+}
+
+/* En el móvil cada línea es una rejilla: imagen, datos y total, sin salirse. */
+.wc-block-cart.is-mobile table.wc-block-cart-items .wc-block-cart-items__row {
+	grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+	gap: 0 0.75rem;
+}
+
+.wc-block-cart.is-mobile table.wc-block-cart-items .wc-block-cart-item__image {
+	width: auto;
+	padding: 0;
+}
+
+.wc-block-cart.is-mobile table.wc-block-cart-items .wc-block-cart-item__product {
+	grid-column: 2;
+	padding: 0;
+}
+
+.wc-block-cart.is-mobile table.wc-block-cart-items .wc-block-cart-item__total {
+	grid-column: 3;
+	grid-row: 1;
+	padding: 0;
+}

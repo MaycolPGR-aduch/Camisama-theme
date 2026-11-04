@@ -1,5 +1,5 @@
 /**
- * Paso 3 del flujo móvil (docs/flujo-movil.md): talla y pago, en una pantalla propia.
+ * Paso 3 del flujo móvil (docs/flujo-movil.md): talla y cantidad, en una pantalla propia.
  *
  * Miniaturas del diseño, desglose del precio, talla en botones sin ninguna marcada, guía de
  * tallas, cantidad y "Añadir al carrito". El pedido lo sigue enviando el formulario de
@@ -127,7 +127,7 @@ export default function BuyStep( {
 					</svg>
 				</button>
 				<h2 id="camisama-buy-title">
-					{ __( 'Talla y pago', 'camisama-customizer' ) }
+					{ __( 'Talla y cantidad', 'camisama-customizer' ) }
 				</h2>
 			</div>
 

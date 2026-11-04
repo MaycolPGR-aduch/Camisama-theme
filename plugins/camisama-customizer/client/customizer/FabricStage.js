@@ -12,7 +12,7 @@ import { fitsInside, fromCanvas, pushInside, zoneBox } from './geometry';
 import { TEXT_BASE, applyElement, createObject, snapshot } from './objects';
 
 // Zoom máximo al acercar una zona (las mangas y la nuca son pequeñas) y margen alrededor.
-const MAX_ZOOM = 4;
+const MAX_ZOOM = 2.5;
 const ZOOM_FILL = 0.8;
 
 /**

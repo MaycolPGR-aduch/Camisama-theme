@@ -2,7 +2,7 @@
  * Resumen del precio: prenda + recargo de cada zona impresa (con el límite de su escalón) +
  * estampados premium, y el total por la cantidad elegida.
  */
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { formatMoney } from './format';
 
@@ -28,10 +28,7 @@ export default function Summary( {
 			<dl>
 				<div>
 					<dt>{ __( 'Prenda', 'camisama-customizer' ) }</dt>
-					<dd>
-						{ from }
-						{ formatMoney( garmentPrice, currency ) }
-					</dd>
+					<dd>{ formatMoney( garmentPrice, currency ) }</dd>
 				</div>
 				{ quote?.zones.map( ( zone ) => (
 					<div key={ zone.zone }>
@@ -82,15 +79,19 @@ export default function Summary( {
 				) }
 				{ quantity > 1 && (
 					<div className="camisama-customizer__unit">
-						<dt>{ __( 'Por unidad', 'camisama-customizer' ) }</dt>
-						<dd>
+						<dt>
 							{ sprintf(
-								/* translators: 1: cantidad, 2: precio de una unidad. */
-								__( '%1$d × %2$s', 'camisama-customizer' ),
-								quantity,
-								from + formatMoney( unit, currency )
+								/* translators: %d: número de unidades. */
+								_n(
+									'%d unidad',
+									'%d unidades',
+									quantity,
+									'camisama-customizer'
+								),
+								quantity
 							) }
-						</dd>
+						</dt>
+						<dd>× { formatMoney( unit, currency ) }</dd>
 					</div>
 				) }
 			</dl>
