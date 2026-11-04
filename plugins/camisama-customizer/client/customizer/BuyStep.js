@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 import SizeOptions from './SizeOptions';
-import { inertOutside, KEEP_DRAWER } from './inert';
+import { inertOutside } from './inert';
 
 const MAX_QUANTITY = 99;
 
@@ -43,8 +43,7 @@ export default function BuyStep( {
 	const closeRef = useRef( null );
 
 	useEffect( () => closeRef.current?.focus(), [] );
-	// Aquí se añade al carrito: el minicarrito que se abre encima no queda inerte.
-	useEffect( () => inertOutside( rootRef.current, KEEP_DRAWER ), [] );
+	useEffect( () => inertOutside( rootRef.current ), [] );
 
 	// Diálogo: Esc lo cierra y el tabulador no sale de él.
 	const onKeyDown = ( event ) => {
@@ -78,6 +77,22 @@ export default function BuyStep( {
 		action = __( 'Preparando tu diseño…', 'camisama-customizer' );
 	} else if ( editing ) {
 		action = __( 'Guardar cambios', 'camisama-customizer' );
+	}
+
+	let addedText = __(
+		'Tu prenda está en el carrito.',
+		'camisama-customizer'
+	);
+	if ( editing ) {
+		addedText = __(
+			'Cambios guardados en tu carrito.',
+			'camisama-customizer'
+		);
+	} else if ( hasDesign ) {
+		addedText = __(
+			'Tu diseño está en el carrito.',
+			'camisama-customizer'
+		);
 	}
 
 	return (
@@ -276,17 +291,7 @@ export default function BuyStep( {
 			<div className="camisama-customizer__buy-foot">
 				{ inCart ? (
 					<div className="camisama-customizer__added" role="status">
-						<p>
-							{ editing
-								? __(
-										'Cambios guardados en tu carrito.',
-										'camisama-customizer'
-									)
-								: __(
-										'Tu diseño está en el carrito.',
-										'camisama-customizer'
-									) }
-						</p>
+						<p>{ addedText }</p>
 						<a href={ cartUrl }>
 							{ __( 'Ver carrito', 'camisama-customizer' ) }
 						</a>

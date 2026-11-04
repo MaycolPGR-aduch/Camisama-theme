@@ -1,12 +1,15 @@
 /**
  * Paso 1 del flujo móvil (docs/flujo-movil.md), junto al título del producto: el precio de
- * partida y la entrada al editor o, con la acción secundaria, al paso de talla y pago.
+ * partida, unos estampados para empezar con un toque y la entrada al editor o, con la acción
+ * secundaria, al paso de talla y pago.
  */
 import { __ } from '@wordpress/i18n';
 
 export default function FlowEntry( {
 	price,
 	hasDesign,
+	starters,
+	onStart,
 	onDesign,
 	onBuy,
 	openRef,
@@ -40,9 +43,41 @@ export default function FlowEntry( {
 					? __( 'Seguir diseñando', 'camisama-customizer' )
 					: __( 'Personalizar', 'camisama-customizer' ) }
 			</button>
+			{ ! hasDesign && starters.length > 0 && (
+				<div className="camisama-customizer__starters">
+					<p id="camisama-starters-label">
+						{ __( 'O empieza con uno:', 'camisama-customizer' ) }
+					</p>
+					<ul
+						className="camisama-customizer__designs"
+						aria-labelledby="camisama-starters-label"
+					>
+						{ starters.map( ( design ) => (
+							<li key={ design.id }>
+								<button
+									type="button"
+									onClick={ () => onStart( design ) }
+								>
+									<img
+										src={ design.file.url }
+										alt=""
+										width={ design.file.width }
+										height={ design.file.height }
+									/>
+									{ design.title }
+								</button>
+							</li>
+						) ) }
+					</ul>
+				</div>
+			) }
 			<button
 				type="button"
-				className="camisama-customizer__secondary"
+				className={
+					hasDesign
+						? 'camisama-customizer__secondary'
+						: 'camisama-customizer__link'
+				}
 				onClick={ onBuy }
 			>
 				{ hasDesign

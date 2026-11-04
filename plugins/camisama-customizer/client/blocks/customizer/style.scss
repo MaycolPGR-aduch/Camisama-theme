@@ -1069,6 +1069,36 @@ $warning: #8a5a00;
 			}
 		}
 
+		// Estampados para empezar: tres a lo ancho, sin desplazar la ficha.
+		&__starters {
+			display: grid;
+			gap: 0.5rem;
+
+			p {
+				margin: 0;
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+
+			.camisama-customizer__designs {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+		}
+
+		// "Comprar sin diseño": un enlace discreto, no compite con "Personalizar".
+		&__entry &__link {
+			justify-self: center;
+			min-height: 44px;
+			padding: 0 0.5em;
+			border: 0;
+			background: none;
+			color: $ink;
+			font-weight: 500;
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+			cursor: pointer;
+		}
+
 		// &__entry / &__buy delante: gana a
 		// .camisama-customizer button { font: inherit }.
 		&__entry &__cta,
@@ -1108,8 +1138,7 @@ $warning: #8a5a00;
 			}
 		}
 
-		// Paso 3, talla y pago: pantalla propia por debajo del cajón del
-		// minicarrito (z-index 9999), que se abre encima al añadir.
+		// Paso 3, talla y pago: pantalla propia.
 		&__buy {
 			position: fixed;
 			inset: 0;
@@ -1373,6 +1402,106 @@ $warning: #8a5a00;
 
 	.wp-block-column:has(> .wp-block-camisama-customizer.is-ready) + .is-product-buy {
 		flex-basis: 32% !important;
+	}
+}
+
+// Confirmación al añadir al carrito (AddedDialog), en móvil y escritorio.
+.camisama-customizer.camisama-customizer__confirm {
+	box-sizing: border-box;
+	gap: 0.75rem;
+	width: min(calc(100% - 2rem), 28rem);
+	max-height: calc(100vh - 2rem);
+	max-height: calc(100dvh - 2rem);
+	overflow-y: auto;
+	padding: var(--wp--preset--spacing--50, 1.25rem);
+	border: 0;
+	border-radius: 20px;
+	background: $paper;
+	color: $ink;
+
+	&::backdrop {
+		background: rgba(22, 22, 26, 0.55);
+	}
+
+	h2 {
+		margin: 0;
+		font-family: var(--wp--preset--font-family--display, inherit);
+		font-size: var(--wp--preset--font-size--large, 1.25rem);
+		line-height: 1.2;
+		text-wrap: balance;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	.camisama-customizer__confirm-images {
+		display: flex;
+		gap: 0.5rem;
+
+		img {
+			flex: 1 1 0;
+			min-width: 0;
+			height: auto;
+			max-height: 42vh;
+			max-height: 42dvh;
+			border-radius: 14px;
+			background: $surface;
+			object-fit: contain;
+		}
+	}
+
+	.camisama-customizer__confirm-details {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+
+		strong {
+			font-family: var(--wp--preset--font-family--display, inherit);
+			font-size: var(--wp--preset--font-size--large, 1.25rem);
+		}
+	}
+
+	a.camisama-customizer__cta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 48px;
+		border-radius: 999px;
+		background: $accent;
+		color: #fff;
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			background: $accent-dark;
+			color: #fff;
+		}
+	}
+
+	.camisama-customizer__confirm-more {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+
+		button {
+			flex: 1 1 auto;
+			min-height: 44px;
+			padding: 0.4em 1em;
+			border: 1.5px solid $ink;
+			border-radius: 999px;
+			background: transparent;
+			color: $ink;
+			font-size: 0.875rem;
+			font-weight: 600;
+
+			&:hover {
+				background: $ink;
+				color: $paper;
+			}
+		}
 	}
 }
 

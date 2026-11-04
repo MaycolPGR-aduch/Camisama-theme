@@ -7,6 +7,20 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-04
+
+### Añadido
+- **Los extremos del recorrido** (P2 de la cuarta crítica):
+  - En la ficha del móvil, "O empieza con uno:" ofrece tres estampados sin recargo: un toque abre el
+    editor con ese estampado puesto. "Comprar sin diseño" pasa a enlace discreto.
+  - Al añadir al carrito (móvil y escritorio), una confirmación propia: el diseño en grande, talla,
+    color, cantidad y total, "Ir al carrito", "Seguir con este diseño" y "Empezar otro diseño". Sin
+    plazos ni promesas de entrega: aún no hay datos.
+
+### Cambiado
+- El minicarrito ya no se abre solo al añadir: lo sustituye la confirmación. Sigue en la cabecera,
+  con su contador al día.
+
 ## 2026-11-03
 
 ### Añadido
@@ -53,8 +67,7 @@ conviene recordar.
   - Al añadir un elemento con el teclado o pulsar "Listo", el foco ya no cae al cuerpo de la
     página: va al elemento seleccionado o a la pestaña activa.
   - Con el modo diseño o "Talla y pago" abiertos, el resto de la página queda inerte: ni el
-    tabulador ni un lector de pantalla salen del diálogo (el minicarrito sigue funcionando en
-    "Talla y pago").
+    tabulador ni un lector de pantalla salen del diálogo.
   - "Elige una talla." va encima de los botones, ligado a ellos, y su grupo se lleva a la vista
     (antes quedaba bajo el pliegue con "Revisa antes de añadir" visible).
 

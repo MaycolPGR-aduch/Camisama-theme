@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 3 de noviembre de 2026.
+falta para abrirla al público. Actualizado el 4 de noviembre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).
@@ -92,8 +92,10 @@ local, 45 pruebas de JS y lint limpio.
       controles de 44 px también en escritorio.
 - [x] **Jerarquía de herramientas** (P2): color de la prenda arriba, pestañas como control
       segmentado con flechas y la zona con estilo propio.
-- [ ] **Extremos del recorrido** (P2): estampados para empezar con un toque y confirmación propia
+- [x] **Extremos del recorrido** (P2): estampados para empezar con un toque y confirmación propia
       al añadir en lugar del minicarrito de WooCommerce.
+- [ ] **Repaso final** (`polish`) de la cuarta crítica: rótulos, recuadro de zona, acercamiento de
+      la manga y el carrito de WooCommerce con los datos en lista y una miniatura mayor.
 - [x] **Jerga del editor**: "Poner encima / Poner debajo" (por encima o por debajo de todo lo de
       su zona, solo cuando hay algo más en ella) y un aviso claro si el diseño es más grande de lo
       que se imprime. "Añadir en:" se mantiene (decisión de la primera crítica).

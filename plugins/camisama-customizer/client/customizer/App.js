@@ -13,7 +13,7 @@ import {
 	useRef,
 	useState,
 } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import BuyStep from './BuyStep';
 import FabricStage from './FabricStage';
@@ -38,6 +38,8 @@ import {
 } from './elements';
 import { isImageVisible, isReadable, mostReadable } from './contrast';
 import { imageTones } from './tones';
+import AddedDialog from './AddedDialog';
+import { fetchDesigns } from './api';
 import { inertOutside } from './inert';
 import { loadDraft, saveDraft } from './draft';
 import { formatMoney } from './format';
@@ -97,6 +99,22 @@ async function cartFields( data, elements, color, replace ) {
 		camisama_previews: JSON.stringify( previews ),
 		...target,
 	};
+}
+
+/**
+ * Vista de una prenda lisa: su maqueta de frente en ese color.
+ *
+ * @param {Object} data  Datos del personalizador.
+ * @param {string} color Color de la prenda.
+ * @return {Array} Cero o una vista previa ({ id, label, src }).
+ */
+function garmentPreview( data, color ) {
+	const front = data.views[ 0 ];
+	const mockup =
+		front?.mockups[ color ] ?? Object.values( front?.mockups ?? {} )[ 0 ];
+	return mockup
+		? [ { id: front.id, label: front.label, src: mockup.url } ]
+		: [];
 }
 
 /**
@@ -261,6 +279,11 @@ export default function App( { data } ) {
 	// Diseño tal como se añadió al carrito: mientras no cambie, se da por comprado.
 	const [ addedDesign, setAddedDesign ] = useState( null );
 	const inCart = addedDesign !== null && addedDesign === elements;
+	// Confirmación tras añadir: las vistas previas de lo añadido, o null si está cerrada.
+	const [ confirmation, setConfirmation ] = useState( null );
+	const sentPreviews = useRef( null );
+	// Estampados para empezar con un toque en la ficha del móvil.
+	const [ starters, setStarters ] = useState( [] );
 	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	// Tonos de cada imagen del diseño (src → luminancias), para avisar si no se verá en la prenda.
@@ -307,18 +330,35 @@ export default function App( { data } ) {
 			onPrice: setVariationPrice,
 			onQuantity: setQuantity,
 			onBusy: setBusy,
-			onSubmit: () => {
+			onSubmit: async () => {
 				setSubmitError( null );
-				return cartFields(
+				const fields = await cartFields(
 					data,
 					latest.current.elements,
 					latest.current.color,
 					latest.current.editKey
 				);
+				sentPreviews.current = fields.camisama_previews
+					? JSON.parse( fields.camisama_previews )
+					: null;
+				return fields;
 			},
 			onAdded: ( key ) => {
 				setAddedDesign( latest.current.elements );
 				setRestoredNotice( false );
+				setConfirmation(
+					sentPreviews.current
+						? data.views
+								.filter(
+									( item ) => sentPreviews.current[ item.id ]
+								)
+								.map( ( item ) => ( {
+									id: item.id,
+									label: item.label,
+									src: sentPreviews.current[ item.id ],
+								} ) )
+						: garmentPreview( data, latest.current.color )
+				);
 				// Guardado al editar: la línea nueva es la que se sigue editando.
 				if ( latest.current.editKey && key ) {
 					setEditKey( key );
@@ -380,6 +420,29 @@ export default function App( { data } ) {
 			cancelled = true;
 		};
 	}, [ elements, tones ] );
+
+	// Estampados para empezar en la ficha del móvil: los primeros sin recargo del catálogo.
+	useEffect( () => {
+		if ( ! mobile || ! entryNode ) {
+			return;
+		}
+		let cancelled = false;
+		fetchDesigns( data.api, null, 1 )
+			.then( ( result ) => {
+				if ( ! cancelled ) {
+					setStarters(
+						result.items
+							.filter( ( design ) => ! design.premium )
+							.slice( 0, 3 )
+					);
+				}
+			} )
+			// Sin ellos, la ficha sigue con "Personalizar".
+			.catch( () => {} );
+		return () => {
+			cancelled = true;
+		};
+	}, [ mobile, entryNode, data.api ] );
 
 	// La talla se elige a conciencia: se quita la que WooCommerce marca por defecto (así el precio
 	// es el mismo, con su "desde", en la ficha, el pie y el resumen). En escritorio va en botones
@@ -537,16 +600,7 @@ export default function App( { data } ) {
 			)
 		);
 		if ( ! views.length ) {
-			// Prenda lisa: su maqueta de frente.
-			const front = data.views[ 0 ];
-			const mockup =
-				front?.mockups[ color ] ??
-				Object.values( front?.mockups ?? {} )[ 0 ];
-			setPreviews(
-				mockup
-					? [ { id: front.id, label: front.label, src: mockup.url } ]
-					: []
-			);
+			setPreviews( garmentPreview( data, color ) );
 		} else {
 			designPreviews( data, elements, color ).then( ( images ) => {
 				if ( ! cancelled ) {
@@ -1192,6 +1246,22 @@ export default function App( { data } ) {
 			data.currency
 		);
 
+	// Lo pedido, para la confirmación: talla (y demás opciones), color y cantidad.
+	const orderDetails = [
+		...buyOptions.flatMap( ( option ) => {
+			const value = option.values.find(
+				( item ) => item.value === choices[ option.name ]
+			);
+			return value ? [ `${ option.label } ${ value.text }` ] : [];
+		} ),
+		...( garment ? [ garment.name ] : [] ),
+		sprintf(
+			/* translators: %d: número de unidades. */
+			_n( '%d unidad', '%d unidades', quantity, 'camisama-customizer' ),
+			quantity
+		),
+	];
+
 	// Avisos del diseño (editar desde el carrito, borrador recuperado, texto que no se ve). En el
 	// modo diseño del móvil van en una franja fija bajo el asa de la hoja: en la columna del lienzo
 	// quedaban tapados por la hoja sin pista de que hubiera algo debajo.
@@ -1738,11 +1808,55 @@ export default function App( { data } ) {
 								: formatMoney( garmentPrice, data.currency )
 						}
 						hasDesign={ elements.length > 0 }
+						starters={ starters }
+						onStart={ ( design ) => {
+							add( designElement( activeZone, design ) );
+							openDesign();
+						} }
 						onDesign={ openDesign }
 						onBuy={ goToBuy }
 						openRef={ openRef }
 					/>,
 					entryNode
+				) }
+
+			{ confirmation &&
+				createPortal(
+					<AddedDialog
+						previews={ confirmation }
+						details={ orderDetails }
+						total={ totalLabel }
+						editing={ Boolean( editKey ) }
+						hasDesign={ elements.length > 0 }
+						cartUrl={ data.cart.url }
+						onClose={ () => {
+							setConfirmation( null );
+							// El botón de añadir ya no está en talla y pago: el foco va a "Ver carrito".
+							window.setTimeout( () => {
+								const { activeElement, body } = document;
+								if ( activeElement === body ) {
+									[
+										...document.querySelectorAll(
+											'.camisama-customizer__added a'
+										),
+									]
+										.find(
+											( link ) =>
+												link.getClientRects().length
+										)
+										?.focus();
+								}
+							} );
+						} }
+						onStartOver={ () => {
+							setConfirmation( null );
+							startOver();
+							if ( mobile && screen ) {
+								closeScreen();
+							}
+						} }
+					/>,
+					document.body
 				) }
 
 			{ mobile &&
