@@ -123,14 +123,21 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Crítica de la portada, la tienda, el carrito y el pago**: 18/40. Plan acordado, del pago
       hacia atrás, por tandas:
   - [x] **Entrega** (P0): envío en Lima y recojo en el taller, dirección adaptada a Perú.
-  - [ ] **Legales y confianza** (P1): borradores de cambios, privacidad y términos para revisar,
-        enlaces reales, contacto y "Pago seguro".
+  - [x] **Legales y confianza** (P1): borradores de cambios, privacidad, términos y contacto,
+        enlaces reales y sin "Pago seguro" mientras no haya pasarela.
   - [ ] **Formulario del pago** (P1): errores bien escritos y ligados a su campo, h1, resumen móvil
         con teclado y botón de 44 px.
   - [ ] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión" y desglose en el carrito.
   - [ ] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
         tabulador, deshacer al eliminar, desborde a 320 px y carrito vacío con voz propia.
   - [ ] **Portada y tarjetas** con los estampados de demostración, y repaso final.
+- [ ] **Completar y revisar las páginas legales** con un abogado: razón social, RUC, dirección,
+      contacto, plazos y qué pasa si el cliente cambia de idea. Quitar el aviso de borrador. Añadir
+      el **Libro de Reclamaciones virtual**, que los Términos ya mencionan como pendiente.
+- [ ] **Datos de la cuenta para la transferencia**: el pago promete enviarlos por correo y todavía
+      no hay ninguna cuenta configurada ni envío automático.
+- [ ] **Decir "Pago seguro" otra vez** cuando haya pasarela real. Queda en la portada: "Pagas en soles
+      y de forma segura" (`call-to-action.php`, a revisar con el trabajo de la portada).
 - [ ] **Datos reales de la entrega**: tarifa, dirección y horario del taller. Hoy son provisionales
       (WooCommerce > Ajustes > Envío). Sin plazos comprometidos todavía.
 

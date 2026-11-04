@@ -12,7 +12,7 @@
 $camisama_assurances = array(
 	__( 'Impresión DTF a todo color, también en prendas oscuras', 'camisama' ),
 	__( 'Desde una sola unidad', 'camisama' ),
-	__( 'Precios en soles, pago seguro', 'camisama' ),
+	__( 'Precios en soles, con IGV', 'camisama' ),
 );
 ?>
 <!-- wp:list {"className":"is-style-camisama-checks","fontSize":"small"} -->

@@ -226,6 +226,8 @@ if (-not $SkipDemo) {
 	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include --user=admin
 	Write-Step 'Entrega (datos provisionales)'
 	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-delivery.php') --use-include --user=admin
+	Write-Step 'Páginas de confianza (borradores para revisar)'
+	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-legal.php') --use-include --user=admin
 }
 
 Invoke-Wp rewrite structure '/%postname%/' --hard --quiet

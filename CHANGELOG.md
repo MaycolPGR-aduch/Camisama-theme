@@ -12,6 +12,11 @@ conviene recordar.
 ### Añadido
 - **Crítica del resto de la web** (portada, tienda, carrito y pago): **18/40**. El problema más grave:
   el pago no ofrecía ninguna entrega. Informe en `.impeccable/critique/`.
+- **Páginas de confianza** (P1 de esa crítica): Política de privacidad, Cambios y devoluciones,
+  Términos y condiciones, y Contacto. Son **borradores para revisar**: llevan un aviso y huecos
+  "[Por completar: …]" donde falta un dato del negocio (`bin/seed-legal.php`, que no toca lo ya
+  publicado). El pie y el pago las enlazan; "Cambios y devoluciones" daba 404 y "Privacidad" llevaba
+  a la portada.
 - **Entrega en el pago** (P0 de esa crítica): "¿Cómo lo recibes?" con "Envío en Lima" y "Recojo en el
   taller". `bin/seed-delivery.php` la configura y `setup-local` lo ejecuta. **Tarifa, dirección y
   horario son provisionales** y lo dicen en pantalla.
@@ -29,6 +34,9 @@ conviene recordar.
   región (se reparte solo en Lima; el pedido guarda Lima como región de entrega) ni código postal,
   y teléfono obligatorio para coordinar la entrega. La dirección de envío va primero y se puede
   facturar a otra (regalos).
+- "Pago seguro" desaparece de la cabecera del pago, el pie y la ficha mientras solo haya una
+  transferencia de prueba: "¿Dudas? Escríbenos" y "Precios en soles, con IGV". Las instrucciones de la
+  transferencia dicen que los datos de la cuenta llegan por correo.
 - La portada ya no dice solo "te lo enviamos": "te lo llevamos en Lima o lo recoges en el taller".
 - **Repaso final de la cuarta crítica** (`polish`):
   - "Talla y pago" pasa a "Talla y cantidad" (ahí no se paga) e "Ir a talla y pago", a "Elegir

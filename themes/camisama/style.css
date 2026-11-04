@@ -257,3 +257,12 @@ h3 {
 	grid-row: 1;
 	padding: 0;
 }
+
+/* Aviso de las páginas legales que siguen en borrador (bin/seed-legal.php). */
+.camisama-draft-note {
+	padding: 0.75em 1em;
+	border-left: 4px solid var(--wp--preset--color--accent);
+	border-radius: 4px;
+	background: var(--wp--preset--color--surface);
+	font-size: var(--wp--preset--font-size--small);
+}

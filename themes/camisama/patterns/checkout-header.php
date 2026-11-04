@@ -22,7 +22,7 @@
 <!-- /wp:group -->
 
 <!-- wp:paragraph {"textColor":"muted","fontSize":"small"} -->
-<p class="has-muted-color has-text-color has-small-font-size"><?php esc_html_e( '🔒 Pago seguro', 'camisama' ); ?></p>
+<p class="has-muted-color has-text-color has-small-font-size"><a href="<?php echo esc_url( home_url( '/contacto/' ) ); ?>"><?php esc_html_e( '¿Dudas? Escríbenos', 'camisama' ); ?></a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->

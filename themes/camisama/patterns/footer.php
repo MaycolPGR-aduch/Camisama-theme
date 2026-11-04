@@ -22,7 +22,9 @@ $camisama_columns = array(
 	__( 'Ayuda', 'camisama' )     => array(
 		__( 'Cómo funciona', 'camisama' )          => home_url( '/#como-funciona' ),
 		__( 'Cambios y devoluciones', 'camisama' ) => camisama_wc_page_url( 'refund_returns' ),
+		__( 'Términos y condiciones', 'camisama' ) => camisama_wc_page_url( 'terms' ),
 		__( 'Privacidad', 'camisama' )             => get_privacy_policy_url() ? get_privacy_policy_url() : home_url( '/' ),
+		__( 'Contacto', 'camisama' )               => home_url( '/contacto/' ),
 	),
 );
 ?>
@@ -73,7 +75,7 @@ $camisama_columns = array(
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><?php esc_html_e( 'Precios en soles (S/) · Pago seguro', 'camisama' ); ?></p>
+<p><?php esc_html_e( 'Precios en soles (S/), con IGV', 'camisama' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
