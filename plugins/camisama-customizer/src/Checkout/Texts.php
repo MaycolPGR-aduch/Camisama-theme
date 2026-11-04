@@ -22,6 +22,7 @@ final class Texts {
 	private const TEXTS = array(
 		'Please enter a valid %s'            => 'Revisa este dato: %s',
 		'Please select a %s'                 => 'Elige una opción: %s',
+		'Please select a valid option'       => 'Elige una opción de la lista',
 		'Please enter a valid email address' => 'Revisa tu correo: debe ser como nombre@ejemplo.com',
 		'Privacy Policy'                     => 'Política de privacidad',
 		'Proceed to Checkout'                => 'Ir al pago',

@@ -127,17 +127,27 @@ local, 45 pruebas de JS y lint limpio.
         enlaces reales y sin "Pago seguro" mientras no haya pasarela.
   - [x] **Formulario del pago** (P1): errores bien escritos y ligados a su campo, h1, botón de 48 px
         y prenda mayor en el resumen. (El resumen móvil ya se abre con el teclado: es de WooCommerce.)
-  - [ ] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión" y desglose en el carrito.
+  - [x] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión", "Personalizar" y desglose
+        en el carrito. Devolver el selector de orden cuando haya más modelos.
   - [ ] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
         tabulador, deshacer al eliminar, desborde a 320 px y carrito vacío con voz propia.
-  - [ ] **Portada y tarjetas** con los estampados de demostración, y repaso final.
+  - [x] **Portada**: rehecha aparte; detalle en [home.md](home.md).
+  - [ ] **Tarjetas de la tienda** con los estampados de demostración, y repaso final.
 - [ ] **Completar y revisar las páginas legales** con un abogado: razón social, RUC, dirección,
       contacto, plazos y qué pasa si el cliente cambia de idea. Quitar el aviso de borrador. Añadir
       el **Libro de Reclamaciones virtual**, que los Términos ya mencionan como pendiente.
 - [ ] **Datos de la cuenta para la transferencia**: el pago promete enviarlos por correo y todavía
       no hay ninguna cuenta configurada ni envío automático.
-- [ ] **Decir "Pago seguro" otra vez** cuando haya pasarela real. Queda en la portada: "Pagas en soles
-      y de forma segura" (`call-to-action.php`, a revisar con el trabajo de la portada).
+- [ ] **Decir "Pago seguro" otra vez** cuando haya pasarela real. Ya no se promete en ninguna página.
+- [x] **Combos de departamento, provincia y distrito** de todo el Perú en el pago, con aviso de que
+      los envíos son solo a Lima Metropolitana y el Callao.
+- [ ] **Revisar tildes del ubigeo**: algunos nombres de distritos pueden seguir sin tilde
+      (`plugins/camisama-customizer/data/`); contrastar con la lista del INEI.
+- [x] **Tarifas por distrito**: cuatro franjas (`Checkout\DeliveryRates`).
+- [ ] **Precios reales del envío**: las tarifas por distrito son provisionales (S/ 10, 14, 20 y 25).
+      Se cambian en `plugins/camisama-customizer/src/Checkout/DeliveryRates.php`.
+- [ ] **Envíos a provincias**, cuando llegue el momento: ampliar la zona en `bin/seed-delivery.php` y en
+      `Checkout\Ubigeo` y `client/checkout/tree.js`, y quitar el aviso.
 - [ ] **Datos reales de la entrega**: tarifa, dirección y horario del taller. Hoy son provisionales
       (WooCommerce > Ajustes > Envío). Sin plazos comprometidos todavía.
 

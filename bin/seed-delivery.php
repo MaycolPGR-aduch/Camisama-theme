@@ -1,6 +1,6 @@
 <?php
 /**
- * Entrega de la tienda local: envío en Lima Metropolitana y recojo en el taller.
+ * Entrega de la tienda local: envío en Lima Metropolitana y el Callao, y recojo en el taller.
  *
  * Se puede ejecutar varias veces. LOS DATOS SON PROVISIONALES (tarifa, dirección y horario, marcados
  * como tales en lo que ve el cliente): antes de abrir al público hay que cambiarlos por los reales
@@ -20,23 +20,27 @@ if ( ! class_exists( 'WC_Shipping_Zones' ) ) {
 // La entrega se elige primero; la facturación es opcional (regalos).
 update_option( 'woocommerce_ship_to_destination', 'shipping' );
 
+// Sin cupones todavía: "Añadir cupones" haría buscar uno que no existe.
+update_option( 'woocommerce_enable_coupons', 'no' );
+
 // Teléfono obligatorio: hace falta para coordinar la entrega.
 update_option( 'woocommerce_checkout_phone_field', 'required' );
 
-// Zona de Lima Metropolitana con su tarifa.
-$camisama_zone_name = 'Lima Metropolitana';
+// Zona de entrega con su tarifa.
+$camisama_zone_name = 'Lima Metropolitana y Callao';
 $camisama_zone      = null;
 foreach ( WC_Shipping_Zones::get_zones() as $camisama_existing ) {
-	if ( $camisama_zone_name === $camisama_existing['zone_name'] ) {
+	if ( in_array( $camisama_existing['zone_name'], array( $camisama_zone_name, 'Lima Metropolitana' ), true ) ) {
 		$camisama_zone = new WC_Shipping_Zone( $camisama_existing['id'] );
 	}
 }
 if ( null === $camisama_zone ) {
 	$camisama_zone = new WC_Shipping_Zone();
-	$camisama_zone->set_zone_name( $camisama_zone_name );
-	$camisama_zone->save();
 }
-// Todo Perú: el pago no pide región (Checkout\Delivery), así que una zona por región no coincidiría.
+$camisama_zone->set_zone_name( $camisama_zone_name );
+$camisama_zone->save();
+// Todo Perú: el envío se retira al elegir un distrito fuera de la zona (Checkout\Delivery). Con una zona
+// por región, el pago empezaría en "Recojo" hasta elegir distrito, porque aún no habría región.
 $camisama_zone->clear_locations();
 $camisama_zone->add_location( 'PE', 'country' );
 $camisama_zone->save();
@@ -53,7 +57,7 @@ if ( null === $camisama_method_id ) {
 update_option(
 	"woocommerce_flat_rate_{$camisama_method_id}_settings",
 	array(
-		'title'      => 'Envío a domicilio en Lima (tarifa provisional)',
+		'title'      => 'Envío a domicilio (tarifa provisional)',
 		'tax_status' => 'none',
 		'cost'       => '10',
 	)
@@ -90,22 +94,24 @@ update_option(
 // Rótulos del selector de entrega en la página de pago.
 $camisama_checkout = get_post( wc_get_page_id( 'checkout' ) );
 if ( $camisama_checkout instanceof WP_Post ) {
-	$camisama_block = '<div class="wp-block-woocommerce-checkout-shipping-method-block"></div>';
-	if ( str_contains( $camisama_checkout->post_content, $camisama_block ) ) {
+	$camisama_labels = '{"title":"¿Cómo lo recibes?","localPickupText":"Recojo en el taller","shippingText":"Envío en Lima y Callao"}';
+	$camisama_data   = 'data-title="¿Cómo lo recibes?" data-local-pickup-text="Recojo en el taller" data-shipping-text="Envío en Lima y Callao"';
+	$camisama_new    = (string) preg_replace(
+		array(
+			'#<!-- wp:woocommerce/checkout-shipping-method-block( \{.*?\})? -->#',
+			'#<div class="wp-block-woocommerce-checkout-shipping-method-block"[^>]*></div>#',
+		),
+		array(
+			"<!-- wp:woocommerce/checkout-shipping-method-block {$camisama_labels} -->",
+			"<div class=\"wp-block-woocommerce-checkout-shipping-method-block\" {$camisama_data}></div>",
+		),
+		$camisama_checkout->post_content
+	);
+	if ( $camisama_new !== $camisama_checkout->post_content ) {
 		wp_update_post(
 			array(
 				'ID'           => $camisama_checkout->ID,
-				'post_content' => str_replace(
-					array(
-						'<!-- wp:woocommerce/checkout-shipping-method-block -->',
-						$camisama_block,
-					),
-					array(
-						'<!-- wp:woocommerce/checkout-shipping-method-block {"title":"¿Cómo lo recibes?","localPickupText":"Recojo en el taller","shippingText":"Envío en Lima"} -->',
-						'<div class="wp-block-woocommerce-checkout-shipping-method-block" data-title="¿Cómo lo recibes?" data-local-pickup-text="Recojo en el taller" data-shipping-text="Envío en Lima"></div>',
-					),
-					$camisama_checkout->post_content
-				),
+				'post_content' => wp_slash( $camisama_new ),
 			)
 		);
 	}

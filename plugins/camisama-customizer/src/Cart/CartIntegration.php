@@ -70,6 +70,19 @@ final class CartIntegration {
 		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'order_item_meta' ), 10, 3 );
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'attach_uploads' ) );
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'attach_uploads' ) );
+		add_action( 'wp_enqueue_scripts', array( self::class, 'provide_rest_url' ) );
+	}
+
+	/**
+	 * Da a la tienda de WooCommerce la URL de su API en el carrito y el pago.
+	 *
+	 * Allí su minicarrito no la declara, pero su código sí la usa: pide "undefinedwc/store/v1/cart"
+	 * y reintenta, y cada intento es una petición fallida a WordPress (WooCommerce 11.2.1).
+	 */
+	public static function provide_rest_url(): void {
+		if ( is_cart() || is_checkout() ) {
+			wp_interactivity_state( 'woocommerce', array( 'restUrl' => get_rest_url() ) );
+		}
 	}
 
 	/**
@@ -199,6 +212,16 @@ final class CartIntegration {
 			'key'   => __( 'Personalización', 'camisama-customizer' ),
 			'value' => self::summary( $quote ),
 		);
+		// Prenda + impresión = el precio de la línea (si no, la impresión parece un recargo aparte).
+		$garment = $cart_item['data'] instanceof \WC_Product ? wc_get_product( $cart_item['data']->get_id() ) : null;
+		if ( $garment ) {
+			$cents       = (int) round( (float) wc_get_price_to_display( $garment ) * 100 );
+			$item_data[] = array(
+				'key'     => __( 'Prenda', 'camisama-customizer' ),
+				'value'   => self::money( $cents ),
+				'display' => self::money( $cents ),
+			);
+		}
 		$item_data[] = array(
 			'key'     => __( 'Impresión y estampados', 'camisama-customizer' ),
 			'value'   => self::money( $quote['total'] ),

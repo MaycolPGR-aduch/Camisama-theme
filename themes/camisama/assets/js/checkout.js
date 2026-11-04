@@ -5,7 +5,7 @@
  * Los bloques pintan y repintan por su cuenta: se revisa con cada cambio del DOM.
  */
 ( function () {
-	const FIELD = '.wc-block-components-text-input, .wc-blocks-components-select, .wc-block-components-country-input';
+	const FIELD = '.wc-block-components-text-input, .wc-block-components-select-input, .wc-block-components-country-input';
 
 	function linkErrors() {
 		document.querySelectorAll( 'input[aria-invalid="true"], select[aria-invalid="true"]' ).forEach( ( field ) => {

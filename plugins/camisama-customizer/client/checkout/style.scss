@@ -1,0 +1,66 @@
+// Combos de departamento, provincia y distrito en el formulario de pago.
+.camisama-ubigeo {
+	display: grid;
+	flex: 1 0 100%;
+	// Sin hueco vertical: cada combo ya trae su margen superior de WooCommerce.
+	gap: 0 12px;
+	margin-top: 12px;
+	min-width: 100%;
+
+	.wc-block-components-select-input {
+		margin: 0;
+		width: 100%;
+	}
+
+	select:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+}
+
+.camisama-ubigeo__note {
+	margin: 0;
+	padding: 0.6em 0.9em;
+	border-left: 4px solid var(--wp--preset--color--border, #e4ded3);
+	border-radius: 4px;
+	background: var(--wp--preset--color--surface, #fff);
+	font-size: 0.875rem;
+
+	&.is-outside {
+		border-left-color: var(--wp--preset--color--accent, #f5b700);
+		background: #fff4d6;
+		color: #8a5a00;
+	}
+}
+
+@media (min-width: 700px) {
+
+	.camisama-ubigeo {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.camisama-ubigeo__note {
+		grid-column: 1 / -1;
+	}
+}
+
+// Campo de WooCommerce que guarda el ubigeo: oculto, pero su mensaje de error
+// se sigue viendo.
+input[id$="-camisama-district"],
+label[for$="-camisama-district"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+// Toda la fila, para que no empuje al campo siguiente (ocuparía media columna,
+// sin alto).
+.wc-block-components-address-form
+.wc-block-components-text-input:has(> input[id$="-camisama-district"]) {
+	flex: 1 0 100%;
+	margin-top: 0;
+	min-height: 0;
+}

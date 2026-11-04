@@ -24,6 +24,7 @@ use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Designs\DesignRepository;
 use Camisama\Customizer\Media\SvgSupport;
 use Camisama\Customizer\Pricing\PriceTableRepository;
+use Camisama\Customizer\Products\CatalogTexts;
 use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\CustomizerData;
 use Camisama\Customizer\Rest\CatalogController;
@@ -107,8 +108,9 @@ final class Plugin {
 		( new CartIntegration( $configs, $prices, $uploads, new PreviewStore( $uploads ) ) )->register();
 		( new CartEdit() )->register();
 		( new OrderDisplay() )->register();
-		( new Delivery() )->register();
+		( new Delivery( $this ) )->register();
 		( new Texts() )->register();
+		( new CatalogTexts( $configs ) )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
 			UploadStore::CLEANUP_HOOK,

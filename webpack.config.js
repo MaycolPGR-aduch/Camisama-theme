@@ -9,6 +9,8 @@ const extraEntries = {
 		'./plugins/camisama-customizer/client/admin/product-config/index.js',
 	'admin/production':
 		'./plugins/camisama-customizer/client/admin/production/index.js',
+	'checkout/ubigeo':
+		'./plugins/camisama-customizer/client/checkout/ubigeo.js',
 };
 
 const withExtraEntries = ( config ) => ( {

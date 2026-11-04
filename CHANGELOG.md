@@ -47,6 +47,26 @@ conviene recordar.
   - "Realizar el pedido" mide 48 px, y al saltar a un error el campo queda a la vista, con su
     etiqueta.
   - La prenda del resumen se ve a 88 px (antes, unos 40).
+- **Combos de departamento, provincia y distrito en el pago**, de todo el Perú (25 departamentos, 196
+  provincias y 1892 distritos, en `data/ubigeo.json`): cada uno carga según el anterior. De ellos salen
+  la ciudad y la región, y el pedido guarda el ubigeo; el servidor rechaza un código que no exista.
+  También sirven para facturar desde cualquier región.
+- **Tarifas de envío por distrito** (`Checkout\DeliveryRates`): cuatro franjas con **precios
+  provisionales** (S/ 10, 14, 20 y 25). Sin distrito elegido se muestra la más baja, avisando de que
+  depende del distrito.
+- **Aviso de envíos:** "Por ahora solo hacemos envíos a Lima Metropolitana y el Callao". Si se elige otra
+  zona, el aviso lo dice con claridad y propone el recojo en el taller; ahí no se ofrece envío.
+- **La entrega incluye el Callao:** "Envío en Lima y Callao", y los Términos lo dicen.
+- **Tienda y precio** (P1 de la crítica del resto de la web):
+  - La tienda se titula "Elige tu modelo", explica que al precio de la prenda se suma la impresión y
+    muestra los 4 modelos en una fila; en la miga de pan se llama "Modelos", como en el menú.
+  - Las tarjetas de la tienda y de las categorías dicen "Desde S/ 39.90 + impresión" (el rango
+    "S/ 39.90 – S/ 44.90" respondía a la talla XXL). La portada conserva su propio texto.
+  - "Personalizar" en lugar de "Seleccionar opciones" en todas las tarjetas, también en la portada.
+  - Sin selector de orden ni "Mostrando todos los 4 resultados": sobran con 4 modelos.
+  - En el carrito y el pago, la línea desglosa "Prenda" e "Impresión y estampados", para que la
+    impresión no parezca un recargo aparte.
+  - Sin "Añadir cupones" mientras no haya cupones.
 - "Pago seguro" desaparece de la cabecera del pago, el pie y la ficha mientras solo haya una
   transferencia de prueba: "¿Dudas? Escríbenos" y "Precios en soles, con IGV". Las instrucciones de la
   transferencia dicen que los datos de la cuenta llegan por correo.
@@ -66,6 +86,10 @@ conviene recordar.
 ### Corregido
 - Cada error del pago queda ligado a su campo (`aria-describedby`), para que lo lea un lector de
   pantalla.
+- **El pedido cobraba la tarifa de envío más baja**, aunque el pago mostrara la del distrito: al
+  confirmar, WooCommerce recalculaba el envío sin ciudad ni región. Ahora se fijan también en ese paso.
+- En el carrito y el pago ya no salen peticiones fallidas a `undefinedwc/store/v1/cart`: es un fallo de
+  WooCommerce 11.2.1, que allí no le da a su código la URL de la API.
 
 ### Decisiones
 - La zona de envío cubre todo Perú aunque se reparta solo en Lima: el pago no pide región, y una

@@ -143,7 +143,7 @@ $camisama_terms = camisama_legal_page(
 			'## Pago',
 			'[Por completar: medios de pago aceptados.] Preparamos tu pedido cuando se confirma el pago.',
 			'## Entrega',
-			'Entregamos en Lima Metropolitana o puedes recoger tu pedido en nuestro taller. Tarifa, dirección y horario: [Por completar]. Plazo de preparación y entrega: [Por completar].',
+			'Entregamos en Lima Metropolitana y el Callao, o puedes recoger tu pedido en nuestro taller. Tarifas por distrito, dirección y horario: [Por completar]. Plazo de preparación y entrega: [Por completar].',
 			'## Tus diseños',
 			'Eres responsable de lo que subes: debes tener derecho a usar las imágenes, textos, marcas y fotos de otras personas. Podemos rechazar un diseño si infringe derechos de terceros o la ley, y en ese caso te devolvemos tu dinero.',
 			'## Cambios y devoluciones',
