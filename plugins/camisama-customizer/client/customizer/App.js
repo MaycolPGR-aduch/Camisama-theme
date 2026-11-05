@@ -46,6 +46,7 @@ import { formatMoney } from './format';
 import { historyReducer, initialHistory } from './history';
 import { quote } from './pricing';
 import { renderPreview } from './renderer';
+import { mockupFor, requireColorMockups } from './mockups';
 import { connectVariationForm } from './wc-bridge';
 
 /** Campos de cada elemento que viajan al servidor; URLs, títulos y precios los pone él. */
@@ -78,8 +79,17 @@ const SENT_FIELDS = [
  *                           solo camisama_replace (si se edita) o nada.
  */
 async function cartFields( data, elements, color, replace ) {
+	requireColorMockups( data, color );
 	const target = replace ? { camisama_replace: replace } : {};
 	if ( ! elements.length ) {
+		// En móvil el lienzo puede estar oculto al comprar una prenda lisa.
+		// Comprobar su imagen aquí evita depender del tamaño o estado de ese lienzo.
+		await renderPreview( {
+			mockup: mockupFor( data.views[ 0 ], color ),
+			zones: [],
+			elements: [],
+			fonts: data.fonts,
+		} );
 		return target;
 	}
 
@@ -110,8 +120,7 @@ async function cartFields( data, elements, color, replace ) {
  */
 function garmentPreview( data, color ) {
 	const front = data.views[ 0 ];
-	const mockup =
-		front?.mockups[ color ] ?? Object.values( front?.mockups ?? {} )[ 0 ];
+	const mockup = mockupFor( front, color );
 	return mockup
 		? [ { id: front.id, label: front.label, src: mockup.url } ]
 		: [];
@@ -126,14 +135,14 @@ function garmentPreview( data, color ) {
  * @return {Promise<Object>} { vista: data URL }.
  */
 async function designPreviews( data, elements, color ) {
+	requireColorMockups( data, color );
 	const previews = {};
 	for ( const view of data.views ) {
 		const zones = data.zones.filter( ( zone ) => zone.view === view.id );
 		const inView = elements.filter( ( element ) =>
 			zones.some( ( zone ) => zone.id === element.zone )
 		);
-		const mockup =
-			view.mockups[ color ] ?? Object.values( view.mockups )[ 0 ];
+		const mockup = mockupFor( view, color );
 		if ( inView.length && mockup ) {
 			previews[ view.id ] = await renderPreview( {
 				mockup,
@@ -602,17 +611,29 @@ export default function App( { data } ) {
 		if ( ! views.length ) {
 			setPreviews( garmentPreview( data, color ) );
 		} else {
-			designPreviews( data, elements, color ).then( ( images ) => {
-				if ( ! cancelled ) {
-					setPreviews(
-						views.map( ( view ) => ( {
-							id: view.id,
-							label: view.label,
-							src: images[ view.id ],
-						} ) )
-					);
-				}
-			} );
+			designPreviews( data, elements, color )
+				.then( ( images ) => {
+					if ( ! cancelled ) {
+						setPreviews(
+							views.map( ( view ) => ( {
+								id: view.id,
+								label: view.label,
+								src: images[ view.id ],
+							} ) )
+						);
+					}
+				} )
+				.catch( () => {
+					if ( ! cancelled ) {
+						setPreviews( [] );
+						setSubmitError(
+							__(
+								'No pudimos preparar las vistas previas. Vuelve al diseño y comprueba que cargue la prenda.',
+								'camisama-customizer'
+							)
+						);
+					}
+				} );
 		}
 		return () => {
 			cancelled = true;
@@ -662,8 +683,7 @@ export default function App( { data } ) {
 			),
 		[ elements, viewZones ]
 	);
-	const mockup =
-		view?.mockups[ color ] ?? Object.values( view?.mockups ?? {} )[ 0 ];
+	const mockup = mockupFor( view, color );
 	const activeZone = zoneById( activeZoneId ) ?? viewZones[ 0 ];
 	const selected =
 		elements.find( ( element ) => element.id === selectedId ) ?? null;
@@ -915,6 +935,12 @@ export default function App( { data } ) {
 	};
 
 	const goToBuy = () => {
+		try {
+			requireColorMockups( data, color );
+		} catch ( error ) {
+			setSubmitError( error.message );
+			return;
+		}
 		setSelectedId( null );
 		setScreen( 'buy' );
 	};

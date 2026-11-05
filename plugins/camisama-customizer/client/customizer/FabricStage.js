@@ -6,10 +6,12 @@
  * queda recortado a su zona y no puede salirse de ella.
  */
 import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { Canvas, FabricImage } from 'fabric';
 
 import { fitsInside, fromCanvas, pushInside, zoneBox } from './geometry';
 import { TEXT_BASE, applyElement, createObject, snapshot } from './objects';
+import { PREVIEW_BACKGROUND } from './mockups';
 
 // Zoom máximo al acercar una zona (las mangas y la nuca son pequeñas) y margen alrededor.
 const MAX_ZOOM = 2.5;
@@ -102,6 +104,8 @@ export default function FabricStage( {
 	const syncing = useRef( false );
 	const latest = useRef( {} );
 	const [ size, setSize ] = useState( { width: 0, height: 0 } );
+	const [ status, setStatus ] = useState( 'loading' );
+	const [ attempt, setAttempt ] = useState( 0 );
 	const aspect = mockup ? mockup.width / mockup.height : 1;
 
 	latest.current = {
@@ -118,6 +122,7 @@ export default function FabricStage( {
 	// Lienzo y eventos (una sola vez).
 	useEffect( () => {
 		const canvas = new Canvas( canvasElRef.current, {
+			backgroundColor: PREVIEW_BACKGROUND,
 			selection: false,
 			preserveObjectStacking: true,
 			uniformScaling: true,
@@ -277,10 +282,19 @@ export default function FabricStage( {
 	// Maqueta de fondo.
 	useEffect( () => {
 		const canvas = canvasRef.current;
-		if ( ! size.width || ! mockup ) {
+		if ( ! canvas || ! size.width ) {
 			return;
 		}
 		let cancelled = false;
+		const report = ( next ) => {
+			setStatus( next );
+		};
+		canvas.backgroundImage = undefined;
+		canvas.requestRenderAll();
+		report( mockup ? 'loading' : 'missing' );
+		if ( ! mockup ) {
+			return;
+		}
 		FabricImage.fromURL( mockup.url, { crossOrigin: 'anonymous' } ).then(
 			( image ) => {
 				if ( cancelled || ! canvasRef.current ) {
@@ -296,12 +310,18 @@ export default function FabricStage( {
 				} );
 				canvas.backgroundImage = image;
 				canvas.requestRenderAll();
+				report( 'ready' );
+			},
+			() => {
+				if ( ! cancelled ) {
+					report( 'error' );
+				}
 			}
 		);
 		return () => {
 			cancelled = true;
 		};
-	}, [ mockup, size ] );
+	}, [ mockup, size, attempt ] );
 
 	// Objetos: crear, actualizar, borrar, ordenar y seleccionar según el diseño.
 	useEffect( () => {
@@ -421,23 +441,49 @@ export default function FabricStage( {
 						: undefined
 				}
 			>
-				{ zones.map( ( zone ) => (
-					<div
-						key={ zone.id }
-						className={ `camisama-customizer__zone${
-							zone.id === activeZoneId ? ' is-active' : ''
-						}${ labelPlacement( zone, zones ) }` }
-						style={ {
-							left: `${ zone.rect.x * 100 }%`,
-							top: `${ zone.rect.y * 100 }%`,
-							width: `${ zone.rect.w * 100 }%`,
-							height: `${ zone.rect.h * 100 }%`,
-						} }
-					>
-						<span>{ zone.label }</span>
-					</div>
-				) ) }
+				{ status === 'ready' &&
+					zones.map( ( zone ) => (
+						<div
+							key={ zone.id }
+							className={ `camisama-customizer__zone${
+								zone.id === activeZoneId ? ' is-active' : ''
+							}${ labelPlacement( zone, zones ) }` }
+							style={ {
+								left: `${ zone.rect.x * 100 }%`,
+								top: `${ zone.rect.y * 100 }%`,
+								width: `${ zone.rect.w * 100 }%`,
+								height: `${ zone.rect.h * 100 }%`,
+							} }
+						>
+							<span>{ zone.label }</span>
+						</div>
+					) ) }
 			</div>
+			{ status !== 'ready' && (
+				<div
+					className="camisama-customizer__mockup-status"
+					role="status"
+				>
+					<p>
+						{ status === 'loading'
+							? __( 'Cargando la prenda…', 'camisama-customizer' )
+							: __(
+									'No se pudo mostrar esta vista en el color elegido.',
+									'camisama-customizer'
+								) }
+					</p>
+					{ status === 'error' && (
+						<button
+							type="button"
+							onClick={ () =>
+								setAttempt( ( value ) => value + 1 )
+							}
+						>
+							{ __( 'Reintentar', 'camisama-customizer' ) }
+						</button>
+					) }
+				</div>
+			) }
 			{ children }
 		</div>
 	);

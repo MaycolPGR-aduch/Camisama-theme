@@ -1,0 +1,10 @@
+OK: 9 comprobaciones
+blanco/front: JPEG 640×640, esquina 247,244,237,255
+blanco/back: JPEG 640×640, esquina 247,244,237,255
+negro/front: JPEG 640×640, esquina 247,244,237,255
+negro/back: JPEG 640×640, esquina 247,244,237,255
+front: PNG 1418×237, transparente, solo tinta, 300 DPI
+left-sleeve: PNG 745×237, transparente, solo tinta, 300 DPI
+right-sleeve: PNG 745×237, transparente, solo tinta, 300 DPI
+back: PNG 1418×237, transparente, solo tinta, 300 DPI
+nape: PNG 662×237, transparente, solo tinta, 300 DPI

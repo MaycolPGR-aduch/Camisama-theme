@@ -9,6 +9,33 @@ import { __ } from '@wordpress/i18n';
 
 const COLOR_FIELD = 'select[name="attribute_pa_color"]';
 
+/**
+ * Sustituye los campos del diseño en cada envío, también cuando el siguiente va sin diseño.
+ *
+ * @param {HTMLFormElement} form   Formulario de WooCommerce.
+ * @param {Object}          fields Campos del envío actual.
+ */
+export function setDesignFields( form, fields ) {
+	for ( const name of [
+		'camisama_design',
+		'camisama_previews',
+		'camisama_replace',
+	] ) {
+		let input = form.querySelector( `input[name="${ name }"]` );
+		if ( ! Object.hasOwn( fields, name ) ) {
+			input?.remove();
+			continue;
+		}
+		if ( ! input ) {
+			input = document.createElement( 'input' );
+			input.type = 'hidden';
+			input.name = name;
+			form.appendChild( input );
+		}
+		input.value = fields[ name ];
+	}
+}
+
 // Avisos de error de WooCommerce en la página que devuelve el envío (plantilla clásica y bloques).
 const ERROR_NOTICES =
 	'.woocommerce-error li, .wc-block-components-notice-banner.is-error .wc-block-components-notice-banner__content';
@@ -207,16 +234,7 @@ export function connectVariationForm(
 		}
 		try {
 			const fields = await onSubmit();
-			for ( const [ name, value ] of Object.entries( fields ) ) {
-				let input = form.querySelector( `input[name="${ name }"]` );
-				if ( ! input ) {
-					input = document.createElement( 'input' );
-					input.type = 'hidden';
-					input.name = name;
-					form.appendChild( input );
-				}
-				input.value = value;
-			}
+			setDesignFields( form, fields );
 			const key = await addToCart(
 				form,
 				button,

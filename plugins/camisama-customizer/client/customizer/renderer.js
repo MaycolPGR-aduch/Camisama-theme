@@ -8,16 +8,18 @@ import { FabricImage, StaticCanvas } from 'fabric';
 
 import { printedBounds, zoneBox } from './geometry';
 import { applyElement, createObject } from './objects';
+import { PREVIEW_BACKGROUND } from './mockups';
 
 const CM_PER_INCH = 2.54;
 
 const fontFor = ( fonts, element ) =>
 	fonts.find( ( font ) => font.slug === element.font ) ?? fonts[ 0 ];
 
-function offscreen( width, height ) {
+function offscreen( width, height, backgroundColor = '' ) {
 	return new StaticCanvas( document.createElement( 'canvas' ), {
 		width,
 		height,
+		backgroundColor,
 		enableRetinaScaling: false,
 		renderOnAddRemove: false,
 	} );
@@ -63,7 +65,7 @@ export async function renderPreview( {
 	width = 640,
 } ) {
 	const height = Math.round( ( width * mockup.height ) / mockup.width );
-	const canvas = offscreen( width, height );
+	const canvas = offscreen( width, height, PREVIEW_BACKGROUND );
 
 	try {
 		const background = await FabricImage.fromURL( mockup.url, {

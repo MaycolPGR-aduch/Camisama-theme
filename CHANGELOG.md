@@ -10,6 +10,11 @@ conviene recordar.
 ## 2026-11-05
 
 ### Añadido
+- **Piloto de plantillas fotográficas** de la camiseta clásica, oculto y solo local
+  ([docs/plantillas-personalizador-piloto.md](docs/plantillas-personalizador-piloto.md)). La clásica a
+  la venta no cambia.
+- El editor distingue si la prenda está cargando, falta o falló la carga (con "Reintentar"), y nunca
+  muestra otro color en su lugar.
 - **Tarjetas con estampado** (`Products\CardPrint`), en la tienda, la portada y los relacionados: un
   estampado de muestra en la zona de impresión de cada prenda, no una camiseta lisa. Es solo para la
   tarjeta (la foto del producto no cambia) y lo asigna `bin/seed-demo.php`. La tienda avisa de que son
@@ -29,6 +34,7 @@ conviene recordar.
   índigo no contrastaba), y también en los botones, campos y cantidad de WooCommerce.
 
 ### Corregido
+- Comprar una prenda lisa después de una con diseño ya no arrastra la impresión anterior.
 - **En móvil no se podía pulsar la papelera del carrito:** el bloque del total la tapaba.
 - El carrito lateral cerrado ya no recibe el foco del tabulador, y su botón de cerrar se anuncia en español.
 - A 320 px la cabecera ya no aplasta el logo.

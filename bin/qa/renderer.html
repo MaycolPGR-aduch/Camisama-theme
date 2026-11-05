@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Prueba de exportación del personalizador</title>
+	<style>
+		body {
+			font: 16px system-ui;
+			background: #f7f4ee;
+			color: #16161a;
+			margin: 2rem;
+			max-width: 70rem;
+		}
+		button,
+		input {
+			font: inherit;
+			padding: 0.7rem;
+		}
+		section {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+			margin-block: 1rem;
+		}
+		figure {
+			margin: 0;
+		}
+		img {
+			width: 240px;
+			max-width: 100%;
+			background: repeating-conic-gradient( #ddd 0% 25%, white 0% 50% )
+				0/20px 20px;
+		}
+		pre {
+			white-space: pre-wrap;
+		}
+		a {
+			display: block;
+		}
+	</style>
+	<h1>Prueba de exportación</h1>
+	<p>
+		Usa las funciones reales del editor. Solo genera archivos de prueba en
+		este navegador; no crea pedidos.
+	</p>
+	<label
+		>ID del producto piloto
+		<input id="product" type="number" min="1" required
+	/></label>
+	<button id="run" type="button">Comprobar vistas e impresión</button>
+	<pre id="result" role="status">Pendiente</pre>
+	<section id="images"></section>
+	<script src="renderer.js"></script>
+</html>

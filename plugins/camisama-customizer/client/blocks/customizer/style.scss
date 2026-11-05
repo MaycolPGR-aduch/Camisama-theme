@@ -194,6 +194,19 @@ $warning: #8a5a00;
 		}
 	}
 
+	&__mockup-status {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		padding: 2rem;
+		background: $surface;
+		text-align: center;
+	}
+
 	// Con una zona acercada (FabricStage), las líneas siguen el mismo encuadre;
 	// --zoom compensa el grosor y el tamaño de las etiquetas.
 	&__zones {

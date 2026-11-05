@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "stage": "local-pilot",
+  "physical_measurements_confirmed": false,
+  "source_sku": "CAM-CLASICA",
+  "pilot_sku": "CAM-CLASICA-PILOTO-V1",
+  "notes": [
+    "Calibración visual de referencia; requiere validación del taller.",
+    "Recorte blanco con flecos pendientes. Los intentos nuevos quedan en propuestas/variantes, sin activar."
+  ],
+  "images": [
+    {
+      "file": "clasica-blanca-espalda.webp",
+      "view": "back",
+      "color": "blanco",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 61092,
+      "sha256": "a5775e0860434c413176b390cc5148ce3f15356da57803c2c4518661e33ce53c",
+      "source": "assets/propuestas/plantillas-clasica/clasica-blanca-espalda.png",
+      "source_sha256": "17b8af7e5397e52a9a9b3e1ce32bfaa6d3b72286dc17dfca11944e2bacd67936"
+    },
+    {
+      "file": "clasica-blanca-frente.webp",
+      "view": "front",
+      "color": "blanco",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 97604,
+      "sha256": "ce49f4054d8d63ed21db7b399d48751b86d73ae57f516d244e1557fe7690814b",
+      "source": "assets/propuestas/plantillas-clasica/clasica-blanca-frente.png",
+      "source_sha256": "58bf828122345a0fb4006d865f5ec154eca842ebfaa43fe1fb00c68cddaab3bc"
+    },
+    {
+      "file": "clasica-negra-espalda.webp",
+      "view": "back",
+      "color": "negro",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 52782,
+      "sha256": "77b1887c80ba3a8f97e4117b055c5b4b76b326e0109a02c8ef26b30c7678adfb",
+      "source": "assets/propuestas/plantillas-clasica/clasica-negra-espalda.png",
+      "source_sha256": "28c08a7b21d7c640ec96340e62d40eb7c53e071caaa820ef8179084ad948f50f"
+    },
+    {
+      "file": "clasica-negra-frente.webp",
+      "view": "front",
+      "color": "negro",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 58986,
+      "sha256": "eebd6190cc40c561077df4e5e4d2d948c34124a203c32696bcf033507e720e54",
+      "source": "assets/propuestas/plantillas-clasica/clasica-negra-frente.png",
+      "source_sha256": "5627596b4b08fe84232a7f7e03e808cd27b470caa6c1dfa1502d1203321cb6db"
+    }
+  ],
+  "zones": [
+    {
+      "id": "front",
+      "label": "Frente",
+      "view": "front",
+      "rect": {
+        "x": 0.35,
+        "y": 0.24,
+        "w": 0.3,
+        "h": 0.4
+      },
+      "size_cm": {
+        "w": 30,
+        "h": 40
+      }
+    },
+    {
+      "id": "left-sleeve",
+      "label": "Manga izquierda",
+      "view": "front",
+      "rect": {
+        "x": 0.752,
+        "y": 0.325,
+        "w": 0.06,
+        "h": 0.06
+      },
+      "size_cm": {
+        "w": 9,
+        "h": 9
+      }
+    },
+    {
+      "id": "right-sleeve",
+      "label": "Manga derecha",
+      "view": "front",
+      "rect": {
+        "x": 0.188,
+        "y": 0.325,
+        "w": 0.06,
+        "h": 0.06
+      },
+      "size_cm": {
+        "w": 9,
+        "h": 9
+      }
+    },
+    {
+      "id": "back",
+      "label": "Espalda",
+      "view": "back",
+      "rect": {
+        "x": 0.35,
+        "y": 0.24,
+        "w": 0.3,
+        "h": 0.4
+      },
+      "size_cm": {
+        "w": 30,
+        "h": 40
+      }
+    },
+    {
+      "id": "nape",
+      "label": "Nuca",
+      "view": "back",
+      "rect": {
+        "x": 0.46,
+        "y": 0.15,
+        "w": 0.08,
+        "h": 0.05
+      },
+      "size_cm": {
+        "w": 8,
+        "h": 5
+      }
+    }
+  ]
+}
