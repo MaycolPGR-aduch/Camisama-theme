@@ -28,6 +28,7 @@ import TextPanel, { TEXT_COLORS } from './panels/TextPanel';
 import UploadPanel from './panels/UploadPanel';
 import {
 	designElement,
+	fitNewDesign,
 	fitToZone,
 	imageQuality,
 	imageElement,
@@ -642,6 +643,12 @@ export default function App( { data } ) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ mobile, buying ] );
 
+	// Un error de compra habla de lo que se intentó comprar: con otro color u otro diseño, sobra
+	// (y mientras está, ocupa el sitio del total).
+	useEffect( () => {
+		setSubmitError( null );
+	}, [ color, elements ] );
+
 	// Borrador: se guarda poco después de cada cambio (no en cada paso de un arrastre). Al editar
 	// una línea del carrito no: salir sin guardar es descartar los cambios.
 	useEffect( () => {
@@ -796,10 +803,9 @@ export default function App( { data } ) {
 		}
 		const zone = zoneById( element.zone );
 		const isText = element.kind === 'text';
-		const fitted = fitToZone(
-			{ ...element, ...size },
-			zone,
-			isText ? TEXT_INSET : 0
+		const fitted = fitNewDesign(
+			fitToZone( { ...element, ...size }, zone, isText ? TEXT_INSET : 0 ),
+			zone
 		);
 		const grew = size.width_cm > element.width_cm + 0.05;
 		return isText && grew && element.id === selectedId
@@ -938,7 +944,9 @@ export default function App( { data } ) {
 		try {
 			requireColorMockups( data, color );
 		} catch ( error ) {
+			// Solo se llega aquí en el móvil. El aviso va donde se puede resolver: junto al color.
 			setSubmitError( error.message );
+			openDesign();
 			return;
 		}
 		setSelectedId( null );
@@ -1298,12 +1306,19 @@ export default function App( { data } ) {
 	// modo diseño del móvil van en una franja fija bajo el asa de la hoja: en la columna del lienzo
 	// quedaban tapados por la hoja sin pista de que hubiera algo debajo.
 	const hasNotices =
+		Boolean( submitError ) ||
 		Boolean( editKey ) ||
 		( restoredNotice && ! history.past.length ) ||
 		( hiddenTexts.length > 0 && Boolean( garment ) ) ||
 		( hiddenImages.length > 0 && Boolean( garment ) );
 	const notices = (
 		<>
+			{ /* En el móvil, fuera de "Talla y cantidad", no se ve el resumen donde sale el error. */ }
+			{ mobile && ! buying && submitError && (
+				<p className="camisama-customizer__error" role="alert">
+					{ submitError }
+				</p>
+			) }
 			{ editKey && (
 				<div className="camisama-customizer__restored" role="status">
 					<p>
@@ -1532,6 +1547,7 @@ export default function App( { data } ) {
 							)
 						)
 					}
+					onRetry={ () => setSubmitError( null ) }
 					onMeasure={ ( id, size, from ) =>
 						dispatch( {
 							type: 'patch',

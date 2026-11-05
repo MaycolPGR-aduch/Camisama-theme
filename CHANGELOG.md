@@ -34,7 +34,15 @@ conviene recordar.
   índigo no contrastaba), y también en los botones, campos y cantidad de WooCommerce.
 
 ### Corregido
+- **El estampado Rayo cobraba de más:** crecía solo hasta 40 cm (S/ 25) y dejaba el editor en un bucle
+  de renderizado. La escala no contaba el borde del dibujo y cada medida daba un 6 % más. Ahora empieza
+  en 10,1 × 20 cm (S/ 14).
+- Los estampados nuevos respetan el tramo de precio también con su medida real: la Llama pasa de
+  "Grande" a "Mediano". Si el cliente los agranda, se cobra lo que elige.
 - Comprar una prenda lisa después de una con diseño ya no arrastra la impresión anterior.
+- **Si a un color le falta una vista**, el móvil ya no deja los botones sin respuesta: abre el diseño con
+  el aviso junto al selector de color. El administrador avisa de que ese color no se podrá comprar.
+- Un error de compra ya no se queda tapando el total al cambiar de color o de diseño, ni al reintentar.
 - **En móvil no se podía pulsar la papelera del carrito:** el bloque del total la tapaba.
 - El carrito lateral cerrado ya no recibe el foco del tabulador, y su botón de cerrar se anuncia en español.
 - A 320 px la cabecera ya no aplasta el logo.

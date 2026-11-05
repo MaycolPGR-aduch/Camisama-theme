@@ -1,5 +1,6 @@
 import {
 	designElement,
+	fitNewDesign,
 	fitToZone,
 	imageElement,
 	imageQuality,
@@ -14,6 +15,7 @@ import {
 	fromCanvas,
 	pushInside,
 	toCanvas,
+	unscaledWidth,
 	zoneBox,
 } from './geometry';
 import { historyReducer, initialHistory } from './history';
@@ -31,6 +33,27 @@ describe( 'geometría', () => {
 		expect( box.x ).toBeCloseTo( 190 );
 		expect( box.w ).toBeCloseTo( 120 );
 		expect( box.ppc ).toBeCloseTo( 4 );
+	} );
+
+	it( 'un dibujo con borde mide lo pedido y no crece al volver a medirlo', () => {
+		// Como un trazado SVG de Fabric: su ancho no incluye el borde, su ancho escalado sí.
+		const path = {
+			scaleX: 1,
+			getScaledWidth() {
+				return ( 94 + 6 ) * this.scaleX;
+			},
+		};
+		let element = { cx: 10, cy: 20, width_cm: 12 };
+
+		for ( let step = 0; step < 5; step++ ) {
+			path.scaleX = toCanvas( element, box, unscaledWidth( path ) ).scale;
+			element = {
+				...element,
+				width_cm: path.getScaledWidth() / box.ppc,
+			};
+		}
+
+		expect( element.width_cm ).toBeCloseTo( 12 );
 	} );
 
 	it( 'ida y vuelta entre cm y píxeles', () => {
@@ -102,6 +125,25 @@ describe( 'elementos', () => {
 		// 36 cm pasa por poco de los 30 cm de "Grande": se queda en 30.
 		expect( tierFit( zone, 36 ) ).toBeCloseTo( 30 / 36 );
 		expect( tierFit( {}, 28.8 ) ).toBe( 1 );
+	} );
+
+	it( 'un estampado nuevo respeta el escalón también con su medida real', () => {
+		const tiers = [ 10, 20, 30, 40 ].map( ( max ) => ( { max_cm: max } ) );
+		const zone = { ...front, tiers };
+		const measured = {
+			fit_tier: true,
+			width_cm: 12,
+			height_cm: 24,
+		};
+
+		// El archivo decía 12 × 20, pero dibujado mide 12 × 24: se queda en "Mediano".
+		expect( fitNewDesign( measured, zone ) ).toEqual( {
+			width_cm: 10,
+			height_cm: 20,
+		} );
+		// Ya medido, lo que elija el cliente no se toca.
+		const chosen = { width_cm: 12, height_cm: 24 };
+		expect( fitNewDesign( chosen, zone ) ).toBe( chosen );
 	} );
 
 	it( 'el tamaño inicial no pasa por poco a un escalón más caro', () => {

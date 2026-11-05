@@ -110,6 +110,36 @@ export function initialSize( zone, aspect ) {
 }
 
 /**
+ * Primera medida real de un estampado nuevo. Su archivo da una proporción aproximada (la del
+ * viewBox, con márgenes), así que la regla de tierFit se aplica otra vez con lo que se dibuja: lo
+ * nuevo no cae en un escalón caro sin que el cliente lo decida. Después ya no se toca.
+ *
+ * @param {Object} element Elemento con su tamaño medido.
+ * @param {Object} zone    Zona (si los hay, sus escalones en tiers).
+ * @return {Object} Elemento ajustado (el mismo objeto si no estaba pendiente).
+ */
+export function fitNewDesign( element, zone ) {
+	if ( ! element.fit_tier ) {
+		return element;
+	}
+
+	const result = { ...element };
+	delete result.fit_tier;
+	const factor = tierFit(
+		zone,
+		Math.max( element.width_cm, element.height_cm )
+	);
+
+	return factor < 1
+		? {
+				...result,
+				width_cm: round( element.width_cm * factor ),
+				height_cm: round( element.height_cm * factor ),
+			}
+		: result;
+}
+
+/**
  * Estampado del catálogo centrado en la zona.
  *
  * @param {Object} zone   Zona donde se coloca.
@@ -129,6 +159,7 @@ export function designElement( zone, design ) {
 		cx: zone.size_cm.w / 2,
 		cy: zone.size_cm.h / 2,
 		angle: 0,
+		fit_tier: true,
 		...initialSize( zone, design.file.width / design.file.height ),
 	};
 }

@@ -7,7 +7,7 @@
 import { FabricImage, FabricText, Rect, loadSVGFromURL, util } from 'fabric';
 
 import { loadFont } from './fonts';
-import { toCanvas } from './geometry';
+import { toCanvas, unscaledWidth } from './geometry';
 
 /** Tamaño de letra (px) con que se crea el texto; el tamaño real lo da la escala. */
 export const TEXT_BASE = 100;
@@ -93,7 +93,7 @@ export function applyElement( obj, element, box, font ) {
 					scale: ( element.font_size_cm * box.ppc ) / TEXT_BASE,
 					angle: element.angle,
 				}
-			: toCanvas( element, box, obj.width );
+			: toCanvas( element, box, unscaledWidth( obj ) );
 
 	obj.set( {
 		left: transform.left,

@@ -27,6 +27,17 @@ export function zoneBox( zone, width, height ) {
 }
 
 /**
+ * Ancho de un objeto del lienzo con escala 1, tal como se mide después. No vale su `width`: en un
+ * trazado SVG no incluye el borde, y cada medida daría un poco más que lo pedido.
+ *
+ * @param {Object} obj Objeto de Fabric.
+ * @return {number} Ancho sin escalar, en píxeles.
+ */
+export function unscaledWidth( obj ) {
+	return obj.getScaledWidth() / obj.scaleX;
+}
+
+/**
  * Posición y escala de un objeto del lienzo para dibujar un elemento.
  *
  * @param {Object} element     Elemento (cx, cy, width_cm, angle).

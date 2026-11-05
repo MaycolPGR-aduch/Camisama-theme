@@ -303,7 +303,7 @@ export default function App( {
 						{ usingFallback && (
 							<p className="description">
 								{ __(
-									'Este color aún no tiene imagen en esta vista; se muestra la de otro color.',
+									'Este color aún no tiene imagen en esta vista. Aquí ves la de otro color como referencia, pero en la tienda este color no se podrá comprar hasta que le pongas la suya.',
 									'camisama-customizer'
 								) }
 							</p>

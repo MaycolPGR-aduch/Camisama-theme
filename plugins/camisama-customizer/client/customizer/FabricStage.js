@@ -93,6 +93,7 @@ export default function FabricStage( {
 	onTransform,
 	onMeasure,
 	onError,
+	onRetry,
 	focusZone,
 	children,
 } ) {
@@ -475,9 +476,10 @@ export default function FabricStage( {
 					{ status === 'error' && (
 						<button
 							type="button"
-							onClick={ () =>
-								setAttempt( ( value ) => value + 1 )
-							}
+							onClick={ () => {
+								onRetry?.();
+								setAttempt( ( value ) => value + 1 );
+							} }
 						>
 							{ __( 'Reintentar', 'camisama-customizer' ) }
 						</button>
