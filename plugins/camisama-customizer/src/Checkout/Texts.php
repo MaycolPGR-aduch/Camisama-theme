@@ -34,6 +34,18 @@ final class Texts {
 	 */
 	public function register(): void {
 		add_filter( 'load_script_translations', array( self::class, 'filter' ), 10, 4 );
+		add_filter( 'render_block_woocommerce/mini-cart-contents', array( self::class, 'close_label' ) );
+	}
+
+	/**
+	 * El botón de cerrar del carrito lateral se anuncia en inglés: WooCommerce lo escribe tal cual en
+	 * su HTML, sin pasar por las traducciones.
+	 *
+	 * @param string $content HTML del bloque.
+	 * @return string
+	 */
+	public static function close_label( string $content ): string {
+		return str_replace( 'aria-label="Close"', 'aria-label="Cerrar"', $content );
 	}
 
 	/**

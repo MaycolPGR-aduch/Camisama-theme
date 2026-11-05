@@ -24,6 +24,7 @@ use Camisama\Customizer\Config\View;
 use Camisama\Customizer\Config\Zone;
 use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Media\SvgSupport;
+use Camisama\Customizer\Products\CardPrint;
 use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\SizeGuide;
 use Camisama\Customizer\Security\SvgSanitizer;
@@ -48,6 +49,7 @@ const CAMISAMA_DEMO_COLORS = array(
 const CAMISAMA_DEMO_PRODUCTS = array(
 	array(
 		'sku'        => 'CAM-CLASICA',
+		'card'       => 'sol-andino',
 		'name'       => 'Camiseta clásica',
 		'shape'      => 'classic',
 		'price'      => '39.90',
@@ -59,6 +61,7 @@ const CAMISAMA_DEMO_PRODUCTS = array(
 	),
 	array(
 		'sku'        => 'CAM-OVERSIZE',
+		'card'       => 'rayo',
 		'name'       => 'Camiseta oversize',
 		'shape'      => 'oversize',
 		'price'      => '49.90',
@@ -78,6 +81,7 @@ const CAMISAMA_DEMO_PRODUCTS = array(
 	),
 	array(
 		'sku'        => 'CAM-MANGA-LARGA',
+		'card'       => 'montana',
 		'name'       => 'Camiseta manga larga',
 		'shape'      => 'long',
 		'price'      => '54.90',
@@ -89,6 +93,7 @@ const CAMISAMA_DEMO_PRODUCTS = array(
 	),
 	array(
 		'sku'        => 'CAM-NINOS',
+		'card'       => 'ola',
 		'name'       => 'Camiseta para niños',
 		'shape'      => 'kids',
 		'price'      => '32.90',
@@ -536,4 +541,26 @@ foreach ( CAMISAMA_DEMO_DESIGNS as $camisama_slug => $camisama_design ) {
 	update_post_meta( $camisama_design_id, '_camisama_demo_design', $camisama_slug );
 
 	WP_CLI::success( "Estampado creado: {$camisama_design['title']}" );
+}
+
+// La tarjeta de cada producto muestra un estampado de muestra. Se respeta el que ya tenga asignado.
+foreach ( CAMISAMA_DEMO_PRODUCTS as $camisama_spec ) {
+	$camisama_product_id = wc_get_product_id_by_sku( $camisama_spec['sku'] );
+	if ( ! $camisama_product_id || get_post_meta( $camisama_product_id, CardPrint::META, true ) ) {
+		continue;
+	}
+
+	$camisama_card_design = get_posts(
+		array(
+			'post_type'      => DesignPostType::POST_TYPE,
+			'meta_key'       => '_camisama_demo_design', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => $camisama_spec['card'], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+		)
+	);
+	if ( $camisama_card_design ) {
+		update_post_meta( $camisama_product_id, CardPrint::META, $camisama_card_design[0] );
+		WP_CLI::log( "  estampado de muestra: {$camisama_spec['name']}" );
+	}
 }

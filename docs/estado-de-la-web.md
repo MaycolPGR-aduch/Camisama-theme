@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 4 de noviembre de 2026.
+falta para abrirla al público. Actualizado el 5 de noviembre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).
@@ -129,10 +129,10 @@ local, 45 pruebas de JS y lint limpio.
         y prenda mayor en el resumen. (El resumen móvil ya se abre con el teclado: es de WooCommerce.)
   - [x] **Tienda y precio** (P1): "Elige tu modelo", "desde + impresión", "Personalizar" y desglose
         en el carrito. Devolver el selector de orden cuando haya más modelos.
-  - [ ] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
-        tabulador, deshacer al eliminar, desborde a 320 px y carrito vacío con voz propia.
+  - [x] **Móvil y estados** (P2): objetivos de 44 px, foco que contraste, carrito lateral fuera del
+        tabulador, deshacer al eliminar, 320 px sin desbordes y carrito vacío con voz propia.
   - [x] **Portada**: rehecha aparte; detalle en [home.md](home.md).
-  - [ ] **Tarjetas de la tienda** con los estampados de demostración, y repaso final.
+  - [x] **Tarjetas de la tienda** con los estampados de demostración, y repaso final.
 - [ ] **Completar y revisar las páginas legales** con un abogado: razón social, RUC, dirección,
       contacto, plazos y qué pasa si el cliente cambia de idea. Quitar el aviso de borrador. Añadir
       el **Libro de Reclamaciones virtual**, que los Términos ya mencionan como pendiente.

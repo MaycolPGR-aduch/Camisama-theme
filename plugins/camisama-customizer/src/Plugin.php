@@ -14,6 +14,8 @@ use Camisama\Customizer\Admin\PriceSettingsPage;
 use Camisama\Customizer\Admin\ProductConfigMetaBox;
 use Camisama\Customizer\Cart\CartEdit;
 use Camisama\Customizer\Cart\CartIntegration;
+use Camisama\Customizer\Cart\CartUndo;
+use Camisama\Customizer\Cart\EmptyCart;
 use Camisama\Customizer\Cart\OrderDisplay;
 use Camisama\Customizer\Cart\ProductionPage;
 use Camisama\Customizer\Cart\PreviewStore;
@@ -24,6 +26,7 @@ use Camisama\Customizer\Designs\DesignPostType;
 use Camisama\Customizer\Designs\DesignRepository;
 use Camisama\Customizer\Media\SvgSupport;
 use Camisama\Customizer\Pricing\PriceTableRepository;
+use Camisama\Customizer\Products\CardPrint;
 use Camisama\Customizer\Products\CatalogTexts;
 use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\CustomizerData;
@@ -107,10 +110,13 @@ final class Plugin {
 		$production = new ProductionStore();
 		( new CartIntegration( $configs, $prices, $uploads, new PreviewStore( $uploads ) ) )->register();
 		( new CartEdit() )->register();
+		( new CartUndo( $this ) )->register();
+		( new EmptyCart() )->register();
 		( new OrderDisplay() )->register();
 		( new Delivery( $this ) )->register();
 		( new Texts() )->register();
 		( new CatalogTexts( $configs ) )->register();
+		( new CardPrint( $configs ) )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
 			UploadStore::CLEANUP_HOOK,

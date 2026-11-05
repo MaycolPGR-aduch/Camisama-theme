@@ -7,6 +7,32 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-05
+
+### Añadido
+- **Tarjetas con estampado** (`Products\CardPrint`), en la tienda, la portada y los relacionados: un
+  estampado de muestra en la zona de impresión de cada prenda, no una camiseta lisa. Es solo para la
+  tarjeta (la foto del producto no cambia) y lo asigna `bin/seed-demo.php`. La tienda avisa de que son
+  ejemplos.
+- **Volver al carrito** en el pago, que no tenía ninguna salida hacia atrás.
+- **Deshacer al quitar una prenda**, en el carrito y en el carrito lateral (`Cart\CartUndo`): la prenda
+  vuelve con su diseño y su cantidad. El aviso dura 10 segundos, o más si lo estás usando.
+- **Carrito vacío con voz propia** (`Cart\EmptyCart`): "Aquí falta tu diseño" y una sola salida, "Elegir
+  modelo", en lugar del mensaje y la lista de productos de WooCommerce.
+
+### Cambiado
+- La portada dice "Desde S/ 39.90" como la tienda, en lugar de "S/ 39.90 – S/ 44.90", un rango que solo
+  respondía a la talla XXL.
+- **Móvil, 44 px para el dedo:** menú y su cierre, enlaces del menú, cuenta, carrito, cantidad, papelera,
+  "Editar diseño", la marca y los enlaces del pie. El menú va junto a la cuenta, no en mitad de la cabecera.
+- **Foco del teclado que se ve en todas partes:** claro sobre el pie y las bandas oscuras y rojas (el
+  índigo no contrastaba), y también en los botones, campos y cantidad de WooCommerce.
+
+### Corregido
+- **En móvil no se podía pulsar la papelera del carrito:** el bloque del total la tapaba.
+- El carrito lateral cerrado ya no recibe el foco del tabulador, y su botón de cerrar se anuncia en español.
+- A 320 px la cabecera ya no aplasta el logo.
+
 ## 2026-11-04
 
 ### Añadido

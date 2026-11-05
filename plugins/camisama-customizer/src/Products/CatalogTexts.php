@@ -51,19 +51,27 @@ final class CatalogTexts {
 
 	/**
 	 * Precio en la tienda y sus categorías: el de la prenda más barata, y que se suma la impresión.
-	 * Fuera de ahí no se toca (la portada lo explica con su propio texto).
+	 * En la portada, solo "Desde": allí la tarjeta ya rotula "Prenda sin impresión". Un rango
+	 * "S/ 39.90 – S/ 44.90" solo respondería a la talla XXL. En el resto no se toca.
 	 *
 	 * @param string      $html    Precio de WooCommerce.
 	 * @param \WC_Product $product Producto.
 	 */
 	public function price_html( string $html, \WC_Product $product ): string {
-		if ( is_admin() || ! ( is_shop() || is_product_taxonomy() ) || ! $this->configs->get( $product->get_id() )->enabled ) {
+		$is_home = is_front_page();
+
+		if ( is_admin() || ! ( $is_home || is_shop() || is_product_taxonomy() ) || ! $this->configs->get( $product->get_id() )->enabled ) {
 			return $html;
 		}
 
 		$from = $product instanceof \WC_Product_Variable
 			? (float) $product->get_variation_price( 'min', true )
 			: (float) wc_get_price_to_display( $product );
+
+		if ( $is_home ) {
+			/* translators: %s: precio de la prenda. */
+			return sprintf( esc_html__( 'Desde %s', 'camisama-customizer' ), wc_price( $from ) );
+		}
 
 		return sprintf(
 			/* translators: %s: precio de la prenda. */
