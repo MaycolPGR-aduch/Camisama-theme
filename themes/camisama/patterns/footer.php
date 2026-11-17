@@ -9,15 +9,21 @@
  * @package Camisama
  */
 
+$camisama_tracking = get_page_by_path( 'sigue-tu-pedido' );
+
 $camisama_columns = array(
 	__( 'Tienda', 'camisama' )    => array(
 		__( 'Todos los modelos', 'camisama' ) => camisama_wc_page_url( 'shop' ),
 		__( 'Camisetas', 'camisama' )         => camisama_product_category_url( 'camisetas' ),
 		__( 'Niños', 'camisama' )             => camisama_product_category_url( 'ninos' ),
 	),
-	__( 'Tu cuenta', 'camisama' ) => array(
-		__( 'Mi cuenta', 'camisama' ) => camisama_wc_page_url( 'myaccount' ),
-		__( 'Carrito', 'camisama' )   => camisama_wc_page_url( 'cart' ),
+	__( 'Tu cuenta', 'camisama' ) => array_filter(
+		array(
+			__( 'Mi cuenta', 'camisama' )       => camisama_wc_page_url( 'myaccount' ),
+			// Para quien compró sin cuenta (bin/seed-tracking.php). Sin la página, no se enlaza.
+			__( 'Sigue tu pedido', 'camisama' ) => $camisama_tracking ? (string) get_permalink( $camisama_tracking ) : '',
+			__( 'Carrito', 'camisama' )         => camisama_wc_page_url( 'cart' ),
+		)
 	),
 	__( 'Ayuda', 'camisama' )     => array(
 		__( 'Cómo funciona', 'camisama' )          => home_url( '/#como-funciona' ),

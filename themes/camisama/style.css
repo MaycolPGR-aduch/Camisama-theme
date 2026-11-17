@@ -529,6 +529,62 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	flex: 1 1 calc(50% - 6px);
 }
 
+/*
+ * "Sigue tu pedido" (woocommerce/order/form-tracking.php y
+ * Checkout\OrderTracking): campos como los del pago, uno bajo otro, y el
+ * resultado con el estado a la vista.
+ */
+.camisama-track-form {
+	max-width: 32rem;
+}
+
+.camisama-track-form .form-row {
+	margin-block: 0 var(--wp--preset--spacing--40);
+}
+
+.camisama-track-form label {
+	display: block;
+	margin-bottom: 0.35em;
+	font-weight: 600;
+}
+
+.camisama-track-form .input-text {
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 48px;
+	padding: 0.6em 0.9em;
+	border: 1.5px solid var(--wp--preset--color--border);
+	border-radius: 12px;
+	background: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--contrast);
+	font: inherit;
+	font-size: 1rem;
+}
+
+.camisama-track-form .input-text:hover {
+	border-color: var(--wp--preset--color--contrast);
+}
+
+.camisama-track-form .button {
+	min-height: 48px;
+}
+
+.woocommerce .order-info mark,
+.camisama-track-hint strong {
+	background: none;
+	color: inherit;
+	font-weight: 700;
+}
+
+.woocommerce .order-info {
+	max-width: 40rem;
+	font-size: var(--wp--preset--font-size--large);
+}
+
+.camisama-track-hint {
+	text-align: center;
+}
+
 .camisama-checkout-back {
 	margin-block: 0 var(--wp--preset--spacing--30);
 }

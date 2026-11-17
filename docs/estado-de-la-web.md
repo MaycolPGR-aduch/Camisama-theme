@@ -136,6 +136,8 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Completar y revisar las páginas legales** con un abogado: razón social, RUC, dirección,
       contacto, plazos y qué pasa si el cliente cambia de idea. Quitar el aviso de borrador. Añadir
       el **Libro de Reclamaciones virtual**, que los Términos ya mencionan como pendiente.
+- [x] **Seguimiento del pedido sin cuenta**: "Sigue tu pedido", con número y correo.
+- [ ] **Registro en "Mi cuenta"**: hoy solo se entra con una cuenta ya creada; decidir si se ofrece.
 - [ ] **Datos de la cuenta para la transferencia**: el pago promete enviarlos por correo y todavía
       no hay ninguna cuenta configurada ni envío automático.
 - [ ] **Decir "Pago seguro" otra vez** cuando haya pasarela real. Ya no se promete en ninguna página.

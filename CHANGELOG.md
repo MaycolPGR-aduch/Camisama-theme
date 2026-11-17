@@ -9,6 +9,12 @@ conviene recordar.
 
 ## 2026-11-17
 
+### Añadido
+- **Sigue tu pedido** (`/sigue-tu-pedido/`, `Checkout\OrderTracking`): quien compró sin cuenta ve
+  cómo va su pedido con el número y su correo. Cada estado dice qué significa ("Esperamos tu
+  transferencia…"). Se enlaza desde el pie, la confirmación del pedido (con el número, si es su
+  pedido) y los correos al cliente. La página la crea `bin/seed-tracking.php`.
+
 ### Cambiado
 - **Pago más corto en el móvil** (de 2259 a 2126 px): con una sola opción, el costo del envío, el taller
   de recojo y la forma de pago se muestran como un dato, sin botón de radio ni recuadro. Nombre y
