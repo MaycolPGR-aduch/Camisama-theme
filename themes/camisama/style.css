@@ -487,6 +487,48 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	display: none;
 }
 
+/*
+ * Una sola opción no es una elección: sin botón de radio ni recuadro, como un
+ * dato (el costo del envío, el taller de recojo, cómo se paga). Con varias se
+ * elige como siempre.
+ */
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child)::after,
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child) .wc-block-components-radio-control__option::after {
+	content: none;
+}
+
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child) .wc-block-components-radio-control__input {
+	display: none;
+}
+
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child) .wc-block-components-radio-control__option,
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child) .wc-block-components-radio-control-accordion-option,
+.wc-block-checkout .wc-block-components-radio-control:has(> :only-child) .wc-block-components-radio-control-accordion-content {
+	padding: 0;
+	box-shadow: none;
+}
+
+/* Nombre y apellidos en una fila también en el móvil: son cortos. */
+.wc-block-checkout__shipping-fields .wc-block-components-address-form,
+.wc-block-checkout__billing-fields .wc-block-components-address-form {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 12px;
+}
+
+.wc-block-checkout__shipping-fields .wc-block-components-address-form > *,
+.wc-block-checkout__billing-fields .wc-block-components-address-form > * {
+	flex: 1 0 100%;
+	min-width: 0;
+}
+
+.wc-block-checkout__shipping-fields .wc-block-components-address-form > .wc-block-components-address-form__first_name,
+.wc-block-checkout__shipping-fields .wc-block-components-address-form > .wc-block-components-address-form__last_name,
+.wc-block-checkout__billing-fields .wc-block-components-address-form > .wc-block-components-address-form__first_name,
+.wc-block-checkout__billing-fields .wc-block-components-address-form > .wc-block-components-address-form__last_name {
+	flex: 1 1 calc(50% - 6px);
+}
+
 .camisama-checkout-back {
 	margin-block: 0 var(--wp--preset--spacing--30);
 }

@@ -28,4 +28,41 @@
 		attributes: true,
 		attributeFilter: [ 'aria-invalid' ],
 	} );
+
+	// Al elegir "Recojo", WooCommerce desmarca "Usar la misma dirección para facturación" (sin envío
+	// hace falta la de facturación) y al volver a "Envío" no la restaura: quedaba un segundo
+	// formulario entero. Se deja como estaba, pulsando la propia casilla para no usar su API interna.
+	const data = window.wp?.data;
+	if ( ! data ) {
+		return;
+	}
+
+	function restoreSameAddress( tries ) {
+		const box = document.querySelector( '.wc-block-checkout__use-address-for-billing input' );
+		if ( box ) {
+			if ( ! box.checked ) {
+				box.click();
+			}
+		} else if ( tries > 0 ) {
+			window.requestAnimationFrame( () => restoreSameAddress( tries - 1 ) );
+		}
+	}
+
+	let collecting = null;
+	let sameBefore = false;
+	data.subscribe( () => {
+		const checkout = data.select( 'wc/store/checkout' );
+		if ( ! checkout?.prefersCollection ) {
+			return;
+		}
+		const now = checkout.prefersCollection();
+		if ( collecting !== null && now !== collecting ) {
+			if ( now ) {
+				sameBefore = checkout.getUseShippingAsBilling();
+			} else if ( sameBefore ) {
+				restoreSameAddress( 30 );
+			}
+		}
+		collecting = now;
+	} );
 }() );

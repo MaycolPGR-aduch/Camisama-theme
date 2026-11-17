@@ -7,6 +7,19 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-17
+
+### Cambiado
+- **Pago más corto en el móvil** (de 2259 a 2126 px): con una sola opción, el costo del envío, el taller
+  de recojo y la forma de pago se muestran como un dato, sin botón de radio ni recuadro. Nombre y
+  apellidos van en una fila.
+- Títulos del pago en la voz de la tienda: "Costo del envío", "Dónde lo recoges" y "Cómo pagas", en
+  lugar de "Opciones de envío", "Ubicaciones de recolección" y "Opciones de pago".
+
+### Corregido
+- Al pasar por "Recojo" y volver a "Envío", "Usar la misma dirección para facturación" quedaba
+  desmarcada y aparecía un segundo formulario entero. Ahora vuelve a como estaba.
+
 ## 2026-11-05
 
 ### Añadido

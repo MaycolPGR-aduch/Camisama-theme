@@ -50,7 +50,7 @@ function camisama_enqueue_styles(): void {
 		wp_enqueue_script(
 			'camisama-checkout',
 			get_stylesheet_directory_uri() . $script,
-			array(),
+			array( 'wp-data' ),
 			(string) filemtime( get_stylesheet_directory() . $script ),
 			array( 'in_footer' => true )
 		);

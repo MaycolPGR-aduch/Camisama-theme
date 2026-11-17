@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 5 de noviembre de 2026.
+falta para abrirla al público. Actualizado el 17 de noviembre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).

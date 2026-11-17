@@ -30,6 +30,19 @@ final class TextsTest extends TestCase {
 	}
 
 	/**
+	 * Los títulos del pago no hablan de "opciones" ni de "recolección".
+	 */
+	public function test_rewrites_checkout_headings(): void {
+		$json = '{"locale_data":{"messages":{"Shipping options":["Opciones de envío"],"Pickup locations":["Ubicaciones de recolección"],"Payment options":["Opciones de pago"]}}}';
+
+		$messages = json_decode( Texts::rewrite( $json ), true )['locale_data']['messages'];
+
+		$this->assertSame( array( 'Costo del envío' ), $messages['Shipping options'] );
+		$this->assertSame( array( 'Dónde lo recoges' ), $messages['Pickup locations'] );
+		$this->assertSame( array( 'Cómo pagas' ), $messages['Payment options'] );
+	}
+
+	/**
 	 * No añade textos que ese script no usa.
 	 */
 	public function test_does_not_add_missing_texts(): void {

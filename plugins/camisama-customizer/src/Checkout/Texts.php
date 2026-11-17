@@ -27,6 +27,10 @@ final class Texts {
 		'Privacy Policy'                     => 'Política de privacidad',
 		'Proceed to Checkout'                => 'Ir al pago',
 		'Estimated total'                    => 'Total',
+		// Títulos del pago: con una sola opción ya no se elige nada (style.css).
+		'Shipping options'                   => 'Costo del envío',
+		'Pickup locations'                   => 'Dónde lo recoges',
+		'Payment options'                    => 'Cómo pagas',
 	);
 
 	/**
