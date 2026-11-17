@@ -43,6 +43,16 @@ function camisama_enqueue_styles(): void {
 			array( 'camisama-style' ),
 			(string) filemtime( __DIR__ . '/assets/css/home.css' )
 		);
+		wp_enqueue_script(
+			'camisama-home',
+			get_theme_file_uri( 'assets/js/home.js' ),
+			array(),
+			(string) filemtime( __DIR__ . '/assets/js/home.js' ),
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
 	}
 
 	if ( function_exists( 'is_checkout' ) && is_checkout() ) {

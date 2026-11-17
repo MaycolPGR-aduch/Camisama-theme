@@ -14,6 +14,13 @@ conviene recordar.
   cómo va su pedido con el número y su correo. Cada estado dice qué significa ("Esperamos tu
   transferencia…"). Se enlaza desde el pie, la confirmación del pedido (con el número, si es su
   pedido) y los correos al cliente. La página la crea `bin/seed-tracking.php`.
+- **Portada más dinámica, tanda 1** ([docs/home.md](docs/home.md)):
+  - El hero turna tres ejemplos sobre la prenda (frase, estampado y foto, en negra y blanca), con
+    la zona de impresión y su recargo real. Lleva pestañas y botón de pausa.
+  - Junto a la prenda, un sello de marca que gira ("Desde 1 unidad ✦ Estampado en Perú").
+  - "Zonas y precio" pasa a ser un simulador: tocas zonas y tamaños, el mapa se rellena y el total
+    se suma en vivo con las tarifas reales. En el móvil, el total sigue a las fichas.
+  - Sin JavaScript se ve como antes, y con movimiento reducido no hay avance automático ni giros.
 
 ### Cambiado
 - **Pago más corto en el móvil** (de 2259 a 2126 px): con una sola opción, el costo del envío, el taller
@@ -25,6 +32,11 @@ conviene recordar.
 ### Corregido
 - Al pasar por "Recojo" y volver a "Envío", "Usar la misma dirección para facturación" quedaba
   desmarcada y aparecía un segundo formulario entero. Ahora vuelve a como estaba.
+
+### Decisiones
+- DESIGN.md cambia "movimiento mínimo" por **movimiento que enseña**. Se puede mover lo que
+  demuestra el producto, con pausa y alternativa reducida. Siguen fuera los degradados y las
+  sombras de adorno.
 
 ## 2026-11-05
 

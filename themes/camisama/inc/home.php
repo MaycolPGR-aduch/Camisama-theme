@@ -73,6 +73,72 @@ function camisama_home_price_example(): ?array {
 }
 
 /**
+ * Tarifas del ejemplo para el simulador de zonas y el hero (assets/js/home.js).
+ *
+ * Los importes van en céntimos y ya convertidos a precio mostrado (con IGV si corresponde), con
+ * el mismo cálculo que el desglose del servidor, para que el navegador solo tenga que sumar.
+ *
+ * @param array<string, mixed>|null $example Datos de camisama_home_price_example().
+ * @return array<string, mixed>|null Datos serializables, o null sin ejemplo.
+ */
+function camisama_home_price_data( ?array $example ): ?array {
+	if ( null === $example ) {
+		return null;
+	}
+	$variant = wc_get_product( $example['variant_id'] );
+	if ( ! $variant ) {
+		return null;
+	}
+
+	$table  = ( new \Camisama\Customizer\Pricing\PriceTableRepository() )->get();
+	$config = ( new \Camisama\Customizer\Config\ProductConfigRepository() )->get( $example['product_id'] );
+	$raw    = (float) $variant->get_price();
+	$base   = wc_get_price_to_display( $variant );
+
+	$tiers = array();
+	foreach ( $table->tiers() as $tier ) {
+		$shown   = wc_get_price_to_display( $variant, array( 'price' => $raw + $tier->amount / 100 ) );
+		$tiers[] = array(
+			'label'  => $tier->label,
+			'max_cm' => $tier->max_cm,
+			'amount' => (int) round( ( $shown - $base ) * 100 ),
+		);
+	}
+
+	$zones = array();
+	foreach ( $config->zones as $zone ) {
+		$zones[] = array(
+			'id'    => $zone->id,
+			'label' => $zone->label,
+			'tiers' => count( $table->tiers_within( $zone->longest_side_cm() ) ),
+		);
+	}
+
+	return array(
+		'base'  => (int) round( $base * 100 ),
+		'tiers' => $tiers,
+		'zones' => $zones,
+		'text'  => array(
+			'combo'     => __( 'Tu combinación', 'camisama' ),
+			'garment'   => __( 'Solo la prenda', 'camisama' ),
+			/* translators: %s: centímetros. */
+			'upTo'      => __( 'hasta %s cm', 'camisama' ),
+			/* translators: 1: total, 2: zonas y tamaños elegidos. */
+			'total'     => __( 'Total %1$s, con %2$s.', 'camisama' ),
+			/* translators: %s: total. */
+			'totalNone' => __( 'Total %s, sin impresión.', 'camisama' ),
+		),
+		'money' => array(
+			'symbol'   => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
+			'format'   => html_entity_decode( get_woocommerce_price_format(), ENT_QUOTES, 'UTF-8' ),
+			'decimals' => wc_get_price_decimals(),
+			'decimal'  => wc_get_price_decimal_separator(),
+			'thousand' => wc_get_price_thousand_separator(),
+		),
+	);
+}
+
+/**
  * Render del bloque: el precio se actualiza incluso si la plantilla se guarda en el editor.
  *
  * @param array<string, mixed>|null $example Datos calculados para la sección.
@@ -81,16 +147,17 @@ function camisama_home_price_example(): ?array {
 function camisama_render_home_price_example( ?array $example ): string {
 	ob_start();
 	?>
-	<div class="camisama-price-example">
+	<div class="camisama-price-example" data-camisama-price-card>
 		<?php if ( null !== $example ) : ?>
-			<h3><?php esc_html_e( 'Una frase en el frente', 'camisama' ); ?></h3>
+			<h3 data-price-title><?php esc_html_e( 'Una frase en el frente', 'camisama' ); ?></h3>
 			<p class="camisama-price-example__model"><?php echo esc_html( $example['name'] ); ?> · <?php echo esc_html( $example['attributes'] ); ?></p>
 			<dl>
 				<div><dt><?php esc_html_e( 'Prenda sin impresión', 'camisama' ); ?></dt><dd><?php echo wp_kses_post( wc_price( $example['base'] ) ); ?></dd></div>
-				<div><dt><?php /* translators: %s: tamaño en centímetros. */ echo esc_html( sprintf( __( 'Impresión de hasta %s cm', 'camisama' ), number_format_i18n( $example['side'] ) ) ); ?></dt><dd><?php echo wp_kses_post( wc_price( $example['print'] ) ); ?></dd></div>
-				<div class="camisama-price-example__total"><dt><?php esc_html_e( 'Total por una camiseta', 'camisama' ); ?></dt><dd><?php echo wp_kses_post( wc_price( $example['total'] ) ); ?></dd></div>
+				<div data-price-line><dt><?php /* translators: %s: tamaño en centímetros. */ echo esc_html( sprintf( __( 'Impresión de hasta %s cm', 'camisama' ), number_format_i18n( $example['side'] ) ) ); ?></dt><dd><?php echo wp_kses_post( wc_price( $example['print'] ) ); ?></dd></div>
+				<div class="camisama-price-example__total"><dt><?php esc_html_e( 'Total por una camiseta', 'camisama' ); ?></dt><dd data-price-total><?php echo wp_kses_post( wc_price( $example['total'] ) ); ?></dd></div>
 			</dl>
-			<p class="camisama-home-note"><?php esc_html_e( 'Ejemplo con texto propio, sin estampados premium. No incluye entrega. El total cambia con tu talla y diseño.', 'camisama' ); ?></p>
+			<p class="screen-reader-text" aria-live="polite" data-price-announce></p>
+			<p class="camisama-home-note"><?php esc_html_e( 'Con texto o fotos propias, sin estampados premium. No incluye entrega. El total final depende de tu talla y tu diseño.', 'camisama' ); ?></p>
 			<a class="camisama-text-link" href="<?php echo esc_url( $example['url'] ); ?>"><?php esc_html_e( 'Personalizar este modelo', 'camisama' ); ?></a>
 		<?php else : ?>
 			<h3><?php esc_html_e( 'Prenda + impresión = tu total', 'camisama' ); ?></h3>

@@ -122,7 +122,7 @@
 }
 
 .camisama-hero__visual figcaption {
-	margin-top: -1rem;
+	margin-top: 1rem;
 	position: relative;
 	font-family: var(--wp--preset--font-family--display);
 	font-size: 1.125rem;
@@ -183,25 +183,315 @@
 	object-fit: cover;
 }
 
-.camisama-tee__print--hero {
-	top: 32%;
-	width: 33%;
+/*
+ * Hero vivo: tres ejemplos que se turnan sobre la prenda. El estado lo
+ * ponen data-state y data-tee en la figura (assets/js/home.js); sin JS se
+ * queda el primero. La zona reproduce el frente adulto de los presets del
+ * personalizador (con la escala 1.4 de la maqueta).
+ */
+.camisama-live {
+	--live-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+	position: relative;
+}
+
+.camisama-live__base {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+.camisama-live[data-tee="black"] .camisama-live__base--black,
+.camisama-live[data-tee="white"] .camisama-live__base--white {
+	opacity: 1;
+}
+
+.camisama-live__zone {
+	position: absolute;
+	top: 26.7%;
+	left: 33.2%;
+	box-sizing: border-box;
+	width: 33.7%;
+	height: 44.9%;
+	border: 1.5px dashed rgb(255 255 255 / 0.85);
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px rgb(22 22 26 / 0.35), inset 0 0 0 1px rgb(22 22 26 / 0.35);
+	container-type: inline-size;
+}
+
+.camisama-live__print {
+	position: absolute;
+	opacity: 0;
+	transform: scale(1.18) rotate(-3deg);
+	transition: opacity 0.25s ease, transform 0.5s var(--live-ease);
+}
+
+.camisama-live[data-state="0"] [data-print="0"],
+.camisama-live[data-state="1"] [data-print="1"],
+.camisama-live[data-state="2"] [data-print="2"] {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0.15s;
+}
+
+/* Hasta 20 cm en una zona de 30: unos dos tercios del ancho. */
+.camisama-live__print--text {
+	top: 9%;
+	left: 18%;
+	width: 64%;
 	color: var(--wp--preset--color--base);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 14.5cqi;
+	font-weight: 800;
+	line-height: 0.95;
+	letter-spacing: -0.02em;
 	text-align: center;
 }
 
-.camisama-tee__print--hero img {
-	display: block;
-	width: 48%;
+/* Hasta 10 cm, en el pecho izquierdo de quien la lleva. */
+.camisama-live__print--logo {
+	top: 6%;
+	left: 62%;
+	width: 31%;
 	height: auto;
-	margin: 0 auto 0.5rem;
 }
 
-.camisama-tee__print--hero span {
+/* Hasta 30 cm: casi todo el ancho de la zona. */
+.camisama-live__print--photo {
+	top: 4%;
+	left: 2%;
+	width: 96%;
+	height: auto;
+	aspect-ratio: 1;
+	border-radius: 2px;
+	object-fit: cover;
+}
+
+.camisama-live__chip {
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+	max-width: calc(100% - 2rem);
+	margin: 0;
+	padding: 0.45em 1em;
+	border-radius: 999px;
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.3;
+	white-space: nowrap;
+	transform: translateX(-50%);
+}
+
+.camisama-live__chip strong {
+	color: var(--wp--preset--color--accent);
 	font-family: var(--wp--preset--font-family--display);
-	font-size: clamp(1.5rem, 3vw, 2.5rem);
-	font-weight: 800;
-	line-height: 0.95;
+	font-size: 1rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.camisama-live__chip.is-changing {
+	animation: camisama-chip-in 0.45s var(--live-ease);
+}
+
+@keyframes camisama-chip-in {
+
+	from {
+		opacity: 0;
+		transform: translate(-50%, 0.5rem);
+	}
+}
+
+.camisama-live__controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+.camisama-live__controls[hidden] {
+	display: none;
+}
+
+.camisama-live__tabs {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.camisama-live__tab,
+.camisama-live__pause {
+	position: relative;
+	box-sizing: border-box;
+	min-height: 44px;
+	overflow: hidden;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+	font: inherit;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.camisama-live__tab {
+	padding: 0.5em 1.1em;
+}
+
+.camisama-live__tab:hover,
+.camisama-live__pause:hover {
+	background: var(--wp--preset--color--border);
+}
+
+.camisama-live__tab[aria-pressed="true"] {
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+/* Cuánto falta para el siguiente ejemplo. */
+.camisama-live__progress {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 3px;
+	background: var(--wp--preset--color--accent);
+	transform: scaleX(0);
+	transform-origin: left;
+}
+
+.camisama-live__tab[aria-pressed="true"] .camisama-live__progress {
+	animation: camisama-live-progress 4.5s linear forwards;
+}
+
+.camisama-live:hover .camisama-live__progress,
+.camisama-live:focus-within .camisama-live__progress,
+.camisama-live.is-offscreen .camisama-live__progress {
+	animation-play-state: paused;
+}
+
+.camisama-live.is-paused .camisama-live__tab .camisama-live__progress {
+	animation: none;
+}
+
+@keyframes camisama-live-progress {
+
+	to {
+		transform: scaleX(1);
+	}
+}
+
+.camisama-live__pause {
+	display: inline-flex;
+	width: 44px;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+
+	/* En la esquina de la prenda: así las pestañas caben en una fila. */
+	position: absolute;
+	top: 0.75rem;
+	left: 0.75rem;
+	background: var(--wp--preset--color--base);
+}
+
+.camisama-live__pause svg {
+	fill: currentcolor;
+}
+
+.camisama-live__icon-play,
+.camisama-live__pause[aria-pressed="true"] .camisama-live__icon-pause {
+	display: none;
+}
+
+.camisama-live__pause[aria-pressed="true"] .camisama-live__icon-play {
+	display: inline;
+}
+
+/* Sello de marca que gira despacio sobre la esquina de la prenda. */
+.camisama-seal {
+	position: absolute;
+	z-index: 1;
+	top: -1.25rem;
+	right: -1.25rem;
+	width: clamp(6.5rem, 12vw, 9rem);
+	aspect-ratio: 1;
+}
+
+.camisama-seal__ring {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+/* Gira el contenido y no el SVG, para que su caja no crezca al rotar. */
+.camisama-seal__spin {
+	transform-box: view-box;
+	transform-origin: center;
+	animation: camisama-seal-spin 28s linear infinite;
+}
+
+.camisama-seal__ring circle {
+	fill: var(--wp--preset--color--accent);
+}
+
+.camisama-seal__ring text {
+	fill: var(--wp--preset--color--contrast);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: 12.5px;
+	font-weight: 700;
+}
+
+.camisama-seal__mark {
+	position: absolute;
+	inset: 31%;
+	box-sizing: border-box;
+	padding: 7%;
+	border-radius: 50%;
+	background: var(--wp--preset--color--contrast);
+	fill: var(--wp--preset--color--base);
+}
+
+.camisama-seal__mark rect {
+	fill: var(--wp--preset--color--primary);
+}
+
+.camisama-live.is-offscreen .camisama-seal__spin {
+	animation-play-state: paused;
+}
+
+@keyframes camisama-seal-spin {
+
+	to {
+		transform: rotate(1turn);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.camisama-live__base,
+	.camisama-live__print {
+		transition: none;
+	}
+
+	.camisama-live__chip.is-changing,
+	.camisama-seal__spin {
+		animation: none;
+	}
+
+	/* Sin avance automático no hay nada que pausar. */
+	.camisama-live__progress,
+	.camisama-live__pause {
+		display: none;
+	}
 }
 
 .camisama-examples {
@@ -341,19 +631,215 @@
 
 .camisama-print__layout {
 	display: grid;
+	grid-template-areas:
+		"zones card"
+		"more card";
 	grid-template-columns: 1.15fr 0.85fr;
 	align-items: start;
-	gap: clamp(2rem, 5vw, 4rem);
+	gap: 1.25rem clamp(2rem, 5vw, 4rem);
 }
 
-.camisama-print__zones > img {
+.camisama-print__zones {
+	grid-area: zones;
+}
+
+.camisama-print__more {
+	grid-area: more;
+}
+
+/* El total acompaña a las fichas mientras se baja por la columna. */
+.camisama-print .camisama-price-example {
+	position: sticky;
+	top: 1.5rem;
+	grid-area: card;
+}
+
+/* Mapa de zonas: en el simulador se tocan y se rellenan al elegirlas. */
+.camisama-zone-map {
 	display: block;
 	width: 100%;
 	height: auto;
 }
 
-.camisama-print__zones details {
-	margin-block: 1.25rem 2rem;
+.camisama-zone-map__tee path {
+	fill: none;
+	stroke: var(--wp--preset--color--base);
+	stroke-width: 2.5;
+	stroke-linejoin: round;
+}
+
+.camisama-zone-map__zone rect {
+	fill: rgb(245 183 0 / 0);
+	stroke: var(--wp--preset--color--accent);
+	stroke-width: 2;
+	stroke-dasharray: 6 5;
+	transform-box: fill-box;
+	transform-origin: center;
+	transition: fill 0.3s ease;
+}
+
+.camisama-zone-map.is-interactive .camisama-zone-map__zone {
+	cursor: pointer;
+}
+
+.camisama-zone-map.is-interactive .camisama-zone-map__zone:hover rect {
+	fill: rgb(245 183 0 / 0.18);
+}
+
+.camisama-zone-map__zone.is-active rect {
+	fill: var(--wp--preset--color--accent);
+	stroke-dasharray: none;
+	animation: camisama-zone-stamp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+@keyframes camisama-zone-stamp {
+
+	from {
+		transform: scale(1.25);
+	}
+}
+
+.camisama-zone-map__labels {
+	fill: var(--wp--preset--color--base);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: 16px;
+	text-anchor: middle;
+	pointer-events: none;
+}
+
+.camisama-zone-map:has([data-zone="front"].is-active) .is-front,
+.camisama-zone-map:has([data-zone="back"].is-active) .is-back {
+	fill: var(--wp--preset--color--contrast);
+	font-weight: 600;
+}
+
+.camisama-zone-map__leaders path {
+	stroke: var(--wp--preset--color--base);
+	stroke-width: 1.5;
+}
+
+.camisama-zone-picker {
+	margin-top: 1.5rem;
+}
+
+.camisama-zone-picker__hint {
+	margin: 0 0 0.75rem;
+	font-weight: 600;
+}
+
+.camisama-zone-picker__zones,
+.camisama-zone-picker__sizes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.camisama-zone-picker__sizes {
+	margin: 1rem 0 0;
+	padding: 0;
+	border: 0;
+}
+
+.camisama-zone-picker__sizes[hidden] {
+	display: none;
+}
+
+.camisama-zone-picker__sizes legend {
+	margin-bottom: 0.5rem;
+	padding: 0;
+	color: var(--wp--preset--color--border);
+	font-size: 0.875rem;
+}
+
+/* Fichas sobre tinta: borde y relleno papel, como las del editor. */
+.camisama-zone-chip {
+	display: inline-flex;
+	box-sizing: border-box;
+	min-height: 44px;
+	align-items: center;
+	gap: 0.35em;
+	padding: 0.4em 1em;
+	border: 1.5px solid var(--wp--preset--color--base);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--wp--preset--color--base);
+	font: inherit;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.camisama-zone-chip:hover {
+	background: rgb(247 244 238 / 0.12);
+}
+
+.camisama-zone-chip[aria-pressed="true"],
+.camisama-zone-chip:has(input:checked) {
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+}
+
+.camisama-zone-chip small {
+	font-size: inherit;
+	font-weight: 400;
+	opacity: 0.75;
+}
+
+.camisama-zone-chip input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.camisama-zone-chip:has(input:focus-visible) {
+	outline: 2px solid var(--wp--preset--color--accent);
+	outline-offset: 2px;
+}
+
+.camisama-print .camisama-zone-chip:focus-visible {
+	outline-color: var(--wp--preset--color--accent);
+}
+
+.camisama-price-example dl > .is-entering {
+	animation: camisama-line-in 0.35s ease;
+}
+
+.camisama-price-example__total dd.is-changing {
+	animation: camisama-total-bump 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+@keyframes camisama-line-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(-0.35rem);
+	}
+}
+
+@keyframes camisama-total-bump {
+
+	50% {
+		color: var(--wp--preset--color--primary);
+		transform: scale(1.08);
+	}
+}
+
+.camisama-price-example__total dd {
+	transform-origin: right center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.camisama-zone-map__zone.is-active rect,
+	.camisama-price-example dl > .is-entering,
+	.camisama-price-example__total dd.is-changing {
+		animation: none;
+	}
+}
+
+.camisama-print__more details {
+	margin-block: 0 2rem;
 	border-block: 1px solid var(--wp--preset--color--muted);
 }
 
@@ -498,12 +984,23 @@
 		grid-template-columns: 1fr;
 	}
 
+	.camisama-print__layout {
+		grid-template-areas:
+			"zones"
+			"card"
+			"more";
+	}
+
+	.camisama-print .camisama-price-example {
+		position: static;
+	}
+
 	.camisama-hero h1 {
 		font-size: clamp(3.4rem, 15vw, 5rem);
 	}
 
 	.camisama-hero__visual {
-		width: min(100%, 340px);
+		width: min(100%, 360px);
 		margin-inline: auto;
 	}
 
@@ -511,8 +1008,18 @@
 		font-size: 1rem;
 	}
 
-	.camisama-tee__print--hero span {
-		font-size: clamp(1.5rem, 7vw, 2rem);
+	.camisama-seal {
+		top: -0.75rem;
+		right: -0.25rem;
+		width: 6rem;
+	}
+
+	.camisama-live__tab {
+		padding-inline: 0.85em;
+	}
+
+	.camisama-live__chip {
+		font-size: 0.8125rem;
 	}
 
 	.camisama-examples__grid {

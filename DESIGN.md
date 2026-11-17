@@ -167,7 +167,9 @@ banners) ni estar **sobrecargada** (muchos colores, degradados, sombras y animac
 - Un solo acento fuerte, el rojo sello; índigo para enlaces y foco; mostaza como apoyo puntual.
 - Titulares en Bricolage Grotesque 700 con tracking negativo; texto en Inter.
 - Botones en píldora; tarjetas e imágenes con esquinas de 20–24px.
-- Sin sombras; movimiento mínimo y respetuoso con `prefers-reduced-motion`.
+- Sin sombras. Movimiento con propósito: se mueve lo que enseña el producto (la prenda que
+  cambia, el precio que se suma), nunca adorno; siempre con pausa y alternativa para
+  `prefers-reduced-motion`.
 
 ## Colors
 
@@ -231,11 +233,19 @@ defecto es 1rem. Las secciones de portada usan los pasos XL y 2XL para respirar.
 Sistema plano: no hay sombras de elevación. La única `box-shadow` es funcional: el doble contorno
 (blanco discontinuo con halo de tinta al 35%) que hace visibles las zonas de impresión sobre
 prendas de cualquier color. La profundidad se consigue con el contraste tonal entre papel
-(fondo) y blanco (superficies e imágenes). La única respuesta de movimiento es un zoom de 1.03 en
-la imagen de la tarjeta de producto al pasar el cursor, desactivado con movimiento reducido.
+(fondo) y blanco (superficies e imágenes). En la tienda, la respuesta de movimiento es un zoom de 1.03 en la imagen de la tarjeta de producto al
+pasar el cursor, desactivado con movimiento reducido. La portada tiene más movimiento (ver The
+Movimiento Que Enseña Rule).
 
 ### Named Rules
 **The Papel y Blanco Rule.** La profundidad es tonal: papel al fondo, blanco para lo que se toca o se
+
+**The Movimiento Que Enseña Rule.** (2026-11-17, a pedido del usuario: portada más llamativa y
+dinámica.) Lo que se mueve demuestra el producto: el hero turna ejemplos sobre la prenda con su
+zona y su recargo, el simulador rellena zonas y suma el total, y el sello de marca gira despacio.
+Transiciones cortas (0.25–0.6 s) con un pequeño rebote de "estampar" al aparecer algo. Cualquier
+cosa que avance sola tiene pausa visible, se detiene con el cursor, el foco o fuera de pantalla, y
+con movimiento reducido no avanza ni gira. Siguen fuera los degradados y las sombras decorativas.
 mira de cerca. Si algo necesita destacar, cambia de superficie, no gana una sombra.
 
 ## Shapes
@@ -308,8 +318,8 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
 ### Don't:
 - **Don't** caer en la tienda genérica: nada de fondos blancos planos con todo en gris, banners
   de oferta ni la apariencia por defecto de los bloques de WooCommerce sin el tema aplicado.
-- **Don't** sobrecargar: un acento fuerte por pantalla, sin degradados ni animaciones que
-  compitan con el diseño del cliente.
+- **Don't** sobrecargar: un acento fuerte por pantalla, sin degradados ni animaciones de adorno;
+  en el editor nada se mueve que compita con el diseño del cliente.
 - **Don't** añadir sombras para dar profundidad; usa el contraste papel/blanco.
 - **Don't** usar mostaza para texto sobre papel o blanco.
 - **Don't** mezclar otras tipografías en la interfaz de la tienda (las 8 fuentes del editor son
