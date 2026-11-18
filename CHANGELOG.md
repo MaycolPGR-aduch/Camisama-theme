@@ -23,6 +23,8 @@ conviene recordar.
   - Sin JavaScript se ve como antes, y con movimiento reducido no hay avance automático ni giros.
 
 ### Cambiado
+- Sin pestaña "Valoraciones (0)" en las fichas: las reseñas quedan desactivadas mientras no haya
+  ninguna (`woocommerce_enable_reviews`, en `bin/setup-local.ps1`).
 - **Pago más corto en el móvil** (de 2259 a 2126 px): con una sola opción, el costo del envío, el taller
   de recojo y la forma de pago se muestran como un dato, sin botón de radio ni recuadro. Nombre y
   apellidos van en una fila.

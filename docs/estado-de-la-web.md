@@ -108,10 +108,10 @@ local, 45 pruebas de JS y lint limpio.
 
 ### Contenido (decisiones del negocio)
 
-- [ ] **Pestaña "Valoraciones (0)"**: es prueba social vacía; desactivar las reseñas mientras no
-      haya.
-- [ ] **Zona "Pecho (logo) 10 × 10 cm"**: la página de zonas de impresión la anuncia pero el
-      editor no la ofrece. Quitarla del texto o añadir la zona.
+- [x] **Pestaña "Valoraciones (0)"**: reseñas desactivadas (`bin/setup-local.ps1`). Activarlas en
+      WooCommerce → Ajustes → Productos cuando haya clientes que puedan dejarlas.
+- [x] **Zona "Pecho (logo) 10 × 10 cm"**: ya no se anuncia; la portada lee las zonas reales de cada
+      modelo.
 - [ ] **Fotos reales** de las prendas en lugar de las maquetas generadas; con ellas, encuadrar
       mejor la prenda en el lienzo (en el móvil ocupa la mitad).
 - [ ] **Logotipo definitivo** (el actual es provisional).

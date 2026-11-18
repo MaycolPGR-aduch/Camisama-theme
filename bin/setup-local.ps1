@@ -210,6 +210,9 @@ $storeOptions = [ordered]@{
 	woocommerce_ship_to_countries    = 'specific'
 	woocommerce_weight_unit          = 'kg'
 	woocommerce_dimension_unit       = 'cm'
+	# Sin valoraciones mientras no haya ninguna: "Valoraciones (0)" era prueba social vacía.
+	# Activarlas cuando haya clientes que puedan dejarlas.
+	woocommerce_enable_reviews       = 'no'
 }
 foreach ($option in $storeOptions.GetEnumerator()) {
 	Invoke-Wp option update $option.Key $option.Value --quiet
