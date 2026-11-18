@@ -250,3 +250,39 @@ function camisama_render_home_price(): string {
 	require __DIR__ . '/../template-parts/home-pricing.php';
 	return (string) ob_get_clean();
 }
+
+/**
+ * Vista previa al compartir la portada (WhatsApp, Facebook, X) y descripción para buscadores.
+ *
+ * No hay plugin de SEO; si se instala uno, quitar esto para no duplicar etiquetas. La imagen
+ * se genera desde bin/og-image/og-home.html con bin/og-image/render.ps1.
+ */
+function camisama_home_social_meta(): void {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	$title       = get_bloginfo( 'name' ) . ' – ' . __( 'Tu diseño, tu ley.', 'camisama' );
+	$description = __( 'Personaliza tu camiseta con estampados, texto o tus fotos, desde una unidad. Impresión DTF y entrega en Lima y Callao.', 'camisama' );
+	$image       = get_theme_file_uri( 'assets/images/og-home.png' );
+	$tags        = array(
+		array( 'name', 'description', $description ),
+		array( 'property', 'og:type', 'website' ),
+		// La tienda vende en Perú aunque WordPress use es_MX (más traducciones completas).
+		array( 'property', 'og:locale', 'es_PE' ),
+		array( 'property', 'og:site_name', get_bloginfo( 'name' ) ),
+		array( 'property', 'og:title', $title ),
+		array( 'property', 'og:description', $description ),
+		array( 'property', 'og:url', home_url( '/' ) ),
+		array( 'property', 'og:image', $image ),
+		array( 'property', 'og:image:width', '1200' ),
+		array( 'property', 'og:image:height', '630' ),
+		array( 'property', 'og:image:alt', __( 'Camisama: Tu diseño, tu ley. Camiseta negra con la frase A mi manera.', 'camisama' ) ),
+		array( 'name', 'twitter:card', 'summary_large_image' ),
+	);
+
+	foreach ( $tags as list( $attribute, $key, $value ) ) {
+		printf( '<meta %1$s="%2$s" content="%3$s">' . "\n", esc_attr( $attribute ), esc_attr( $key ), esc_attr( $value ) );
+	}
+}
+add_action( 'wp_head', 'camisama_home_social_meta', 5 );

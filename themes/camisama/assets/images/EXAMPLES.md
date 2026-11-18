@@ -12,3 +12,4 @@ Prompt final utilizado:
 Los ejemplos se identifican como digitales en la portada. La composición sobre las prendas se realiza en HTML/CSS; los enlaces permiten elegir modelo, sin prometer cargar automáticamente el diseño de ejemplo.
 
 - `example-tee-red.png` y `example-tee-navy.png`: maquetas roja y azul marino de la camiseta clásica, del mismo generador, para las muestras de color de la portada y los pasos de "Cómo funciona".
+- `og-home.png` (1200 × 630): vista previa al compartir la portada. Se genera, sin IA, desde `bin/og-image/og-home.html` (fuentes y maquetas del tema) con `pwsh bin/og-image/render.ps1`, que la fotografía con Chrome sin ventana. Para cambiarla, editar el HTML y volver a ejecutar el script.

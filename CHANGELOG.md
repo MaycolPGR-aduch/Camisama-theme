@@ -20,6 +20,9 @@ conviene recordar.
   - Las secciones entran suavemente al hacer scroll, escalonadas.
   - Los botones principales se hunden al pulsarlos y dejan un aro de "sello".
   - En el cierre rojo, el sello "Tu diseño, tu ley." cae sobre una camiseta al llegar.
+- **Vista previa al compartir la portada** por WhatsApp o redes: imagen de 1200 × 630 con la marca
+  (`og-home.png`, generada desde `bin/og-image/`), etiquetas Open Graph y descripción para
+  buscadores.
 
 ## 2026-11-17
 

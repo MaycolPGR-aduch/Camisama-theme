@@ -54,6 +54,15 @@ El movimiento de la portada enseña el producto; no es adorno. Todo es mejora pr
   sobre la camiseta la primera vez que se ve casi entera, y la prenda acusa el golpe. Sin JS o con
   movimiento reducido el sello ya está puesto.
 
+## Vista previa al compartir
+
+`camisama_home_social_meta()` (en `inc/home.php`) añade en la portada la descripción para
+buscadores y las etiquetas Open Graph y de X, con `og-home.png` (1200 × 630). No hay plugin de SEO:
+si se instala uno, quitar esa función para no duplicar etiquetas. WhatsApp y Facebook guardan la
+vista previa en caché; tras cambiar la imagen, renombrarla o usar el depurador de Facebook. La
+imagen solo se ve al compartir cuando la tienda esté publicada (desde `camisama.test` no la pueden
+descargar).
+
 ## Verificación
 
 Ejecutar con WordPress y WooCommerce locales disponibles:
