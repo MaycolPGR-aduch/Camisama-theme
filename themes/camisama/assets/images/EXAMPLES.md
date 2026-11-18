@@ -10,3 +10,5 @@ Prompt final utilizado:
 > Use case: photorealistic-natural. Asset: a small square sample photograph to demonstrate a user's photo printed on a custom t-shirt, not a real customer image or proof of merchandise quality. Create one square natural travel photograph of a tranquil turquoise Andean mountain lake, brown-green mountain ridges and distant snow peaks, soft clear morning light, tactile photographic detail. Clean striking composition readable at thumbnail size, natural restrained colors. Image only, no shirt, no people, no words, no logos, no border, no collage. Save the resulting generated image locally.
 
 Los ejemplos se identifican como digitales en la portada. La composición sobre las prendas se realiza en HTML/CSS; los enlaces permiten elegir modelo, sin prometer cargar automáticamente el diseño de ejemplo.
+
+- `example-tee-red.png` y `example-tee-navy.png`: maquetas roja y azul marino de la camiseta clásica, del mismo generador, para las muestras de color de la portada y los pasos de "Cómo funciona".

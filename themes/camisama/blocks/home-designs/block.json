@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "camisama/home-designs",
+	"title": "Estampados del catálogo",
+	"category": "widgets",
+	"icon": "art",
+	"description": "Franja en movimiento con los estampados publicados del personalizador.",
+	"textdomain": "camisama",
+	"supports": { "html": false }
+}

@@ -170,14 +170,7 @@
 			setPaused( ! root.classList.contains( 'is-paused' ) )
 		);
 
-		if ( 'IntersectionObserver' in window ) {
-			new window.IntersectionObserver( ( entries ) => {
-				root.classList.toggle(
-					'is-offscreen',
-					! entries[ 0 ].isIntersecting
-				);
-			} ).observe( root );
-		}
+		pauseOffscreen( root, 'is-offscreen' );
 
 		// Con movimiento reducido no hay avance automático: los ejemplos se eligen a mano.
 		setPaused( reducedMotion.matches );
@@ -337,6 +330,213 @@
 		render( null );
 	}
 
+	/**
+	 * Añade o quita una clase según el elemento esté en pantalla, para pausar lo que se mueve.
+	 *
+	 * @param {Element} element   Elemento observado.
+	 * @param {string}  className Clase que se pone mientras está fuera.
+	 */
+	function pauseOffscreen( element, className ) {
+		if ( ! ( 'IntersectionObserver' in window ) ) {
+			return;
+		}
+		new window.IntersectionObserver( ( entries ) => {
+			element.classList.toggle(
+				className,
+				! entries[ 0 ].isIntersecting
+			);
+		} ).observe( element );
+	}
+
+	/**
+	 * Franja de estampados: botón de pausa y parada fuera de pantalla. Con movimiento
+	 * reducido la franja ya está quieta (CSS) y el botón no hace falta.
+	 *
+	 * @param {Element} root Sección de la franja.
+	 */
+	function initDesigns( root ) {
+		const pause = root.querySelector( '.camisama-designs__pause' );
+		pauseOffscreen( root, 'is-offscreen' );
+		if ( ! pause || reducedMotion.matches ) {
+			return;
+		}
+		const pauseLabel = pause.getAttribute( 'aria-label' );
+		pause.addEventListener( 'click', () => {
+			const paused = root.classList.toggle( 'is-paused' );
+			pause.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
+			pause.setAttribute(
+				'aria-label',
+				paused ? pause.dataset.playLabel : pauseLabel
+			);
+		} );
+		pause.hidden = false;
+	}
+
+	/**
+	 * Muestras de color de los ejemplos: cambian la maqueta y el tono del texto impreso.
+	 *
+	 * @param {Element} group Grupo de muestras de un ejemplo.
+	 */
+	function initSwatches( group ) {
+		const tee = group.parentElement.querySelector( '.camisama-tee' );
+		const base = tee && tee.querySelector( '.camisama-tee__base' );
+		if ( ! base ) {
+			return;
+		}
+		const swatches = Array.from(
+			group.querySelectorAll( '.camisama-swatch' )
+		);
+
+		swatches.forEach( ( swatch ) => {
+			// Precarga al acercarse, para que el cambio sea inmediato.
+			swatch.addEventListener(
+				'pointerenter',
+				() => {
+					new window.Image().src = swatch.dataset.src;
+				},
+				{ once: true }
+			);
+			swatch.addEventListener( 'click', () => {
+				swatches.forEach( ( other ) =>
+					other.setAttribute(
+						'aria-pressed',
+						other === swatch ? 'true' : 'false'
+					)
+				);
+				const apply = () => {
+					base.src = swatch.dataset.src;
+					tee.dataset.tone = swatch.dataset.tone;
+					base.classList.remove( 'is-swapping' );
+				};
+				if ( reducedMotion.matches ) {
+					apply();
+					return;
+				}
+				base.classList.add( 'is-swapping' );
+				window.setTimeout( apply, 200 );
+			} );
+		} );
+		group.hidden = false;
+	}
+
+	/**
+	 * Pasos: el que cruza el centro de la pantalla pasa a ser el actual y la prenda muestra
+	 * su estado.
+	 *
+	 * @param {Element} root Sección de los pasos.
+	 */
+	function initSteps( root ) {
+		const steps = Array.from(
+			root.querySelectorAll( '[data-step-index]' )
+		);
+		if ( steps.length === 0 || ! ( 'IntersectionObserver' in window ) ) {
+			return;
+		}
+
+		function setStep( index ) {
+			root.dataset.step = String( index );
+			steps.forEach( ( step, position ) =>
+				step.classList.toggle( 'is-current', position === index )
+			);
+		}
+
+		const observer = new window.IntersectionObserver(
+			( entries ) => {
+				entries.forEach( ( entry ) => {
+					if ( entry.isIntersecting ) {
+						setStep( Number( entry.target.dataset.stepIndex ) );
+					}
+				} );
+			},
+			{ rootMargin: '-45% 0px -45% 0px' }
+		);
+		steps.forEach( ( step ) => observer.observe( step ) );
+
+		root.classList.add( 'is-enhanced' );
+		setStep( 0 );
+	}
+
+	/**
+	 * Entradas al hacer scroll. Los bloques de un mismo grupo entran escalonados. Con movimiento
+	 * reducido no se toca nada: todo se ve desde el principio.
+	 */
+	function initReveal() {
+		if ( reducedMotion.matches || ! ( 'IntersectionObserver' in window ) ) {
+			return;
+		}
+		const groups = [
+			'.camisama-designs__head',
+			'.camisama-section-heading',
+			'.camisama-examples__grid > figure',
+			'.camisama-models .wc-block-product',
+			'.camisama-steps h2',
+			'.camisama-print__zones',
+			'.camisama-faq__intro',
+			'.camisama-faq__list > details',
+			'.camisama-home-close__copy',
+		];
+		const observer = new window.IntersectionObserver(
+			( entries ) => {
+				entries.forEach( ( entry ) => {
+					if ( entry.isIntersecting ) {
+						entry.target.classList.add( 'is-visible' );
+						observer.unobserve( entry.target );
+					}
+				} );
+			},
+			{ rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+		);
+		groups.forEach( ( selector ) => {
+			document
+				.querySelectorAll( selector )
+				.forEach( ( element, index ) => {
+					element.style.setProperty(
+						'--reveal-delay',
+						`${ ( index % 4 ) * 90 }ms`
+					);
+					element.classList.add( 'camisama-reveal' );
+					observer.observe( element );
+				} );
+		} );
+	}
+
+	/**
+	 * Botones principales: aro de "sello" al pulsarlos.
+	 */
+	function initStampButtons() {
+		document.addEventListener( 'pointerdown', ( event ) => {
+			const button = event.target.closest( '.camisama-home-button' );
+			if ( button ) {
+				replay( button, 'is-stamped' );
+			}
+		} );
+	}
+
+	/**
+	 * Cierre: el sello cae la primera vez que la camiseta se ve casi entera.
+	 *
+	 * @param {Element} root Sección de cierre.
+	 */
+	function initClose( root ) {
+		if ( reducedMotion.matches || ! ( 'IntersectionObserver' in window ) ) {
+			return;
+		}
+		root.classList.add( 'is-armed' );
+		const observer = new window.IntersectionObserver(
+			( entries ) => {
+				if ( entries[ 0 ].isIntersecting ) {
+					root.classList.add( 'is-stamped' );
+					root.classList.remove( 'is-armed' );
+					observer.disconnect();
+				}
+			},
+			{ threshold: 0.6 }
+		);
+		observer.observe(
+			root.querySelector( '.camisama-home-close__visual' ) || root
+		);
+	}
+
 	function init() {
 		const prices = readPrices();
 		const hero = document.querySelector( '[data-camisama-live]' );
@@ -347,6 +547,23 @@
 		if ( section && prices ) {
 			initPricing( section, prices );
 		}
+		const designs = document.querySelector( '[data-camisama-designs]' );
+		if ( designs ) {
+			initDesigns( designs );
+		}
+		document
+			.querySelectorAll( '.camisama-swatches' )
+			.forEach( initSwatches );
+		const steps = document.querySelector( '[data-camisama-steps]' );
+		if ( steps ) {
+			initSteps( steps );
+		}
+		const close = document.querySelector( '[data-camisama-close]' );
+		if ( close ) {
+			initClose( close );
+		}
+		initStampButtons();
+		initReveal();
 	}
 
 	if ( document.readyState === 'loading' ) {

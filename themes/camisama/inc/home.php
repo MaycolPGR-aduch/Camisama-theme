@@ -187,6 +187,38 @@ function camisama_register_home_price_block(): void {
 			'supports'        => array( 'html' => false ),
 		)
 	);
+	register_block_type(
+		__DIR__ . '/../blocks/home-designs',
+		array(
+			'editor_script'   => 'camisama-home-blocks',
+			'render_callback' => 'camisama_render_home_designs',
+			'supports'        => array( 'html' => false ),
+		)
+	);
+}
+
+/**
+ * Estampados publicados del catálogo del personalizador, en el orden del administrador.
+ *
+ * @return list<array<string, mixed>> Estampados con archivo, o lista vacía sin el plugin.
+ */
+function camisama_home_designs(): array {
+	if ( ! class_exists( \Camisama\Customizer\Designs\DesignRepository::class ) ) {
+		return array();
+	}
+
+	return ( new \Camisama\Customizer\Designs\DesignRepository() )->query( null, 1, 12 )['items'];
+}
+
+/**
+ * Franja de estampados: dinámica para que siga al catálogo aunque se guarde la plantilla.
+ *
+ * @return string HTML de la franja, o vacío si no hay estampados.
+ */
+function camisama_render_home_designs(): string {
+	ob_start();
+	require __DIR__ . '/../template-parts/home-designs.php';
+	return (string) ob_get_clean();
 }
 add_action( 'init', 'camisama_register_home_price_block' );
 

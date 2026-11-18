@@ -494,6 +494,177 @@
 	}
 }
 
+/*
+ * Franja de estampados: dos copias de la lista desplazándose a la izquierda;
+ * al llegar a la mitad el bucle vuelve sin costura. Se pausa con el cursor,
+ * con el botón y fuera de pantalla.
+ */
+.camisama-designs {
+	padding-block: clamp(2rem, 4vw, 3rem);
+	border-block: 1px solid var(--wp--preset--color--border);
+	overflow: hidden;
+}
+
+.camisama-designs__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	gap: 0.5rem 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.camisama-home .camisama-designs__head h2 {
+	max-width: none;
+	font-size: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+.camisama-designs__head p {
+	flex: 1 1 18rem;
+	margin: 0;
+	color: var(--wp--preset--color--muted);
+}
+
+.camisama-designs__pause {
+	display: inline-flex;
+	box-sizing: border-box;
+	width: 44px;
+	height: 44px;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+	cursor: pointer;
+}
+
+.camisama-designs__pause[hidden] {
+	display: none;
+}
+
+.camisama-designs__pause:hover {
+	background: var(--wp--preset--color--border);
+}
+
+.camisama-designs__pause svg {
+	fill: currentcolor;
+}
+
+.camisama-designs__pause[aria-pressed="true"] .camisama-live__icon-pause {
+	display: none;
+}
+
+.camisama-designs__pause[aria-pressed="true"] .camisama-live__icon-play {
+	display: inline;
+}
+
+/* Bordes que se desvanecen: los estampados entran y salen, no se cortan. */
+.camisama-designs__viewport {
+	mask-image: linear-gradient(90deg, transparent, #000 6% 94%, transparent);
+}
+
+.camisama-designs__track {
+	display: flex;
+	width: max-content;
+	animation: camisama-designs-loop 45s linear infinite;
+}
+
+.camisama-designs:hover .camisama-designs__track,
+.camisama-designs.is-paused .camisama-designs__track,
+.camisama-designs.is-offscreen .camisama-designs__track {
+	animation-play-state: paused;
+}
+
+@keyframes camisama-designs-loop {
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.camisama-designs__list {
+	display: flex;
+	gap: 1rem;
+	margin: 0;
+	padding: 0 1rem 0 0;
+	list-style: none;
+}
+
+.camisama-designs__item {
+	display: grid;
+	width: clamp(8.5rem, 12vw, 10rem);
+	justify-items: center;
+	gap: 0.2rem;
+	text-align: center;
+}
+
+.camisama-designs__art {
+	position: relative;
+	display: block;
+	width: 100%;
+	aspect-ratio: 1;
+	margin-bottom: 0.5rem;
+	border-radius: 20px;
+	background: var(--wp--preset--color--surface);
+	transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+.camisama-designs__item:hover .camisama-designs__art {
+	transform: rotate(-4deg) scale(1.06);
+}
+
+/* Fija dentro de la ficha: un SVG alto (Rayo, Llama) no la estira. */
+.camisama-designs__art img {
+	position: absolute;
+	inset: 18%;
+	width: 64%;
+	height: 64%;
+	object-fit: contain;
+}
+
+.camisama-designs__name {
+	font-family: var(--wp--preset--font-family--display);
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.camisama-designs__meta {
+	color: var(--wp--preset--color--muted);
+	font-size: 0.875rem;
+}
+
+.camisama-designs__meta--premium {
+	color: var(--wp--preset--color--primary);
+	font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	/* Quieta y deslizable; sin la copia del bucle. */
+	.camisama-designs__viewport {
+		overflow-x: auto;
+		mask-image: none;
+	}
+
+	.camisama-designs__track {
+		animation: none;
+	}
+
+	.camisama-designs__list[aria-hidden="true"],
+	.camisama-designs__pause {
+		display: none;
+	}
+
+	.camisama-designs__list {
+		padding-left: clamp(1.25rem, 4vw, 3rem);
+	}
+
+	.camisama-designs__art {
+		transition: none;
+	}
+}
+
 .camisama-examples {
 	background: var(--wp--preset--color--surface);
 }
@@ -520,6 +691,72 @@
 
 .camisama-examples figcaption {
 	margin-top: 1.25rem;
+}
+
+.camisama-tee[data-tone="light"] .camisama-tee__print--text {
+	color: var(--wp--preset--color--contrast);
+}
+
+.camisama-tee__base.is-swapping {
+	opacity: 0;
+}
+
+.camisama-examples .camisama-tee__base {
+	transition: opacity 0.2s ease;
+}
+
+/* Colores de la prenda: círculos con aro interior blanco, como en el editor. */
+.camisama-swatches {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin-top: 0.75rem;
+}
+
+.camisama-swatches[hidden] {
+	display: none;
+}
+
+.camisama-swatch {
+	display: inline-grid;
+	box-sizing: border-box;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	place-items: center;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	cursor: pointer;
+}
+
+.camisama-swatch::before {
+	box-sizing: border-box;
+	width: 1.75rem;
+	height: 1.75rem;
+	border: 1.5px solid var(--wp--preset--color--border);
+	border-radius: 50%;
+	background: var(--swatch);
+	box-shadow: inset 0 0 0 2px var(--wp--preset--color--surface);
+	content: "";
+	transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
+.camisama-swatch:hover::before {
+	transform: scale(1.12);
+}
+
+.camisama-swatch[aria-pressed="true"]::before {
+	border: 2px solid var(--wp--preset--color--contrast);
+	transform: scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.camisama-examples .camisama-tee__base,
+	.camisama-swatch::before {
+		transition: none;
+	}
 }
 
 .camisama-examples figcaption p {
@@ -618,6 +855,235 @@
 .camisama-steps__list p {
 	margin: 0.5rem 0 0;
 	color: var(--wp--preset--color--muted);
+}
+
+/*
+ * Pasos que avanzan con el scroll: la prenda se queda fija mientras pasan los
+ * pasos y se va armando (data-step: 0 color, 1 diseño, 2 talla y pedido).
+ */
+.camisama-steps__layout {
+	grid-template-areas:
+		"title list"
+		"stage list";
+	grid-template-rows: auto 1fr;
+	align-items: start;
+	row-gap: 2rem;
+}
+
+.camisama-steps h2 {
+	grid-area: title;
+}
+
+.camisama-steps__list {
+	grid-area: list;
+}
+
+.camisama-steps__stage {
+	position: sticky;
+	top: 2rem;
+	grid-area: stage;
+	width: min(100%, 360px);
+}
+
+.camisama-steps__tee {
+	container-type: inline-size;
+}
+
+.camisama-steps.is-enhanced .camisama-steps__list li {
+	min-height: 34vh;
+	opacity: 0.35;
+	transition: opacity 0.4s ease;
+}
+
+.camisama-steps.is-enhanced .camisama-steps__list li.is-current {
+	opacity: 1;
+}
+
+.camisama-steps.is-enhanced .camisama-steps__list li:last-child {
+	min-height: 0;
+}
+
+.camisama-steps__list li::before {
+	transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+	transform-origin: left top;
+}
+
+.camisama-steps.is-enhanced .camisama-steps__list li.is-current::before {
+	transform: scale(1.35);
+}
+
+.camisama-steps__base {
+	position: absolute;
+	inset: 0;
+}
+
+.camisama-steps.is-enhanced[data-step="0"] .camisama-steps__base--navy {
+	animation: camisama-steps-dye 1.6s ease both;
+}
+
+@keyframes camisama-steps-dye {
+
+	0%,
+	40% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.camisama-steps__swatches {
+	position: absolute;
+	top: 7%;
+	left: 50%;
+	display: flex;
+	gap: 0.4rem;
+	opacity: 0;
+	transform: translate(-50%, -0.5rem);
+	transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.camisama-steps__swatches > span {
+	box-sizing: border-box;
+	width: 1.5rem;
+	height: 1.5rem;
+	border: 1.5px solid var(--wp--preset--color--border);
+	border-radius: 50%;
+	background: var(--swatch);
+	box-shadow: inset 0 0 0 2px var(--wp--preset--color--surface);
+}
+
+.camisama-steps__swatches > .is-chosen {
+	border: 2px solid var(--wp--preset--color--contrast);
+}
+
+.camisama-steps[data-step="0"] .camisama-steps__swatches {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+.camisama-steps.is-enhanced[data-step="0"] .camisama-steps__swatches > .is-chosen {
+	animation: camisama-steps-pick 1.6s ease both;
+}
+
+@keyframes camisama-steps-pick {
+
+	0%,
+	30% {
+		border-color: var(--wp--preset--color--border);
+		transform: none;
+	}
+
+	45% {
+		transform: scale(1.3);
+	}
+
+	100% {
+		border-color: var(--wp--preset--color--contrast);
+		transform: scale(1.12);
+	}
+}
+
+/* El diseño, dentro del frente adulto (igual que en el hero). */
+.camisama-steps__zone {
+	position: absolute;
+	top: 30%;
+	left: 33.2%;
+	display: grid;
+	width: 33.7%;
+	justify-items: center;
+	gap: 0.4em;
+	color: var(--wp--preset--color--base);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 6cqi;
+	font-weight: 800;
+	line-height: 1;
+	opacity: 0;
+	transform: scale(1.18) rotate(-3deg);
+	transition: opacity 0.25s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.camisama-steps__zone img {
+	width: 52%;
+	height: auto;
+}
+
+.camisama-steps[data-step="1"] .camisama-steps__zone,
+.camisama-steps[data-step="2"] .camisama-steps__zone {
+	opacity: 1;
+	transform: none;
+}
+
+.camisama-steps__order {
+	position: absolute;
+	bottom: 6%;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	opacity: 0;
+	transform: translate(-50%, 0.75rem);
+	transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+	white-space: nowrap;
+}
+
+.camisama-steps[data-step="2"] .camisama-steps__order {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+.camisama-steps__sizes {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.camisama-steps__sizes > span,
+.camisama-steps__ready {
+	display: inline-grid;
+	min-width: 1.9rem;
+	height: 1.9rem;
+	box-sizing: border-box;
+	padding-inline: 0.5rem;
+	place-items: center;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	border-radius: 999px;
+	background: var(--wp--preset--color--surface);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.camisama-steps__sizes > .is-chosen,
+.camisama-steps__ready {
+	background: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}
+
+.camisama-steps__ready::before {
+	margin-right: 0.35em;
+	color: var(--wp--preset--color--accent);
+	content: "✓";
+}
+
+.camisama-steps__ready {
+	display: inline-flex;
+	align-items: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.camisama-steps.is-enhanced .camisama-steps__list li,
+	.camisama-steps__list li::before,
+	.camisama-steps__swatches,
+	.camisama-steps__zone,
+	.camisama-steps__order {
+		transition: none;
+	}
+
+	.camisama-steps.is-enhanced[data-step="0"] .camisama-steps__base--navy,
+	.camisama-steps.is-enhanced[data-step="0"] .camisama-steps__swatches > .is-chosen {
+		animation: none;
+	}
 }
 
 .camisama-print {
@@ -935,14 +1401,154 @@
 }
 
 .camisama-home-close__layout {
-	display: flex;
+	display: grid;
+	grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
 	align-items: center;
-	justify-content: space-between;
-	gap: 2rem;
+	gap: clamp(2rem, 5vw, 4rem);
 }
 
 .camisama-home-close p {
-	margin-bottom: 0;
+	margin-bottom: 1.75rem;
+}
+
+.camisama-home-close__visual {
+	width: min(100%, 340px);
+	margin: 0 0 0 auto;
+}
+
+.camisama-home-close__tee {
+	container-type: inline-size;
+}
+
+/* Sello de goma sobre el frente: borde y letra en rojo, un poco girado. */
+.camisama-stamp {
+	position: absolute;
+	top: 37%;
+	left: 50%;
+	display: grid;
+	box-sizing: border-box;
+	padding: 0.35em 0.6em 0.3em;
+	border: 0.12em solid var(--wp--preset--color--primary);
+	border-radius: 0.3em;
+	color: var(--wp--preset--color--primary);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 6cqi;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.01em;
+	text-align: center;
+	white-space: nowrap;
+	transform: translateX(-50%) rotate(-8deg);
+}
+
+.camisama-home-close.is-armed .camisama-stamp {
+	opacity: 0;
+}
+
+.camisama-home-close.is-stamped .camisama-stamp {
+	animation: camisama-stamp-drop 0.7s cubic-bezier(0.3, 0, 0.2, 1) 0.25s both;
+}
+
+.camisama-home-close.is-stamped .camisama-home-close__tee {
+	animation: camisama-stamp-hit 0.35s ease-out 0.62s;
+}
+
+@keyframes camisama-stamp-drop {
+
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) rotate(-16deg) scale(2.4);
+	}
+
+	55% {
+		opacity: 1;
+		transform: translateX(-50%) rotate(-8deg) scale(0.92);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(-50%) rotate(-8deg) scale(1);
+	}
+}
+
+@keyframes camisama-stamp-hit {
+
+	30% {
+		transform: translateY(3px) scale(0.99);
+	}
+}
+
+/*
+ * Entradas al hacer scroll: home.js marca los bloques con camisama-reveal y
+ * les pone is-visible al aparecer. Sin JS o con movimiento reducido no se
+ * ocultan nunca.
+ */
+.camisama-reveal {
+	opacity: 0;
+	transform: translateY(1.5rem);
+	transition:
+		opacity 0.6s ease var(--reveal-delay, 0s),
+		transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--reveal-delay, 0s);
+}
+
+.camisama-reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+/* Botón que "estampa": se hunde al pulsarlo y deja un aro que se abre. */
+.camisama-home-button {
+	position: relative;
+	transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.camisama-home-button:active {
+	transform: scale(0.96);
+}
+
+.camisama-home-button.is-stamped::after {
+	position: absolute;
+	inset: -2px;
+	border: 2px solid var(--wp--preset--color--primary);
+	border-radius: inherit;
+	content: "";
+	pointer-events: none;
+	animation: camisama-button-stamp 0.55s ease-out forwards;
+}
+
+.camisama-home-button--paper.is-stamped::after {
+	border-color: var(--wp--preset--color--base);
+}
+
+@keyframes camisama-button-stamp {
+
+	from {
+		opacity: 0.9;
+		transform: scale(1);
+	}
+
+	to {
+		opacity: 0;
+		transform: scale(1.18, 1.6);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.camisama-home-close.is-stamped .camisama-stamp,
+	.camisama-home-close.is-stamped .camisama-home-close__tee,
+	.camisama-home-button.is-stamped::after {
+		animation: none;
+	}
+
+	.camisama-home-button,
+	.camisama-reveal {
+		transition: none;
+	}
+
+	.camisama-home-button:active {
+		transform: none;
+	}
 }
 
 .camisama-home-button--paper {
@@ -995,6 +1601,62 @@
 		position: static;
 	}
 
+	/* La prenda se queda arriba, pequeña, mientras pasan los pasos. */
+	.camisama-steps__layout {
+		grid-template-areas:
+			"title"
+			"stage"
+			"list";
+		grid-template-rows: auto;
+		row-gap: 1.5rem;
+	}
+
+	.camisama-steps__stage {
+		z-index: 1;
+		top: 0;
+		display: grid;
+		width: 100%;
+		padding-block: 0.5rem;
+		justify-items: center;
+		background: var(--wp--preset--color--base);
+	}
+
+	.camisama-steps__tee {
+		width: min(100%, 220px);
+	}
+
+	.camisama-steps.is-enhanced .camisama-steps__list li {
+		min-height: 26vh;
+	}
+
+	.camisama-steps__order {
+		bottom: 4%;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	/* Modelos en carrusel: se desliza con el dedo y asoma el siguiente. */
+	.camisama-models .wc-block-product-template {
+		--camisama-bleed: var(--wp--style--root--padding-left, 1.25rem);
+
+		width: calc(100% + 2 * var(--camisama-bleed));
+		max-width: none;
+		grid-template-columns: none;
+		grid-auto-columns: 68%;
+		grid-auto-flow: column;
+		margin-inline: calc(-1 * var(--camisama-bleed));
+		padding: 0 var(--camisama-bleed) 0.75rem;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-padding-inline: var(--camisama-bleed);
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+
+	.camisama-models .wc-block-product {
+		scroll-snap-align: start;
+	}
+
 	.camisama-hero h1 {
 		font-size: clamp(3.4rem, 15vw, 5rem);
 	}
@@ -1029,9 +1691,39 @@
 
 	.camisama-examples figure {
 		display: grid;
+		grid-template-areas:
+			"tee caption"
+			"swatches caption";
 		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
 		align-items: center;
-		gap: 1rem;
+		gap: 0 1rem;
+	}
+
+	.camisama-examples .camisama-tee {
+		grid-area: tee;
+	}
+
+	.camisama-examples figcaption {
+		grid-area: caption;
+	}
+
+	/* En el móvil, cuatro círculos de 44 px no caben bajo una prenda pequeña. */
+	.camisama-swatches {
+		grid-area: swatches;
+		flex-wrap: nowrap;
+		justify-content: center;
+		gap: 0;
+		margin-top: 0.25rem;
+	}
+
+	.camisama-swatch {
+		width: 34px;
+		height: 44px;
+	}
+
+	.camisama-swatch::before {
+		width: 1.375rem;
+		height: 1.375rem;
 	}
 
 	.camisama-examples figcaption {
@@ -1055,7 +1747,11 @@
 	}
 
 	.camisama-home-close__layout {
-		align-items: start;
-		flex-direction: column;
+		grid-template-columns: 1fr;
+	}
+
+	.camisama-home-close__visual {
+		width: min(100%, 240px);
+		margin-inline: auto;
 	}
 }

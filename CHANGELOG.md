@@ -7,6 +7,20 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-18
+
+### Añadido
+- **Portada más dinámica, tanda 2** ([docs/home.md](docs/home.md)):
+  - Franja de estampados del catálogo bajo el hero, en movimiento y con pausa. Sale del catálogo
+    real del personalizador, con categoría o recargo premium (bloque `camisama/home-designs`).
+  - Muestras de color en los ejemplos: blanco, negro, rojo y azul marino de la camiseta clásica.
+  - "Cómo funciona" avanza con el scroll: la prenda se queda fija y se arma paso a paso.
+  - En el móvil, los modelos se deslizan en carrusel.
+- **Portada más dinámica, tanda 3**:
+  - Las secciones entran suavemente al hacer scroll, escalonadas.
+  - Los botones principales se hunden al pulsarlos y dejan un aro de "sello".
+  - En el cierre rojo, el sello "Tu diseño, tu ley." cae sobre una camiseta al llegar.
+
 ## 2026-11-17
 
 ### Añadido
