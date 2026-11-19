@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace Camisama\Customizer\Tests\Unit\Checkout;
 
 use Camisama\Customizer\Checkout\OrderTracking;
+use Camisama\Customizer\Checkout\PaymentTimes;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,6 +26,16 @@ final class OrderTrackingTest extends TestCase {
 		$this->assertStringContainsString( 'preparando', OrderTracking::message( 'processing' ) );
 		$this->assertStringContainsString( 'escríbenos', OrderTracking::message( 'cancelled' ) );
 		$this->assertSame( '', OrderTracking::message( 'estado-de-otro-plugin' ) );
+	}
+
+	/**
+	 * Con la fecha límite, la transferencia dice hasta cuándo y cuánto se tarda después.
+	 */
+	public function test_on_hold_says_until_when(): void {
+		$message = OrderTracking::message( 'on-hold', '06/11/2026 a las 17:18' );
+
+		$this->assertStringContainsString( 'hasta el 06/11/2026 a las 17:18', $message );
+		$this->assertStringContainsString( PaymentTimes::PREPARE, $message );
 	}
 
 	/**

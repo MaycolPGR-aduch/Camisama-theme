@@ -21,6 +21,7 @@ use Camisama\Customizer\Cart\ProductionPage;
 use Camisama\Customizer\Cart\PreviewStore;
 use Camisama\Customizer\Checkout\Delivery;
 use Camisama\Customizer\Checkout\OrderTracking;
+use Camisama\Customizer\Checkout\PaymentTimes;
 use Camisama\Customizer\Checkout\Texts;
 use Camisama\Customizer\Config\ProductConfigRepository;
 use Camisama\Customizer\Designs\DesignPostType;
@@ -117,6 +118,7 @@ final class Plugin {
 		( new Delivery( $this ) )->register();
 		( new Texts() )->register();
 		( new OrderTracking() )->register();
+		( new PaymentTimes() )->register();
 		( new CatalogTexts( $configs ) )->register();
 		( new CardPrint( $configs ) )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );

@@ -51,6 +51,25 @@ final class OrderTracking {
 		add_filter( 'woocommerce_order_tracking_status', array( self::class, 'status' ), 10, 2 );
 		add_filter( 'render_block_woocommerce/order-confirmation-status', array( self::class, 'confirmation_hint' ) );
 		add_action( 'woocommerce_email_after_order_table', array( self::class, 'email_hint' ), 20, 3 );
+		add_action( 'woocommerce_view_order', array( self::class, 'bank_details' ), 5 );
+	}
+
+	/**
+	 * Mientras se espera la transferencia, a qué cuenta hacerla: lo mismo que la confirmación del
+	 * pedido (instrucciones y, si están puestos en WooCommerce, los datos de la cuenta).
+	 *
+	 * @param int $order_id Pedido.
+	 */
+	public static function bank_details( $order_id ): void {
+		$order   = wc_get_order( $order_id );
+		$gateway = WC()->payment_gateways()->payment_gateways()['bacs'] ?? null;
+		if ( ! $order instanceof \WC_Order || 'on-hold' !== $order->get_status() || 'bacs' !== $order->get_payment_method() || ! $gateway instanceof \WC_Gateway_BACS ) {
+			return;
+		}
+
+		echo '<section class="camisama-bank-details">';
+		$gateway->thankyou_page( $order->get_id() );
+		echo '</section>';
 	}
 
 	/**
@@ -97,14 +116,20 @@ final class OrderTracking {
 	/**
 	 * Qué significa cada estado para quien compra.
 	 *
-	 * @param string $status Estado del pedido, sin "wc-".
+	 * @param string $status   Estado del pedido, sin "wc-".
+	 * @param string $deadline Fecha límite para transferir, ya formateada, o vacío.
 	 * @return string Explicación, o vacío si no hay una propia.
 	 */
-	public static function message( string $status ): string {
+	public static function message( string $status, string $deadline = '' ): string {
 		return match ( $status ) {
 			'pending'    => __( 'Aún no recibimos el pago.', 'camisama-customizer' ),
-			'on-hold'    => __( 'Esperamos tu transferencia: en cuanto la confirmemos, empezamos a preparar tu prenda.', 'camisama-customizer' ),
-			'processing' => __( 'Pago confirmado: estamos preparando tu prenda.', 'camisama-customizer' ),
+			'on-hold'    => '' !== $deadline
+				/* translators: 1: fecha límite, 2: tiempo de preparación. */
+				? sprintf( __( 'Esperamos tu transferencia hasta el %1$s. En cuanto la confirmemos, preparamos tu prenda en %2$s.', 'camisama-customizer' ), $deadline, PaymentTimes::PREPARE )
+				/* translators: %s: tiempo de preparación. */
+				: sprintf( __( 'Esperamos tu transferencia: en cuanto la confirmemos, preparamos tu prenda en %s.', 'camisama-customizer' ), PaymentTimes::PREPARE ),
+			/* translators: %s: tiempo de preparación. */
+			'processing' => sprintf( __( 'Pago confirmado: estamos preparando tu prenda (%s).', 'camisama-customizer' ), PaymentTimes::PREPARE ),
 			'completed'  => __( 'Pedido completado.', 'camisama-customizer' ),
 			'cancelled'  => __( 'Pedido cancelado. Si no lo esperabas, escríbenos.', 'camisama-customizer' ),
 			'refunded'   => __( 'Te devolvimos el pago de este pedido.', 'camisama-customizer' ),
@@ -121,7 +146,11 @@ final class OrderTracking {
 	 * @return string
 	 */
 	public static function status( string $text, \WC_Order $order ): string {
-		$message = self::message( $order->get_status() );
+		$created  = $order->get_date_created();
+		$deadline = 'bacs' === $order->get_payment_method() && null !== $created
+			? PaymentTimes::pay_by( $created )->format( 'd/m/Y' ) . ' a las ' . PaymentTimes::pay_by( $created )->format( 'H:i' )
+			: '';
+		$message  = self::message( $order->get_status(), $deadline );
 		if ( '' === $message ) {
 			return $text;
 		}

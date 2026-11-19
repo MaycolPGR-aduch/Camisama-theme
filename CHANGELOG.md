@@ -13,6 +13,12 @@ conviene recordar.
 - **Crítica independiente de tienda, carrito y pago** (dos evaluadores, sin portada): **24/40**,
   desde 18/40. Informe en `.impeccable/critique/`.
 
+- **Plazos de la transferencia** (`Checkout\PaymentTimes`, **provisionales**: 48 horas para pagar,
+  preparación en 2 a 3 días hábiles y envío en 1 a 2 días hábiles más). Salen en "Cómo pagas", en
+  las instrucciones de la confirmación y del correo, y en "Sigue tu pedido", que además calcula la
+  fecha límite ("Esperamos tu transferencia hasta el 06/11/2026 a las 17:18") y muestra los datos de
+  la cuenta cuando estén configurados.
+
 ### Cambiado
 - **Primero dónde, luego quién:** en el pago, departamento, provincia y distrito van al principio de
   la dirección, antes de escribir la calle. En la dirección de entrega, "Con envío a domicilio"
