@@ -8,7 +8,14 @@
  */
 import { __ } from '@wordpress/i18n';
 
-import { districtsOf, outsideDelivery, partsOf, provincesOf } from './tree';
+import {
+	byDelivery,
+	districtsOf,
+	outsideDelivery,
+	partsOf,
+	provincesOf,
+	withRate,
+} from './tree';
 import './style.scss';
 
 const FIELD = 'input[id$="-camisama-district"]';
@@ -16,6 +23,7 @@ const WRAPPER = '.wc-block-components-text-input';
 const ERROR = '.wc-block-components-validation-error';
 
 let tree = null;
+const rates = window.camisamaUbigeo?.rates ?? {};
 
 /**
  * Da un valor al campo de WooCommerce como si lo escribiera el cliente.
@@ -42,18 +50,47 @@ function setCode( input, value ) {
  * Rellena un combo; sin opciones queda desactivado, con lo que falta elegir antes.
  *
  * @param {HTMLSelectElement} select      Combo.
- * @param {Array}             items       Opciones: [ código, nombre ].
+ * @param {Array}             groups      Grupos: [ título o vacío, [ [ código, nombre ] ] ].
  * @param {string}            placeholder Primera opción.
  * @param {string}            value       Opción elegida.
  */
-function fill( select, items, placeholder, value = '' ) {
-	const first = new window.Option( placeholder, '' );
-	select.replaceChildren(
-		first,
-		...items.map( ( item ) => new window.Option( item[ 1 ], item[ 0 ] ) )
-	);
+function fill( select, groups, placeholder, value = '' ) {
+	const option = ( item ) => new window.Option( item[ 1 ], item[ 0 ] );
+	const nodes = groups
+		.filter( ( [ , items ] ) => items.length )
+		.flatMap( ( [ label, items ] ) => {
+			if ( ! label ) {
+				return items.map( option );
+			}
+			const optgroup = document.createElement( 'optgroup' );
+			optgroup.label = label;
+			optgroup.append( ...items.map( option ) );
+			return [ optgroup ];
+		} );
+	select.replaceChildren( new window.Option( placeholder, '' ), ...nodes );
 	select.value = value;
-	select.disabled = ! items.length;
+	select.disabled = ! nodes.length;
+}
+
+/**
+ * En la dirección de entrega, lo que tiene envío a domicilio va primero y aparte del resto.
+ *
+ * @param {Array}   items    Departamentos o provincias.
+ * @param {boolean} shipping Si es la dirección de entrega.
+ * @return {Array} Grupos para fill().
+ */
+function deliveryGroups( items, shipping ) {
+	const groups = byDelivery( items );
+	if ( ! shipping || ! groups[ 0 ].length ) {
+		return [ [ '', items ] ];
+	}
+	return [
+		[ __( 'Con envío a domicilio', 'camisama-customizer' ), groups[ 0 ] ],
+		[
+			__( 'Solo recojo en el taller', 'camisama-customizer' ),
+			groups[ 1 ],
+		],
+	];
 }
 
 /**
@@ -83,6 +120,7 @@ function comboField( id, label ) {
  */
 function createBox( input ) {
 	const group = input.id.split( '-' )[ 0 ];
+	const shipping = group === 'shipping';
 	const box = document.createElement( 'div' );
 	box.className = 'camisama-ubigeo';
 	box.dataset.group = group;
@@ -103,7 +141,7 @@ function createBox( input ) {
 
 	// El aviso de los envíos solo tiene sentido en la dirección de entrega.
 	let note = null;
-	if ( group === 'shipping' ) {
+	if ( shipping ) {
 		note = document.createElement( 'p' );
 		note.className = 'camisama-ubigeo__note';
 		note.setAttribute( 'role', 'status' );
@@ -133,7 +171,10 @@ function createBox( input ) {
 	const fillProvinces = ( value = '' ) =>
 		fill(
 			province.select,
-			provincesOf( tree, department.select.value ),
+			deliveryGroups(
+				provincesOf( tree, department.select.value ),
+				shipping
+			),
 			department.select.value
 				? __( 'Elige la provincia', 'camisama-customizer' )
 				: __( 'Primero, el departamento', 'camisama-customizer' ),
@@ -142,7 +183,14 @@ function createBox( input ) {
 	const fillDistricts = ( value = '' ) =>
 		fill(
 			district.select,
-			districtsOf( tree, province.select.value ),
+			[
+				[
+					'',
+					districtsOf( tree, province.select.value ).map( ( item ) =>
+						shipping ? withRate( item, rates ) : item
+					),
+				],
+			],
 			province.select.value
 				? __( 'Elige el distrito', 'camisama-customizer' )
 				: __( 'Primero, la provincia', 'camisama-customizer' ),
@@ -183,7 +231,7 @@ function createBox( input ) {
 
 	fill(
 		department.select,
-		tree,
+		deliveryGroups( tree, shipping ),
 		__( 'Elige el departamento', 'camisama-customizer' )
 	);
 	fillProvinces();
@@ -204,10 +252,13 @@ function wire() {
 			return;
 		}
 
-		let box = wrapper.previousElementSibling;
-		if ( ! box?.classList.contains( 'camisama-ubigeo' ) ) {
+		// Al principio de la dirección: dónde se entrega decide si hay envío, antes de escribir la
+		// calle. Si WooCommerce repinta el formulario y lo quita, se vuelve a poner.
+		const form = wrapper.closest( '.wc-block-components-address-form' );
+		let box = form?.querySelector( ':scope > .camisama-ubigeo' );
+		if ( ! box ) {
 			box = createBox( input );
-			wrapper.before( box );
+			( form ?? wrapper.parentElement ).prepend( box );
 			box.dataset.code = '-';
 		}
 		box.input = input;

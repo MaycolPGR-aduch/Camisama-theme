@@ -1,7 +1,7 @@
 # Estado de la web: hecho y pendiente
 
 Resumen de dónde está la tienda Camisama (tema `camisama` + plugin `camisama-customizer`) y qué
-falta para abrirla al público. Actualizado el 17 de noviembre de 2026.
+falta para abrirla al público. Actualizado el 19 de noviembre de 2026.
 
 Contexto de producto y decisiones visuales: [PRODUCT.md](../PRODUCT.md) y [DESIGN.md](../DESIGN.md).
 Registro de lo que se va haciendo: [CHANGELOG.md](../CHANGELOG.md).
@@ -146,7 +146,8 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Revisar tildes del ubigeo**: algunos nombres de distritos pueden seguir sin tilde
       (`plugins/camisama-customizer/data/`); contrastar con la lista del INEI.
 - [x] **Tarifas por distrito**: cuatro franjas (`Checkout\DeliveryRates`).
-- [ ] **Precios reales del envío**: las tarifas por distrito son provisionales (S/ 10, 14, 20 y 25).
+- [ ] **Precios reales del envío**: las tarifas por distrito son provisionales (S/ 10, 14, 20 y 25),
+      aunque ya no lo dice la etiqueta que ve el cliente.
       Se cambian en `plugins/camisama-customizer/src/Checkout/DeliveryRates.php`.
 - [ ] **Envíos a provincias**, cuando llegue el momento: ampliar la zona en `bin/seed-delivery.php` y en
       `Checkout\Ubigeo` y `client/checkout/tree.js`, y quitar el aviso.

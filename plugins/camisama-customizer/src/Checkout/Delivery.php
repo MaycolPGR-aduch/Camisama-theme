@@ -105,7 +105,12 @@ final class Delivery {
 		wp_enqueue_style( self::HANDLE, $this->plugin->url( 'build/checkout/style-ubigeo.css' ), array(), $asset['version'] );
 		wp_add_inline_script(
 			self::HANDLE,
-			'window.camisamaUbigeo = ' . wp_json_encode( array( 'url' => $this->plugin->url( 'data/ubigeo.json' ) ) ) . ';',
+			'window.camisamaUbigeo = ' . wp_json_encode(
+				array(
+					'url'   => $this->plugin->url( 'data/ubigeo.json' ),
+					'rates' => DeliveryRates::all(),
+				)
+			) . ';',
 			'before'
 		);
 	}
@@ -139,8 +144,9 @@ final class Delivery {
 
 	/**
 	 * Tarifa de envío según el distrito (DeliveryRates). Fuera de la zona de envíos solo queda el
-	 * recojo. Sin distrito todavía no se quita nada, para que el pago empiece en "Envío", y se
-	 * muestra la tarifa más baja avisando de que depende del distrito.
+	 * recojo. Sin distrito tampoco hay envío a domicilio todavía: no se puede saber cuánto cuesta, y
+	 * sumar la tarifa más baja hacía subir el total al elegir un distrito lejano. Cada distrito lleva
+	 * su tarifa en el combo (client/checkout/ubigeo.js).
 	 *
 	 * @param array<string, \WC_Shipping_Rate> $rates   Tarifas.
 	 * @param array<string, mixed>             $package Paquete, con su destino.
@@ -159,17 +165,17 @@ final class Delivery {
 		$code  = Ubigeo::delivery_code( $city, $state );
 		$cents = null === $code ? null : DeliveryRates::cents( $code );
 
-		foreach ( $rates as $rate ) {
+		foreach ( $rates as $id => $rate ) {
 			if ( 'flat_rate' !== $rate->get_method_id() ) {
 				continue;
 			}
-			$rate->set_cost( (string) ( ( $cents ?? DeliveryRates::lowest() ) / 100 ) );
-			$rate->set_label(
-				null === $cents
-					? __( 'Envío a domicilio: según tu distrito (tarifa provisional)', 'camisama-customizer' )
-					/* translators: %s: distrito. */
-					: sprintf( __( 'Envío a %s (tarifa provisional)', 'camisama-customizer' ), $city )
-			);
+			if ( null === $cents ) {
+				unset( $rates[ $id ] );
+				continue;
+			}
+			$rate->set_cost( (string) ( $cents / 100 ) );
+			/* translators: %s: distrito. */
+			$rate->set_label( sprintf( __( 'Envío a %s', 'camisama-customizer' ), $city ) );
 		}
 
 		return $rates;

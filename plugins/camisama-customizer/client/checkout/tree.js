@@ -48,6 +48,47 @@ export function partsOf( code ) {
 }
 
 /**
+ * Separa departamentos o provincias en los que tienen envío a domicilio y el resto.
+ *
+ * @param {Array} items Departamentos o provincias: [ código, nombre, hijos ].
+ * @return {Array} [ con envío, solo recojo ].
+ */
+export function byDelivery( items ) {
+	const delivers = ( item ) =>
+		item[ 0 ].length === 2
+			? DEPARTMENTS_WITH_DELIVERY.includes( item[ 0 ] )
+			: DELIVERY_PROVINCES.includes( item[ 0 ] );
+
+	// Lima primero (como en DELIVERY_PROVINCES): es donde vive la mayoría de quienes compran.
+	const rank = ( item ) =>
+		DELIVERY_PROVINCES.findIndex( ( code ) =>
+			code.startsWith( item[ 0 ] )
+		);
+
+	return [
+		items.filter( delivers ).sort( ( a, b ) => rank( a ) - rank( b ) ),
+		items.filter( ( item ) => ! delivers( item ) ),
+	];
+}
+
+/**
+ * Distrito con su tarifa de envío al lado, si la tiene.
+ *
+ * @param {Array}  district [ código, nombre ].
+ * @param {Object} rates    Céntimos por ubigeo (Checkout\DeliveryRates).
+ * @return {Array} [ código, texto de la opción ].
+ */
+export function withRate( district, rates ) {
+	const cents = rates?.[ district[ 0 ] ];
+	return cents
+		? [
+				district[ 0 ],
+				`${ district[ 1 ] } · envío S/ ${ ( cents / 100 ).toFixed( 2 ) }`,
+			]
+		: district;
+}
+
+/**
  * ¿Lo elegido hasta ahora queda fuera de la zona de envíos? Sin elegir nada, todavía no.
  *
  * @param {string} department Código del departamento, o vacío.

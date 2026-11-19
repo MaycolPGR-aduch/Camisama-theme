@@ -31,6 +31,9 @@ final class Texts {
 		'Shipping options'                   => 'Costo del envío',
 		'Pickup locations'                   => 'Dónde lo recoges',
 		'Payment options'                    => 'Cómo pagas',
+		// Sin distrito no hay envío a domicilio todavía (Delivery::rates_in_zone): no es un error.
+		'No shipping options are available for this address. Please verify the address is correct or try a different address.' => 'Elige tu distrito para ver el costo del envío. Si estás fuera de Lima Metropolitana y el Callao, elige “Recojo en el taller”.',
+		'Shipping options are not available' => 'Elige tu distrito para ver el costo del envío',
 	);
 
 	/**

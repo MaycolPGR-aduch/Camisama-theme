@@ -55,6 +55,18 @@ final class DeliveryRatesTest extends TestCase {
 	}
 
 	/**
+	 * La lista completa da a cada distrito con envío su tarifa, para mostrarla en el combo.
+	 */
+	public function test_all_rates_by_district(): void {
+		$all = DeliveryRates::all();
+
+		$this->assertCount( 51, $all );
+		$this->assertSame( 2000, $all['150123'] ?? null );
+		$this->assertSame( 1400, $all['070102'] ?? null );
+		$this->assertArrayNotHasKey( '040101', $all );
+	}
+
+	/**
 	 * Del nombre y la región del destino sale el distrito, sin confundirlo con otro de fuera de la zona.
 	 */
 	public function test_finds_the_district_of_a_destination(): void {

@@ -101,6 +101,23 @@ final class DeliveryRates {
 	}
 
 	/**
+	 * Todas las tarifas, para mostrarlas junto a cada distrito al elegirlo.
+	 *
+	 * @return array<int|string, int> Céntimos por ubigeo (PHP guarda como número los que no empiezan
+	 *                                por cero; en el JSON del pago son texto igualmente).
+	 */
+	public static function all(): array {
+		$all = array();
+		foreach ( self::BANDS as $cents => $codes ) {
+			foreach ( $codes as $code ) {
+				$all[ $code ] = $cents;
+			}
+		}
+
+		return $all;
+	}
+
+	/**
 	 * Tarifa más baja: la que se muestra mientras no se ha elegido distrito.
 	 *
 	 * @return int Céntimos.

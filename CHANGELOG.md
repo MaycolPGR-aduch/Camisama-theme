@@ -7,6 +7,27 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-19
+
+### Añadido
+- **Crítica independiente de tienda, carrito y pago** (dos evaluadores, sin portada): **24/40**,
+  desde 18/40. Informe en `.impeccable/critique/`.
+
+### Cambiado
+- **Primero dónde, luego quién:** en el pago, departamento, provincia y distrito van al principio de
+  la dirección, antes de escribir la calle. En la dirección de entrega, "Con envío a domicilio"
+  (Lima y Callao, Lima primero) va aparte de "Solo recojo en el taller", y cada distrito muestra su
+  tarifa ("Pachacámac · envío S/ 20.00").
+- **El envío no se suma hasta saber el distrito:** antes se sumaba la tarifa más baja (S/ 10) y el
+  total subía al elegir un distrito lejano. Ahora el carrito dice "El envío se calculará al
+  finalizar la compra" y el pago, "Elige tu distrito para ver el costo del envío".
+- La etiqueta del envío ya no dice "(tarifa provisional)": las tarifas siguen siendo provisionales,
+  pero eso no es asunto del cliente (anotado en el estado de la web).
+
+### Corregido
+- El aviso "No hay opciones de envío… Verifica que la dirección sea correcta" culpaba a la persona y
+  se quedaba al cambiar de departamento; ahora orienta: elegir el distrito o el recojo en el taller.
+
 ## 2026-11-18
 
 ### Añadido

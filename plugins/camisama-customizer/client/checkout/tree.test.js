@@ -1,4 +1,11 @@
-import { districtsOf, outsideDelivery, partsOf, provincesOf } from './tree';
+import {
+	byDelivery,
+	districtsOf,
+	outsideDelivery,
+	partsOf,
+	provincesOf,
+	withRate,
+} from './tree';
 
 const TREE = [
 	[
@@ -59,5 +66,39 @@ describe( 'zona de envíos', () => {
 	it( 'el resto del Perú y de Lima quedan fuera', () => {
 		expect( outsideDelivery( '04', '' ) ).toBe( true );
 		expect( outsideDelivery( '15', '1505' ) ).toBe( true );
+	} );
+
+	it( 'Lima va antes que el Callao', () => {
+		const callao = [ '07', 'Callao', [ [ '0701', 'Callao', [] ] ] ];
+		expect(
+			byDelivery( [ callao, ...TREE ] )[ 0 ].map( ( item ) => item[ 1 ] )
+		).toEqual( [ 'Lima', 'Callao' ] );
+	} );
+
+	it( 'lo que tiene envío va primero, y el resto aparte', () => {
+		expect( byDelivery( TREE ) ).toEqual( [
+			[ TREE[ 1 ] ],
+			[ TREE[ 0 ] ],
+		] );
+		expect( byDelivery( provincesOf( TREE, '15' ) ) ).toEqual( [
+			[ provincesOf( TREE, '15' )[ 0 ] ],
+			[ provincesOf( TREE, '15' )[ 1 ] ],
+		] );
+		// Donde no hay envío no se separa: todo es "solo recojo".
+		expect( byDelivery( provincesOf( TREE, '04' ) ) ).toEqual( [
+			[],
+			provincesOf( TREE, '04' ),
+		] );
+	} );
+
+	it( 'cada distrito con envío lleva su tarifa', () => {
+		const rates = { 150122: 1000 };
+		expect( withRate( [ '150122', 'Miraflores' ], rates ) ).toEqual( [
+			'150122',
+			'Miraflores · envío S/ 10.00',
+		] );
+		expect(
+			withRate( [ '150501', 'San Vicente de Cañete' ], rates )
+		).toEqual( [ '150501', 'San Vicente de Cañete' ] );
 	} );
 } );
