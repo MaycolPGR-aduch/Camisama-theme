@@ -238,6 +238,15 @@ function createBox( input ) {
 	fillDistricts();
 	updateNote();
 
+	// El aviso de WooCommerce queda junto a su campo oculto, lejos de los combos: se repite aquí.
+	box.error = document.createElement( 'div' );
+	box.error.className =
+		'wc-block-components-validation-error camisama-ubigeo__error';
+	box.error.id = `${ input.id }-camisama-error`;
+	box.error.setAttribute( 'role', 'alert' );
+	box.error.hidden = true;
+	box.append( box.error );
+
 	box.selects = [ department.select, province.select, district.select ];
 	return box;
 }
@@ -246,6 +255,13 @@ function createBox( input ) {
  * Coloca o actualiza los combos de cada dirección visible.
  */
 function wire() {
+	// Si WooCommerce oculta el campo (recojo en el taller), sus combos sobran.
+	document.querySelectorAll( '.camisama-ubigeo' ).forEach( ( box ) => {
+		if ( box.input && ! box.input.isConnected ) {
+			box.remove();
+		}
+	} );
+
 	document.querySelectorAll( FIELD ).forEach( ( input ) => {
 		const wrapper = input.closest( WRAPPER );
 		if ( ! wrapper ) {
@@ -277,17 +293,28 @@ function wire() {
 			} );
 		}
 
-		// Con error, el combo que falta queda marcado y ligado al mensaje.
+		// Con error, el mensaje sale bajo los combos y el que falta queda marcado y ligado a él.
 		const error = wrapper.querySelector( ERROR );
-		if ( error && ! error.id ) {
-			error.id = `${ input.id }-error`;
+		const message = error?.textContent.trim() ?? '';
+		if ( box.error.textContent !== message ) {
+			// Igual que el de WooCommerce: su icono y el texto.
+			const line = document.createElement( 'p' );
+			const icon = error?.querySelector( 'svg' );
+			if ( icon ) {
+				line.append( icon.cloneNode( true ) );
+			}
+			const text = document.createElement( 'span' );
+			text.textContent = message;
+			line.append( text );
+			box.error.replaceChildren( ...( message ? [ line ] : [] ) );
 		}
+		box.error.hidden = ! message;
 		box.selects.forEach( ( select ) => {
 			const missing =
-				Boolean( error ) && ! select.disabled && ! select.value;
+				Boolean( message ) && ! select.disabled && ! select.value;
 			select.setAttribute( 'aria-invalid', String( missing ) );
 			if ( missing ) {
-				select.setAttribute( 'aria-describedby', error.id );
+				select.setAttribute( 'aria-describedby', box.error.id );
 			} else {
 				select.removeAttribute( 'aria-describedby' );
 			}

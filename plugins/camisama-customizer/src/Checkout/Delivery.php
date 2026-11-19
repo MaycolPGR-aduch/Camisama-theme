@@ -65,11 +65,31 @@ final class Delivery {
 				'label'                      => __( 'Distrito', 'camisama-customizer' ),
 				'location'                   => 'address',
 				'type'                       => 'text',
-				'required'                   => true,
 				'validate_callback'          => array( self::class, 'validate' ),
 				// La confirmación ya lo muestra como ciudad y región.
 				'show_in_order_confirmation' => false,
-			)
+			) + self::pickup_rules()
+		);
+	}
+
+	/**
+	 * Al recoger en el taller el distrito no hace falta: se oculta y deja de ser obligatorio. Son
+	 * reglas de WooCommerce sobre el carrito, así el pago y el servidor deciden lo mismo.
+	 *
+	 * @return array{required: array<string, mixed>, hidden: array<string, mixed>}
+	 */
+	public static function pickup_rules(): array {
+		$collecting = static fn ( bool $value ): array => array(
+			'cart' => array(
+				'properties' => array(
+					'prefers_collection' => array( 'const' => $value ),
+				),
+			),
+		);
+
+		return array(
+			'required' => $collecting( false ),
+			'hidden'   => $collecting( true ),
 		);
 	}
 

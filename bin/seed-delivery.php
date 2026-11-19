@@ -57,7 +57,7 @@ if ( null === $camisama_method_id ) {
 update_option(
 	"woocommerce_flat_rate_{$camisama_method_id}_settings",
 	array(
-		'title'      => 'Envío a domicilio (tarifa provisional)',
+		'title'      => 'Envío a domicilio',
 		'tax_status' => 'none',
 		'cost'       => '10',
 	)
@@ -77,15 +77,17 @@ update_option(
 	'pickup_location_pickup_locations',
 	array(
 		array(
-			'name'    => 'Taller Camisama (dirección provisional)',
+			// PROVISIONAL: sin dirección ni horario reales todavía, se promete avisar con ellos.
+			// Cuando existan, ponerlos aquí (address_1, city, state) y en "details" el horario.
+			'name'    => 'Taller Camisama',
 			'address' => array(
-				'address_1' => 'Dirección por confirmar',
+				'address_1' => '',
 				'city'      => 'Lima',
-				'state'     => 'LMA',
+				'state'     => '',
 				'postcode'  => '',
 				'country'   => 'PE',
 			),
-			'details' => 'Horario por confirmar. Te avisamos cuando tu pedido esté listo.',
+			'details' => 'Te escribimos con la dirección y el horario cuando tu pedido esté listo.',
 			'enabled' => true,
 		),
 	)

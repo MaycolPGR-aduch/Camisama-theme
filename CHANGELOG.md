@@ -20,6 +20,11 @@ conviene recordar.
   la cuenta cuando estén configurados.
 
 ### Cambiado
+- **Recojo en el taller sin datos de más:** con el recojo ya no se piden departamento, provincia ni
+  distrito (el campo solo es obligatorio con envío) y el lugar de recojo dice "Taller Camisama · Lima"
+  con "Te escribimos con la dirección y el horario cuando tu pedido esté listo", en vez de "Dirección
+  por confirmar… Municipalidad Metropolitana de Lima". La dirección y el horario reales siguen
+  pendientes (`bin/seed-delivery.php`, marcado como provisional).
 - **Primero dónde, luego quién:** en el pago, departamento, provincia y distrito van al principio de
   la dirección, antes de escribir la calle. En la dirección de entrega, "Con envío a domicilio"
   (Lima y Callao, Lima primero) va aparte de "Solo recojo en el taller", y cada distrito muestra su
@@ -31,6 +36,10 @@ conviene recordar.
   pero eso no es asunto del cliente (anotado en el estado de la web).
 
 ### Corregido
+- El aviso "Revisa este dato: distrito" salía bajo "Referencia", lejos de los combos: ahora sale
+  justo debajo, con su icono, y el combo que falta se marca en rojo y queda ligado al aviso para los
+  lectores de pantalla.
+- Al pasar de envío a recojo y volver, ya no quedan combos huérfanos de la dirección anterior.
 - El aviso "No hay opciones de envío… Verifica que la dirección sea correcta" culpaba a la persona y
   se quedaba al cambiar de departamento; ahora orienta: elegir el distrito o el recojo en el taller.
 

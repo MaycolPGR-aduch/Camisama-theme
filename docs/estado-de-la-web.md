@@ -154,8 +154,11 @@ local, 45 pruebas de JS y lint limpio.
       Se cambian en `plugins/camisama-customizer/src/Checkout/DeliveryRates.php`.
 - [ ] **Envíos a provincias**, cuando llegue el momento: ampliar la zona en `bin/seed-delivery.php` y en
       `Checkout\Ubigeo` y `client/checkout/tree.js`, y quitar el aviso.
-- [ ] **Datos reales de la entrega**: tarifa, dirección y horario del taller. Hoy son provisionales
-      (WooCommerce > Ajustes > Envío). Sin plazos comprometidos todavía.
+- [ ] **Datos reales de la entrega**: dirección y horario del taller. Hoy el recojo dice "Taller
+      Camisama · Lima" y promete escribir con ellos; se ponen en `bin/seed-delivery.php` (o en
+      WooCommerce > Ajustes > Envío). Los plazos provisionales están en `Checkout\PaymentTimes`.
+- [ ] **Recojo con menos datos**: con el recojo aún se pide una dirección de facturación (campo propio
+      de WooCommerce, no admite reglas). Valorar si basta con nombre, correo y teléfono.
 
 ### Fase 5: funciones del personalizador
 

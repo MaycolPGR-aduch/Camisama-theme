@@ -18,6 +18,16 @@ use PHPUnit\Framework\TestCase;
 final class DeliveryTest extends TestCase {
 
 	/**
+	 * Con recojo en el taller el distrito se oculta y no es obligatorio; con envío, sí lo es.
+	 */
+	public function test_district_only_for_delivery(): void {
+		$rules = Delivery::pickup_rules();
+
+		$this->assertFalse( $rules['required']['cart']['properties']['prefers_collection']['const'] );
+		$this->assertTrue( $rules['hidden']['cart']['properties']['prefers_collection']['const'] );
+	}
+
+	/**
 	 * Perú pide distrito y referencia, y no región, ciudad ni código postal.
 	 */
 	public function test_peru_asks_for_district_and_reference(): void {

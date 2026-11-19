@@ -16,6 +16,11 @@
 		opacity: 0.6;
 		cursor: not-allowed;
 	}
+
+	// El combo que falta, en rojo como los campos de WooCommerce con error.
+	select[aria-invalid="true"] {
+		border-color: #cc1818;
+	}
 }
 
 .camisama-ubigeo__note {
@@ -44,8 +49,7 @@
 	}
 }
 
-// Campo de WooCommerce que guarda el ubigeo: oculto, pero su mensaje de error
-// se sigue viendo.
+// Campo de WooCommerce que guarda el ubigeo: oculto.
 input[id$="-camisama-district"],
 label[for$="-camisama-district"] {
 	position: absolute;
@@ -54,6 +58,18 @@ label[for$="-camisama-district"] {
 	overflow: hidden;
 	opacity: 0;
 	pointer-events: none;
+}
+
+// Su mensaje de error se repite bajo los combos (ubigeo.js): aquí, lejos de
+// ellos, sobra.
+.wc-block-components-text-input:has(> input[id$="-camisama-district"])
+.wc-block-components-validation-error {
+	display: none;
+}
+
+.camisama-ubigeo__error {
+	grid-column: 1 / -1;
+	margin-top: 4px;
 }
 
 // Toda la fila, para que no empuje al campo siguiente (ocuparía media columna,
