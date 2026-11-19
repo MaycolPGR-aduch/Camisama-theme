@@ -1,0 +1,35 @@
+{
+  "dest": "C:/Users/PC.DESKTOP-OHIFT3T/.codex/visualizations/2026/11/04/01a1a840-d538-7a92-9704-00d75ba9cb87/plantillas-clasica-propuesta-v1",
+  "mode": "Herramienta integrada ImageGen; propuesta sin integraciÃ³n.",
+  "files": [
+    {
+      "name": "clasica-blanca-frente.png",
+      "source": "C:/Users/PC.DESKTOP-OHIFT3T/.codex/generated_images/01a1a840-d538-7a92-9704-00d75ba9cb87/exec-da6e7673-0b03-44ef-a467-f82c39bdbd79.png",
+      "prompts": [
+        "Use case: product-mockup. Generate a production-oriented garment mockup BASE for an interactive t-shirt customizer: ONE SINGLE plain white classic regular-fit short-sleeved cotton crew-neck t-shirt, FRONT VIEW, isolated on a genuinely transparent alpha background. Square canvas. Photorealistic studio apparel photography of a 180 gsm combed cotton shirt on an invisible mannequin, relaxed but almost planar printable chest. Orthographic camera exactly straight-on, zero rotation, zero perspective tilt, centered vertically and horizontally, symmetrical left and right. Entire garment including collar, both sleeves and full bottom hem visible. Garment bounding box approximately x=10% to 90%, y=12% to 88%, clear transparent margins on every side. Normal classic fit, not oversize; short sleeves angled gently down; clean straight hem. Real cotton weave visible at close view, fine double-needle seams and realistically ribbed collar. White cotton should stay neutral clean off-white with restrained delicate shading, not beige. Broad soft even frontal studio lighting, readable outline. Extremely mild folds confined near outer side seams and sleeve edges; central chest and belly smooth and clear for adding custom print later. No print, no text, no logos, no label, no watermark, no person, no skin, no arms, no head, no hanger, no mannequin parts, no background objects, no shadow on a ground plane, no floor, no checkerboard painted in the image. Exactly one garment, not a comparison sheet, not a pair. Transparent background, photographic fabric rather than vector drawing or flat silhouette."
+      ]
+    },
+    {
+      "name": "clasica-negra-frente.png",
+      "source": "C:/Users/PC.DESKTOP-OHIFT3T/.codex/generated_images/01a1a840-d538-7a92-9704-00d75ba9cb87/exec-80db03f5-061c-4c37-a917-4cae0b646c8b.png",
+      "prompts": [
+        "Edit target: the provided white front-view t-shirt customizer base. Change ONLY its cotton fabric color to neutral solid soft black (charcoal black around #202024, not washed or acid-washed). Preserve EXACTLY the square canvas, garment outline, collar geometry, center, bounding box, scale, proportions, sleeve angles, seam positions and front camera view. Preserve photographic cotton weave, subtle soft folds and even frontal studio lighting; keep enough gentle tonal detail in dark fabric so folds and stitching remain visible. Chest stays smooth and blank, no print or text. Maintain a genuinely transparent alpha background and clean natural anti-aliased garment edges, remove any stray specks outside the garment. Do not introduce a backdrop, painted checkerboard, ground shadow, mannequin, hanger, person, labels, branding or extra garments. This is the black colorway of exactly the same front template, not a new shirt or a new crop."
+      ]
+    },
+    {
+      "name": "clasica-blanca-espalda.png",
+      "source": "C:/Users/PC.DESKTOP-OHIFT3T/.codex/generated_images/01a1a840-d538-7a92-9704-00d75ba9cb87/exec-78a05889-2854-4427-9713-1762183054aa.png",
+      "prompts": [
+        "Reference and edit target: the supplied blank white FRONT t-shirt mockup. Produce its matching BACK VIEW template for a garment customizer. Keep exactly the same square canvas dimensions, garment center, outer silhouette, overall bounding box, shirt size, hem height, shoulder widths, symmetric sleeve angles, classic regular fit, seam quality, cotton weave, neutral white fabric, almost-flat main printing surface and soft even studio illumination. Camera straight-on orthographic from directly behind; show the actual BACK, with a HIGH back neckline at the nape and the small horizontal back-neck seam, rather than the deeper curved FRONT collar opening. No visible front neck opening, no tag, no extra seam across middle of back, no chest details. Entire shirt and sleeves fully visible, same framing as the reference. Central back remains smooth and empty to overlay a design later. Genuinely transparent alpha background, clean anti-aliased edges without stray isolated specks, no ground shadow, no mannequin or person, no hangers, no text, no print, no logos, no watermark, no comparison sheet. Exactly one white shirt rear view.",
+        "Precisely edit the supplied transparent white cotton t-shirt mockup ONLY to clean its alpha cutout. Keep all shirt pixels, white cotton color, photographic texture, seams, collar geometry, view direction, folds, outline, garment position and dimensions unchanged. Preserve the same square canvas and crop. Remove ALL isolated white debris / tiny disconnected opaque islands outside the garment, especially the speckles ABOVE THE COLLAR, BELOW THE BOTTOM HEM, and outside both sleeve edges. Erase stray white wisps without eating into the fabric. The shirt should be one clean contiguous object with a neat natural anti-aliased contour and fully transparent pixels everywhere else. Do not create a white outline, halo, background, floor or external shadow. No text or other content. Genuine transparent PNG, identical shirt, surgical alpha cleanup only."
+      ]
+    },
+    {
+      "name": "clasica-negra-espalda.png",
+      "source": "C:/Users/PC.DESKTOP-OHIFT3T/.codex/generated_images/01a1a840-d538-7a92-9704-00d75ba9cb87/exec-9c3cf621-4e3a-4bf9-9476-984996b0316b.png",
+      "prompts": [
+        "Edit target: matching white t-shirt REAR VIEW customizer template supplied. Recolor only the garment to neutral solid soft black around #202024, not acid-washed, retaining gentle photographic cotton detail and readable shadows and seams. Preserve the EXACT square canvas, back view, high nape neckline, outer garment silhouette, sleeve angles, hem, center, scale and every clothing proportion. Keep central back smooth and blank for a design overlay. Clean the transparent alpha: only the shirt itself must remain; remove every disconnected speck above the collar, below the hem or beside sleeves and do not leave a white halo along the silhouette. Maintain genuine transparency outside the clean natural anti-aliased garment contour. No front neck opening, no print, text, tag, logos, watermark, mannequin, body, hanger, background or shadow outside garment. Exactly one black shirt back view."
+      ]
+    }
+  ]
+}

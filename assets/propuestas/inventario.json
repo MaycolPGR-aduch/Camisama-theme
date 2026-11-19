@@ -1,0 +1,80 @@
+[
+  {
+    "archivo": "home/camiseta-texto-hoy-se-sale.png",
+    "original": "exec-552cc925-c070-4a66-8336-6cb72f9c56d2.png",
+    "sha256": "c0c373e5026a15375077eb506348382d549875bba2a9accec27c28ba99da6c0c",
+    "bytes": 2654865
+  },
+  {
+    "archivo": "home/camiseta-estampado-andino.png",
+    "original": "exec-5a0a38c2-efac-4a0f-be64-475881d19122.png",
+    "sha256": "f627b20b9d845b40c3686de6778e18cdc376dc76100e82e86cdd4d0c7fa83f49",
+    "bytes": 2255446
+  },
+  {
+    "archivo": "plantillas-clasica/clasica-blanca-espalda.png",
+    "original": "exec-78a05889-2854-4427-9713-1762183054aa.png",
+    "sha256": "17b8af7e5397e52a9a9b3e1ce32bfaa6d3b72286dc17dfca11944e2bacd67936",
+    "bytes": 1000824
+  },
+  {
+    "archivo": "plantillas-clasica/variantes/blanca-espalda-inicial.png",
+    "original": "exec-7d2f1618-5914-4a8b-92ef-78a7f9454ccf.png",
+    "sha256": "d37872bab161d48d1f1150c0282fc1ec295a0825c8334b834812fbdf0490cd7f",
+    "bytes": 1142046
+  },
+  {
+    "archivo": "plantillas-clasica/clasica-negra-frente.png",
+    "original": "exec-80db03f5-061c-4c37-a917-4cae0b646c8b.png",
+    "sha256": "5627596b4b08fe84232a7f7e03e808cd27b470caa6c1dfa1502d1203321cb6db",
+    "bytes": 1109186
+  },
+  {
+    "archivo": "plantillas-clasica/clasica-negra-espalda.png",
+    "original": "exec-9c3cf621-4e3a-4bf9-9476-984996b0316b.png",
+    "sha256": "28c08a7b21d7c640ec96340e62d40eb7c53e071caaa820ef8179084ad948f50f",
+    "bytes": 1059790
+  },
+  {
+    "archivo": "home/camiseta-foto-paisaje.png",
+    "original": "exec-b76090df-eba8-4ba7-a703-a90eff13617f.png",
+    "sha256": "6c4a198002187838bd6cb3c6d756213fe43294d7657474b782dfc6a42e888354",
+    "bytes": 2252327
+  },
+  {
+    "archivo": "plantillas-clasica/variantes/blanca-frente-recorte-alternativo.png",
+    "original": "exec-b9ca4836-0f7f-4fd3-bfda-0133bc551335.png",
+    "sha256": "198a9470652c2f8179df4cc7e4d59979b0401869f8586e1a8d8054ab0d922d04",
+    "bytes": 1090936
+  },
+  {
+    "archivo": "home/principal-camiseta-a-mi-manera.png",
+    "original": "exec-c2ce7f12-0f97-46ef-ad8d-3437c0c0e454.png",
+    "sha256": "43d542588dc12ce859a6328ae7496757539f44357cae07ce8a3fdf7f815d2cdc",
+    "bytes": 2427988
+  },
+  {
+    "archivo": "plantillas-clasica/clasica-blanca-frente.png",
+    "original": "exec-da6e7673-0b03-44ef-a467-f82c39bdbd79.png",
+    "sha256": "58bf828122345a0fb4006d865f5ec154eca842ebfaa43fe1fb00c68cddaab3bc",
+    "bytes": 1224581
+  },
+  {
+    "archivo": "recursos/foto-lago-original.png",
+    "original": "exec-f895af85-d809-411c-97ef-401beeb620ea.png",
+    "sha256": "9a83c626997136d186b66ed50de7a3dc2ce46dff72ec3b0975411e17391c955b",
+    "bytes": 3026124
+  },
+  {
+    "archivo": "plantillas-clasica/variantes/blanca-frente-desde-negra-piloto.png",
+    "original": "exec-2d488180-c7ce-49fe-871d-970fcf925917.png",
+    "sha256": "f1e145cac67aca22e4aba9fbd0b9184f73524dda5c2fd199bf1d9e85266c2b3b",
+    "bytes": 1144340
+  },
+  {
+    "archivo": "plantillas-clasica/variantes/blanca-espalda-desde-negra-piloto.png",
+    "original": "exec-5b3064a9-8f10-4a44-9323-5cad2343d00f.png",
+    "sha256": "ddaf74fbc5eab2cae3bf4ebeaea7fdc8a321948cdc566c5bf7f25a490ac8a398",
+    "bytes": 1095709
+  }
+]

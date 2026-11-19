@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-05",
+  "tool": "ImageGen",
+  "selected": false,
+  "reason": "Persisten flecos y manchas exteriores. Se conserva la selección original para el piloto de referencia.",
+  "files": [
+    {
+      "file": "blanca-frente-desde-negra-piloto.png",
+      "original": "exec-2d488180-c7ce-49fe-871d-970fcf925917.png",
+      "prompt": "Edit the supplied BLACK t-shirt FRONT template. Recolor the cotton to clean neutral white, keeping the EXACT alpha silhouette of the black reference. Preserve the existing image dimensions, crop, position, silhouette, neckline (front low crew opening), seams, sleeves and hem. White fabric with restrained realistic weave and even soft light, only subtle folds. Keep central printing surface blank. CRITICAL: the clean alpha edge from the black reference is the mask to preserve; do not add any new fringes, white wisps, detached spots or exterior pixels. Outside the garment is fully transparent. No backdrop, ground shadow, person, hanger, text, tag or print. One garment only."
+    },
+    {
+      "file": "blanca-espalda-desde-negra-piloto.png",
+      "original": "exec-5b3064a9-8f10-4a44-9323-5cad2343d00f.png",
+      "prompt": "Edit the supplied BLACK t-shirt BACK template. Recolor the cotton to clean neutral white, keeping the EXACT alpha silhouette of the black reference. Preserve the existing image dimensions, crop, position, silhouette, neckline (high back neck), seams, sleeves and hem. White fabric with restrained realistic weave and even soft light, only subtle folds. Keep central printing surface blank. CRITICAL: the clean alpha edge from the black reference is the mask to preserve; do not add any new fringes, white wisps, detached spots or exterior pixels. Outside the garment is fully transparent. No backdrop, ground shadow, person, hanger, text, tag or print. One garment only."
+    }
+  ]
+}

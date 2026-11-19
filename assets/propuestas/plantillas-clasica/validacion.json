@@ -1,0 +1,74 @@
+[
+  {
+    "file": "clasica-blanca-frente.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "garment_bbox_alpha128": [
+      136,
+      90,
+      1115,
+      1166
+    ]
+  },
+  {
+    "file": "clasica-negra-frente.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "garment_bbox_alpha128": [
+      134,
+      90,
+      1119,
+      1167
+    ]
+  },
+  {
+    "file": "clasica-blanca-espalda.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "garment_bbox_alpha128": [
+      131,
+      86,
+      1124,
+      1166
+    ]
+  },
+  {
+    "file": "clasica-negra-espalda.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "garment_bbox_alpha128": [
+      128,
+      84,
+      1125,
+      1166
+    ]
+  }
+]
