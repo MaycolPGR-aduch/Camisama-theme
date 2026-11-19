@@ -1,6 +1,6 @@
 /**
  * Pago: liga cada error a su campo (aria-describedby), que los bloques de WooCommerce no hacen, para
- * que un lector de pantalla lo lea al llegar al campo.
+ * que un lector de pantalla lo lea al llegar al campo, y da flechas a "Envío / Recojo".
  *
  * Los bloques pintan y repintan por su cuenta: se revisa con cada cambio del DOM.
  */
@@ -22,12 +22,43 @@
 		} );
 	}
 
-	new window.MutationObserver( linkErrors ).observe( document.body, {
+	// "Envío / Recojo" es un grupo de radios (role="radio"), pero WooCommerce deja las dos fichas en el
+	// orden de tabulación y sin flechas. Como en cualquier grupo de radios: Tab entra en la elegida y
+	// las flechas cambian de opción.
+	const OPTION = '.wc-block-checkout__shipping-method-option[role="radio"]';
+
+	function rovingTabs() {
+		document.querySelectorAll( OPTION ).forEach( ( option ) => {
+			const tab = 'true' === option.getAttribute( 'aria-checked' ) ? '0' : '-1';
+			if ( option.getAttribute( 'tabindex' ) !== tab ) {
+				option.setAttribute( 'tabindex', tab );
+			}
+		} );
+	}
+
+	document.addEventListener( 'keydown', ( event ) => {
+		const option = event.target.closest?.( OPTION );
+		const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ event.key ];
+		if ( ! option || ! step ) {
+			return;
+		}
+		const options = [ ...option.parentElement.querySelectorAll( ':scope > [role="radio"]' ) ];
+		const next = options[ ( options.indexOf( option ) + step + options.length ) % options.length ];
+		event.preventDefault();
+		next.click();
+		next.focus();
+	} );
+
+	new window.MutationObserver( () => {
+		linkErrors();
+		rovingTabs();
+	} ).observe( document.body, {
 		subtree: true,
 		childList: true,
 		attributes: true,
-		attributeFilter: [ 'aria-invalid' ],
+		attributeFilter: [ 'aria-invalid', 'aria-checked' ],
 	} );
+	rovingTabs();
 
 	// Al elegir "Recojo", WooCommerce desmarca "Usar la misma dirección para facturación" (sin envío
 	// hace falta la de facturación) y al volver a "Envío" no la restaura: quedaba un segundo

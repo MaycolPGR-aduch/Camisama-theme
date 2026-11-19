@@ -137,6 +137,12 @@ local, 45 pruebas de JS y lint limpio.
       contacto, plazos y qué pasa si el cliente cambia de idea. Quitar el aviso de borrador. Añadir
       el **Libro de Reclamaciones virtual**, que los Términos ya mencionan como pendiente.
 - [x] **Seguimiento del pedido sin cuenta**: "Sigue tu pedido", con número y correo.
+- [x] **Segunda crítica de tienda, carrito y pago** (24/40, 2026-11-19): envío y distrito juntos,
+      plazos de la transferencia, recojo sin datos de más y pulido del pago (campos de la marca,
+      total destacado, 14 px mínimo, foco y flechas en "Envío / Recojo", seguimiento a 320 px).
+  - [ ] Pendiente de esa crítica: avisar del teléfono o el correo mal escritos al salir del campo;
+        "escríbenos" como enlace en "Sigue tu pedido"; que las tarjetas de la tienda digan en qué
+        se diferencian los modelos.
 - [ ] **Registro en "Mi cuenta"**: hoy solo se entra con una cuenta ya creada; decidir si se ofrece.
 - [ ] **Plazos reales de la transferencia**: hoy son provisionales (48 horas para pagar, 2 a 3 días
       hábiles de preparación, 1 a 2 de envío). Se cambian en

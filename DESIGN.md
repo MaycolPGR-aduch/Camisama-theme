@@ -7,6 +7,7 @@ colors:
   lino: "#E4DED3"
   grafito: "#5F5E66"
   tinta: "#16161A"
+  borde-campo: "#86868C"
   rojo-sello: "#D3261C"
   rojo-sello-oscuro: "#A51D15"
   indigo: "#26357F"
@@ -193,6 +194,8 @@ Neutros cálidos de papel y lino con un rojo de sello como único acento dominan
 - **Papel**: fondo de toda la página.
 - **Blanco**: superficie de tarjetas, galería e imágenes de producto; texto sobre rojo.
 - **Lino**: bordes y divisores.
+- **Borde de campo**: grafito aclarado (`--camisama-field-border`), solo para el borde de los
+  campos de la tienda: sobre el papel un campo tiene que verse (3,3:1; el lino se queda en 1,3:1).
 - **Grafito**: texto secundario (migas de pan, notas).
 - **Tinta**: texto principal, títulos, navegación y relleno del botón con borde en hover.
 
@@ -273,9 +276,16 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
 - **Shadow Strategy:** ninguna (ver Elevation & Depth).
 
 ### Inputs / Fields
-- **Style:** fondo blanco, borde lino de 1.5px, radio 12px, 44px de alto y letra de 16px (con
-  menos, Safari en iPhone amplía la página); etiqueta encima en Inter 600 a 0.875rem. Los
-  desplegables y la cantidad del formulario de WooCommerce llevan el mismo aspecto.
+- **Style:** fondo blanco, borde de campo de 1.5px, radio 12px, 44px de alto y letra de 16px
+  (con menos, Safari en iPhone amplía la página); etiqueta encima en Inter 600 a 0.875rem. Los
+  desplegables y la cantidad del formulario de WooCommerce llevan el mismo aspecto. (Los paneles
+  del editor siguen con borde lino.)
+- **Carrito y pago (bloques de WooCommerce):** mismo campo, de 56px, con la etiqueta flotando
+  dentro: 16px en vacío y 14px una vez escrito el dato. Errores en rojo sello (4,7:1 sobre papel)
+  con el borde del campo en rojo; la etiqueta sigue en tinta. Total del pedido en Bricolage 700 a
+  x-large; títulos de cada paso en Bricolage 700 a large.
+- **Checkbox:** 24px, borde de tinta de 1.5px, radio 4px; marcada se rellena de tinta con la marca
+  en blanco. La fila entera se pulsa (44px).
 - **Focus:** anillo índigo de 2px, igual que el resto.
 - **Range:** `accent-color` tinta.
 

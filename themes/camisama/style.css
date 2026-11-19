@@ -34,6 +34,9 @@ html {
  */
 :root {
 	--camisama-focus: var(--wp--preset--color--secondary);
+
+	/* Borde de campo: grafito aclarado (3,3:1 en papel, 3,7:1 en blanco). */
+	--camisama-field-border: #86868c;
 }
 
 .has-contrast-background-color,
@@ -235,7 +238,7 @@ h3 {
 	box-sizing: border-box;
 	min-height: 44px;
 	padding-block: 0.5em;
-	border: 1.5px solid var(--wp--preset--color--border);
+	border: 1.5px solid var(--camisama-field-border);
 	border-radius: 12px;
 	background-color: var(--wp--preset--color--surface);
 	color: var(--wp--preset--color--contrast);
@@ -472,9 +475,9 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 /* Aviso de las páginas legales que siguen en borrador (bin/seed-legal.php). */
 .camisama-draft-note {
 	padding: 0.75em 1em;
-	border-left: 4px solid var(--wp--preset--color--accent);
-	border-radius: 4px;
-	background: var(--wp--preset--color--surface);
+	border-radius: 10px;
+	background: #fff4d6;
+	color: #8a5a00;
 	font-size: var(--wp--preset--font-size--small);
 }
 
@@ -530,6 +533,198 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 }
 
 /*
+ * Campos del carrito y del pago con el aspecto de la tienda: blancos, 12 px de
+ * radio y 1,5 px de borde. El borde es más oscuro que el lino de las
+ * tarjetas: sobre el papel un campo tiene que verse (3,3:1). Las etiquetas
+ * siguen flotando dentro del campo, pero a 14 px una vez escrito el dato
+ * (WooCommerce las encogía a 13); por eso el campo pasa de 50 a 56 px. La
+ * clase repetida gana a la regla de WooCommerce por tipo de campo.
+ */
+.wc-block-components-text-input.wc-block-components-text-input input[type],
+.wc-blocks-components-select .wc-blocks-components-select__select,
+.wc-block-components-textarea {
+	border: 1.5px solid var(--camisama-field-border);
+	border-radius: 12px;
+	background-color: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--contrast);
+}
+
+.wc-block-components-text-input.wc-block-components-text-input input[type]:hover,
+.wc-blocks-components-select .wc-blocks-components-select__select:hover,
+.wc-block-components-textarea:hover {
+	border-color: var(--wp--preset--color--contrast);
+}
+
+.wc-block-components-text-input.wc-block-components-text-input input[type],
+.wc-block-components-text-input.wc-block-components-text-input.is-active input[type] {
+	box-sizing: border-box;
+	height: 56px;
+	padding: 24px 14px 6px;
+	line-height: 22px;
+}
+
+.wc-block-components-form .wc-block-components-text-input label,
+.wc-block-components-text-input label {
+	left: 14px;
+	top: 28px;
+}
+
+.wc-block-components-form .wc-block-components-text-input.is-active label,
+.wc-block-components-form .wc-block-components-text-input input:-webkit-autofill + label,
+.wc-block-components-text-input.is-active label,
+.wc-block-components-text-input input:-webkit-autofill + label {
+	top: 8px;
+	transform: scale(0.875);
+}
+
+.wc-blocks-components-select .wc-blocks-components-select__select,
+.wc-blocks-components-select .wc-blocks-components-select__select:focus {
+	height: 56px;
+	padding: 22px 40px 4px 14px;
+	border-width: 1.5px;
+}
+
+.wc-blocks-components-select .wc-blocks-components-select__label {
+	left: 14px;
+	top: 7px;
+	font-size: 0.875rem;
+}
+
+/* La nota del pedido a 16 px: con menos, Safari en iPhone amplía la página. */
+.wc-block-components-textarea.wc-block-components-textarea {
+	font-size: 1rem;
+}
+
+/* El ejemplo, en grafito: en tinta parecía ya escrito. */
+.wc-block-components-textarea.wc-block-components-textarea::placeholder {
+	color: var(--wp--preset--color--muted);
+}
+
+/* La cantidad del carrito, del mismo juego que los campos. */
+.wc-block-components-quantity-selector.wc-block-components-quantity-selector {
+	border: 1.5px solid var(--camisama-field-border);
+	border-radius: 12px;
+	background-color: var(--wp--preset--color--surface);
+}
+
+/* Errores en el rojo de la marca (4,7:1 sobre el papel). */
+.wc-block-components-validation-error,
+.has-error .wc-blocks-components-select .wc-blocks-components-select__label,
+.has-error .wc-blocks-components-select .wc-blocks-components-select__select {
+	color: var(--wp--preset--color--primary);
+}
+
+.wc-block-components-text-input.wc-block-components-text-input.has-error input[type],
+.has-error .wc-blocks-components-select .wc-blocks-components-select__select,
+.wc-block-components-checkbox.has-error .wc-block-components-checkbox__input {
+	border-color: var(--wp--preset--color--primary);
+}
+
+.wc-block-components-validation-error svg {
+	fill: currentcolor;
+}
+
+/*
+ * Casillas de 24 px con borde de tinta; marcadas, rellenas de tinta (como una
+ * ficha elegida). Toda la fila se puede pulsar, con 44 px de alto.
+ */
+.wc-block-components-checkbox label {
+	min-height: 44px;
+	align-items: center;
+}
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input[type="checkbox"] {
+	width: 24px;
+	min-width: 24px;
+	height: 24px;
+	border: 1.5px solid var(--wp--preset--color--contrast);
+	border-radius: 4px;
+}
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input[type="checkbox"]:checked {
+	background: var(--wp--preset--color--contrast);
+}
+
+.wc-block-components-checkbox .wc-block-components-checkbox__mark {
+	width: 18px;
+	height: 18px;
+	margin-top: 2px;
+	margin-left: 3px;
+	fill: var(--wp--preset--color--surface);
+}
+
+/* "+ Agregar referencia": un enlace de verdad, con su objetivo de 44 px. */
+.wc-block-components-address-form__address_2-toggle {
+	display: inline-flex;
+	align-items: center;
+	width: auto;
+	min-height: 44px;
+	margin-top: 4px;
+	color: var(--wp--preset--color--secondary);
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+/* Títulos de cada paso del pago en la voz de los titulares. */
+.wc-block-checkout .wc-block-components-checkout-step__title {
+	font-size: var(--wp--preset--font-size--large);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+/*
+ * "Envío / Recojo": fichas como las del resto de la tienda, con el foco del
+ * teclado a la vista (WooCommerce solo aclaraba el fondo).
+ */
+.wc-block-checkout__shipping-method-container {
+	border-radius: 14px;
+}
+
+.wc-block-checkout__shipping-method-option {
+	border-radius: 12px;
+}
+
+/* En dos o tres líneas (móvil), juntas: WooCommerce daba 28 px. */
+.wc-block-checkout__shipping-method-option-title {
+	line-height: 1.35;
+}
+
+.wc-block-checkout__shipping-method-option:focus-visible {
+	outline: 2px solid var(--camisama-focus);
+	outline-offset: 2px;
+}
+
+/* El total, en la voz de los precios. */
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__label {
+	font-weight: 600;
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__value {
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--x-large);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+/*
+ * El resumen del pedido, una tarjeta blanca como las de la tienda. En la
+ * columna lateral el borde lo lleva el bloque; en el móvil, su relleno.
+ */
+.wc-block-checkout.is-large .wp-block-woocommerce-checkout-order-summary-block,
+.wc-block-checkout .checkout-order-summary-block-fill {
+	border-color: var(--wp--preset--color--border);
+	border-radius: 20px;
+	background: var(--wp--preset--color--surface);
+}
+
+/* Color, talla, diseño y distrito del envío: 14 px como mínimo. */
+.wc-block-components-product-metadata,
+.wc-block-components-product-metadata .wc-block-components-product-details,
+.wc-block-components-totals-shipping .wc-block-components-totals-shipping__via {
+	font-size: var(--wp--preset--font-size--small);
+}
+
+/*
  * "Sigue tu pedido" (woocommerce/order/form-tracking.php y
  * Checkout\OrderTracking): campos como los del pago, uno bajo otro, y el
  * resultado con el estado a la vista.
@@ -553,7 +748,7 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	width: 100%;
 	min-height: 48px;
 	padding: 0.6em 0.9em;
-	border: 1.5px solid var(--wp--preset--color--border);
+	border: 1.5px solid var(--camisama-field-border);
 	border-radius: 12px;
 	background: var(--wp--preset--color--surface);
 	color: var(--wp--preset--color--contrast);
@@ -583,6 +778,49 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 
 .camisama-track-hint {
 	text-align: center;
+}
+
+/*
+ * Detalle del pedido (seguimiento y cuenta): a 320 px la vista previa del
+ * diseño y "Transferencia bancaria" lo ensanchaban 33 px más que la pantalla.
+ * Columnas fijas, la vista previa nunca más ancha que su celda y las palabras
+ * largas se parten.
+ */
+.woocommerce-table--order-details {
+	width: 100%;
+	table-layout: fixed;
+}
+
+.woocommerce-table--order-details th,
+.woocommerce-table--order-details td {
+	overflow-wrap: break-word;
+}
+
+.woocommerce-table--order-details .wc-item-meta {
+	padding-left: 0;
+	list-style: none;
+}
+
+/* Dato y valor seguidos: flotando, el valor se partía a media palabra. */
+.woocommerce .woocommerce-table--order-details td.product-name .wc-item-meta .wc-item-meta-label {
+	display: inline;
+	float: none;
+}
+
+.woocommerce .woocommerce-table--order-details td.product-name .wc-item-meta p {
+	display: inline;
+}
+
+.woocommerce-table--order-details thead .product-name {
+	width: 58%;
+}
+
+.woocommerce-table--order-details .camisama-order-previews img {
+	max-width: 100%;
+}
+
+.woocommerce-table--order-details .shipped_via {
+	font-size: var(--wp--preset--font-size--small);
 }
 
 .camisama-checkout-back {

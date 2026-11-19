@@ -20,6 +20,20 @@ conviene recordar.
   la cuenta cuando estén configurados.
 
 ### Cambiado
+- **Pulido del pago, el carrito y "Sigue tu pedido"** (`/impeccable polish`, tema):
+  - Campos con el aspecto de la tienda: blancos, radio de 12 px, borde de 1,5 px y 56 px de alto,
+    con la etiqueta flotante a 14 px una vez escrito el dato (WooCommerce la encogía a 13 px). El
+    borde es un grafito aclarado (`--camisama-field-border`, 3,3:1 sobre el papel): con el lino de
+    las tarjetas los campos casi no se veían. También lo usan la ficha y "Sigue tu pedido".
+  - Errores en el rojo de la marca; la cantidad del carrito y la nota del pedido, del mismo juego
+    (la nota a 16 px para que el iPhone no amplíe la página).
+  - Títulos de cada paso en Bricolage 700 y el total del pedido en Bricolage a tamaño grande; el
+    resumen del pedido, una tarjeta blanca de 20 px.
+  - Casillas de 24 px con borde de tinta que se rellenan al marcarlas, con toda la fila pulsable;
+    "+ Agregar referencia" como enlace con su objetivo de 44 px.
+  - Ningún texto por debajo de 14 px (detalles de la prenda y distrito del envío).
+  - El aviso "Por ahora solo hacemos envíos a Lima…" y el de las páginas legales en borrador ya no
+    llevan franja lateral: aviso redondeado, ámbar cuando advierte.
 - **Recojo en el taller sin datos de más:** con el recojo ya no se piden departamento, provincia ni
   distrito (el campo solo es obligatorio con envío) y el lugar de recojo dice "Taller Camisama · Lima"
   con "Te escribimos con la dirección y el horario cuando tu pedido esté listo", en vez de "Dirección
@@ -36,6 +50,10 @@ conviene recordar.
   pero eso no es asunto del cliente (anotado en el estado de la web).
 
 ### Corregido
+- "Envío / Recojo" no mostraba el foco del teclado (1,27:1) ni respondía a las flechas: ahora
+  lleva el anillo índigo, las flechas cambian de opción y Tab entra solo en la elegida.
+- En "Sigue tu pedido", el detalle del pedido se salía 33 px de la pantalla a 320 px y partía
+  "Personalización" a media palabra.
 - El aviso "Revisa este dato: distrito" salía bajo "Referencia", lejos de los combos: ahora sale
   justo debajo, con su icono, y el combo que falta se marca en rojo y queda ligado al aviso para los
   lectores de pantalla.

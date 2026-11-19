@@ -8,6 +8,7 @@ p1_count: 3
 target_identity: "file:C:\\Camisama\\themes\\camisama\\templates"
 timestamp: 2026-11-19T20-50-41Z
 slug: themes-camisama-templates
+closed: true
 ---
 Method: dual-agent (A: revisión de diseño · B: detector + navegador)
 

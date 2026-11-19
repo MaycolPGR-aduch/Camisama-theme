@@ -19,20 +19,22 @@
 
 	// El combo que falta, en rojo como los campos de WooCommerce con error.
 	select[aria-invalid="true"] {
-		border-color: #cc1818;
+		border-color: var(--wp--preset--color--primary, #d3261c);
 	}
 }
 
 .camisama-ubigeo__note {
 	margin: 0;
 	padding: 0.6em 0.9em;
-	border-left: 4px solid var(--wp--preset--color--border, #e4ded3);
-	border-radius: 4px;
+	border: 1px solid var(--wp--preset--color--border, #e4ded3);
+	border-radius: 10px;
 	background: var(--wp--preset--color--surface, #fff);
 	font-size: 0.875rem;
 
+	// Fuera de Lima y el Callao: aviso ámbar, como la calidad aceptable del
+	// editor.
 	&.is-outside {
-		border-left-color: var(--wp--preset--color--accent, #f5b700);
+		border-color: transparent;
 		background: #fff4d6;
 		color: #8a5a00;
 	}
