@@ -1,7 +1,7 @@
 # Plantillas fotográficas
 
 Desde el 24 de noviembre de 2026 los 4 modelos de la tienda local usan fotos en lugar de las maquetas
-dibujadas: en el editor, la tienda, la ficha, el carrito y la confirmación.
+dibujadas: en el editor, la tienda, la ficha, el carrito, la confirmación y la portada.
 
 **Son imágenes generadas con IA**, no fotos de las prendas del taller. Antes de abrir al público hay que
 sustituirlas por fotos reales o comprobar, prenda en mano, que corte, color y textura coinciden.
@@ -14,6 +14,7 @@ sustituirlas por fotos reales o comprobar, prenda en mano, que corte, color y te
 | Recorte, color y fotos de producto | `python bin/plantillas/preparar.py` (Pillow, NumPy, SciPy) |
 | Zonas de impresión por modelo | `bin/plantillas/zonas.json` |
 | Resultado, con huellas | `assets/customizer/modelos/v1/` y su `manifest.json` |
+| Copias para la portada | `themes/camisama/assets/images/example-tee-*.webp` (las hace `preparar.py`) |
 | Puesta en la tienda local | `bin/import-fotos-modelos.php` (también desde `bin/setup-local.ps1`) |
 
 Volver a las maquetas y zonas anteriores:
@@ -45,5 +46,4 @@ php vendor/wp-cli/wp-cli/php/boot-fs.php --path=C:\laragon\www\camisama eval-fil
 1. Confirmar las zonas con el taller y la prenda física (costuras, posición, diferencias por talla).
 2. Fotos reales, o niños en rojo y mostaza generadas como las demás.
 3. La vista previa sigue siendo plana: la impresión no sigue los pliegues.
-4. La portada usa todavía sus prendas dibujadas (`themes/camisama/assets/images/example-tee-*.png`).
-5. El producto del piloto (`CAM-CLASICA-PILOTO-V1`, oculto) ya no hace falta; sigue publicado.
+4. El producto del piloto (`CAM-CLASICA-PILOTO-V1`, oculto) ya no hace falta; sigue publicado.

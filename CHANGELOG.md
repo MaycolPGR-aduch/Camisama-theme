@@ -15,6 +15,10 @@ conviene recordar.
   confirmación. `bin/plantillas/preparar.py` las prepara y `bin/import-fotos-modelos.php` las pone en la
   tienda local, con copia de lo anterior y opción de volver ("restaurar"). **Son imágenes generadas con
   IA**, no fotos de las prendas del taller.
+- **La portada, con las mismas fotos**: hero, ejemplos con sus cuatro colores, pasos, cierre e imagen
+  para compartir. La zona discontinua y los estampados salen de las medidas del editor. El pie de los
+  ejemplos dice que las prendas son imágenes generadas con IA. Las tarjetas de modelos muestran la
+  primera frase entera de su descripción, como en la tienda.
 - **Correo y teléfono revisados al salir del campo**, en el pago (`client/checkout/contact.js`):
   "maria@gmail" o un celular de 8 dígitos se avisan en el momento y dicen cómo se corrigen. Se
   aceptan celulares y fijos peruanos, con o sin +51, y teléfonos de otros países con "+".

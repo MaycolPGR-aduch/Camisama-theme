@@ -1,6 +1,6 @@
 # Recursos de ejemplo de la portada
 
-- `example-tee-white.png` y `example-tee-black.png`: maquetas del generador de demostración de este proyecto (`bin/seed-demo.php`), copiadas al tema para que no dependan de adjuntos de una instalación local.
+- `example-tee-white.webp`, `-black`, `-red` y `-navy`: frentes de la camiseta clásica, las mismas plantillas del editor (recortadas y con transparencia), que `bin/plantillas/preparar.py` copia aquí para que el tema no dependa de adjuntos de una instalación local. **Imágenes generadas con IA** (docs/plantillas-fotograficas.md); la portada lo dice junto a los ejemplos.
 - `example-sun.svg`: estampado Sol andino de `bin/demo-designs/sol-andino.svg`.
 - `print-zones.svg`: diagrama vectorial de ubicaciones de referencia. Las medidas mostradas junto al diagrama se leen de la configuración del modelo real.
 - `example-photo.webp`: muestra ilustrativa generada mediante la herramienta integrada ImageGen, reducida a 520 × 520 y optimizada a WEBP con FFmpeg. No representa una foto aportada por un cliente ni un pedido realizado.
@@ -11,5 +11,4 @@ Prompt final utilizado:
 
 Los ejemplos se identifican como digitales en la portada. La composición sobre las prendas se realiza en HTML/CSS; los enlaces permiten elegir modelo, sin prometer cargar automáticamente el diseño de ejemplo.
 
-- `example-tee-red.png` y `example-tee-navy.png`: maquetas roja y azul marino de la camiseta clásica, del mismo generador, para las muestras de color de la portada y los pasos de "Cómo funciona".
-- `og-home.png` (1200 × 630): vista previa al compartir la portada. Se genera, sin IA, desde `bin/og-image/og-home.html` (fuentes y maquetas del tema) con `pwsh bin/og-image/render.ps1`, que la fotografía con Chrome sin ventana. Para cambiarla, editar el HTML y volver a ejecutar el script.
+- `og-home.png` (1200 × 630): vista previa al compartir la portada. Se genera desde `bin/og-image/og-home.html` (fuentes del tema y la prenda negra de arriba) con `pwsh bin/og-image/render.ps1`, que la fotografía con Chrome sin ventana. Para cambiarla, editar el HTML y volver a ejecutar el script.

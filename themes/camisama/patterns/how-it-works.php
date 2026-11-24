@@ -22,8 +22,8 @@ $camisama_steps = array(
 <h2 id="camisama-steps-title"><?php esc_html_e( 'De tu cabeza a tu camiseta.', 'camisama' ); ?></h2>
 <div class="camisama-steps__stage" aria-hidden="true">
 <div class="camisama-tee camisama-steps__tee">
-<img class="camisama-tee__base camisama-steps__base camisama-steps__base--white" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-white.png' ) ); ?>" alt="" width="800" height="800" loading="lazy">
-<img class="camisama-tee__base camisama-steps__base camisama-steps__base--navy" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-navy.png' ) ); ?>" alt="" width="800" height="800" loading="lazy">
+<img class="camisama-tee__base camisama-steps__base camisama-steps__base--white" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-white.webp' ) ); ?>" alt="" width="1024" height="1024" loading="lazy">
+<img class="camisama-tee__base camisama-steps__base camisama-steps__base--navy" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-navy.webp' ) ); ?>" alt="" width="1024" height="1024" loading="lazy">
 <span class="camisama-steps__swatches"><span style="--swatch: #FAFAF7"></span><span style="--swatch: #1C1C21"></span><span style="--swatch: #C62A22"></span><span class="is-chosen" style="--swatch: #1F2A4D"></span></span>
 <span class="camisama-steps__zone"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-sun.svg' ) ); ?>" alt="" width="160" height="160" loading="lazy"><span>TU LEY.</span></span>
 <span class="camisama-steps__order"><span class="camisama-steps__sizes"><span>S</span><span class="is-chosen">M</span><span>L</span></span><span class="camisama-steps__ready"><?php esc_html_e( 'Lista para pedir', 'camisama' ); ?></span></span>

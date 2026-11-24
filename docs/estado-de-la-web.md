@@ -112,11 +112,10 @@ local, 45 pruebas de JS y lint limpio.
       WooCommerce → Ajustes → Productos cuando haya clientes que puedan dejarlas.
 - [x] **Zona "Pecho (logo) 10 × 10 cm"**: ya no se anuncia; la portada lee las zonas reales de cada
       modelo.
-- [x] **Plantillas fotográficas** en los 4 modelos, generadas con IA
+- [x] **Plantillas fotográficas** en los 4 modelos y en la portada, generadas con IA
       ([plantillas-fotograficas.md](plantillas-fotograficas.md)): la prenda llena el lienzo.
 - [ ] **Fotos reales** de las prendas, o comprobar prenda en mano que las generadas coinciden, y
       confirmar las zonas con el taller. Niños en rojo y mostaza están teñidas desde la blanca.
-- [ ] **Portada con las mismas fotos**: todavía usa sus prendas dibujadas.
 - [ ] **Logotipo definitivo** (el actual es provisional).
 - [ ] **Medidas reales de las tallas** por modelo (ancho y largo en cm). Mientras tanto, la guía
       "¿Qué talla?" usará unas de referencia por defecto.

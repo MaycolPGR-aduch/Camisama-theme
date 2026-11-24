@@ -46,8 +46,8 @@ $camisama_live  = array(
 </div>
 <figure class="camisama-hero__visual camisama-live" data-camisama-live data-state="0" data-tee="black">
 <div class="camisama-tee camisama-live__stage" role="img" aria-label="<?php echo esc_attr( $camisama_live[0]['label'] ); ?>">
-<img class="camisama-tee__base camisama-live__base camisama-live__base--black" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-black.png' ) ); ?>" alt="" width="800" height="800" fetchpriority="high">
-<img class="camisama-tee__base camisama-live__base camisama-live__base--white" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-white.png' ) ); ?>" alt="" width="800" height="800" loading="lazy">
+<img class="camisama-tee__base camisama-live__base camisama-live__base--black" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-black.webp' ) ); ?>" alt="" width="1024" height="1024" fetchpriority="high">
+<img class="camisama-tee__base camisama-live__base camisama-live__base--white" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/example-tee-white.webp' ) ); ?>" alt="" width="1024" height="1024" loading="lazy">
 <div class="camisama-live__zone" aria-hidden="true">
 <span class="camisama-live__print camisama-live__print--text" data-print="0">A MI<br>MANERA.</span>
 <img class="camisama-live__print camisama-live__print--logo" data-print="1" src="<?php echo esc_url( $camisama_sun ); ?>" alt="" width="160" height="160" loading="lazy">

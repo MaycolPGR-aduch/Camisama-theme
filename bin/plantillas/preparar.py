@@ -9,10 +9,13 @@ las zonas valen para todos. Escribe en assets/customizer/modelos/v1:
 - <modelo>/<color>-<vista>.webp        maqueta del editor, con transparencia;
 - <modelo>/<color>-<vista>-foto.webp   foto del producto, sobre el fondo de las tarjetas;
 - manifest.json                        archivos, huellas y zonas (zonas.json).
+
+Los frentes de la clásica se copian también al tema (example-tee-*.webp), para la portada.
 """
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import numpy as np
@@ -23,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "assets" / "propuestas"
 TARGET = ROOT / "assets" / "customizer" / "modelos" / "v1"
 SIZE = 1024
+THEME = ROOT / "themes" / "camisama" / "assets" / "images"
+THEME_TEES = {"blanco": "white", "negro": "black", "rojo": "red", "azul-marino": "navy"}
 VIEWS = {"front": "frente", "back": "espalda"}
 CARD = np.array([0xF1, 0xED, 0xE6], float)
 
@@ -176,6 +181,8 @@ def main():
         manifest["models"][slug] = {"sku": model["sku"], "zones": zones[slug], "images": images}
     text = json.dumps(manifest, ensure_ascii=False, indent="\t")
     (TARGET / "manifest.json").write_text(text + "\n", encoding="utf-8", newline="\n")
+    for color, name in THEME_TEES.items():
+        shutil.copyfile(TARGET / "clasica" / f"{color}-front.webp", THEME / f"example-tee-{name}.webp")
     files = sorted(TARGET.rglob("*.webp"))
     print(f"{len(files)} imágenes, {sum(f.stat().st_size for f in files) // 1024} KB")
 

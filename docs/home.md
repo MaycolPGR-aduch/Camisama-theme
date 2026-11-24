@@ -6,6 +6,15 @@ Los patrones se componen en `themes/camisama/templates/front-page.html`. El CSS 
 
 El bloque `camisama/home-price` se registra con metadatos y vista previa de servidor en el editor. En cada render busca una variante publicada, comprable y en stock, valida que el producto tenga personalizador y zona frontal, y calcula una impresión de texto de hasta 10 cm mediante `DesignPricer`. El desglose utiliza las mismas tarifas del plugin y el formato de precios de WooCommerce. Las medidas desplegables proceden de la configuración del modelo de ese ejemplo. Si no hay un producto válido, se muestra una explicación sin importes inventados.
 
+## Prendas
+
+Desde el 24 de noviembre de 2026 las prendas del hero, los ejemplos, los pasos, el cierre y la imagen
+para compartir son las plantillas fotográficas del editor ([plantillas-fotograficas.md](plantillas-fotograficas.md)),
+generadas con IA; el pie de los ejemplos lo dice. La zona discontinua y los estampados salen del frente de
+la clásica en `bin/plantillas/zonas.json` (variables `--front-*` de `.camisama-tee`, en `home.css`): si
+cambian las zonas, cambiarlas también ahí y en `bin/og-image/og-home.html`. `--tee-scale` encoge la prenda
+donde lleva fichas (hero y pasos), y la zona la sigue. El mapa de zonas y precio sigue siendo un dibujo.
+
 ## Movimiento (tanda 1 del rediseño dinámico)
 
 El movimiento de la portada enseña el producto; no es adorno. Todo es mejora progresiva con
@@ -34,7 +43,7 @@ El movimiento de la portada enseña el producto; no es adorno. Todo es mejora pr
   Se pausa con el cursor, con su botón y fuera de pantalla; con movimiento reducido queda quieta y
   se desliza a mano. Sin estampados no se muestra.
 - **Colores en los ejemplos** (`patterns/personalization-examples.php`): cada ejemplo cambia entre
-  blanco, negro, rojo y azul marino, las maquetas reales de la camiseta clásica (copiadas en
+  blanco, negro, rojo y azul marino, las plantillas del editor de la camiseta clásica (copiadas en
   `assets/images`). El texto impreso pasa a tinta sobre la prenda blanca.
 - **Cómo funciona con el scroll** (`patterns/how-it-works.php`): la prenda se queda fija mientras
   pasan los pasos y se arma por etapas (color, diseño, talla y "Lista para pedir"). El paso que

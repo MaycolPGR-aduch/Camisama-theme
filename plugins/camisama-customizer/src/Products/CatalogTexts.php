@@ -82,13 +82,13 @@ final class CatalogTexts {
 	}
 
 	/**
-	 * En las tarjetas de la tienda, solo la primera frase de la descripción corta: en qué se
+	 * En las tarjetas de la tienda y la portada, solo la primera frase de la descripción corta: en qué se
 	 * diferencia el modelo (corte, tela, tallas). Cortarla por número de palabras la deja a medias.
 	 *
 	 * @param string $content HTML del bloque.
 	 */
 	public static function card_summary( string $content ): string {
-		if ( ! is_shop() && ! is_product_taxonomy() ) {
+		if ( ! is_shop() && ! is_product_taxonomy() && ! is_front_page() ) {
 			return $content;
 		}
 

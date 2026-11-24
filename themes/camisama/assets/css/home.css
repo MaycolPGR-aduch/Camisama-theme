@@ -139,12 +139,23 @@
 	font-weight: 400;
 }
 
+/*
+ * Prenda de los ejemplos: la plantilla del editor (bin/plantillas), recortada.
+ * El frente son los 30 × 40 cm de su zona, en fracciones de la imagen
+ * (bin/plantillas/zonas.json). --tee-scale encoge la prenda donde hay
+ * fichas encima o debajo; la zona y los estampados la siguen.
+ */
 .camisama-tee {
+	--tee-scale: 1;
+	--front-top: calc(50% + (19.8% - 50%) * var(--tee-scale));
+	--front-left: calc(50% + (34.25% - 50%) * var(--tee-scale));
+	--front-width: calc(31.2% * var(--tee-scale));
+	--front-height: calc(41.6% * var(--tee-scale));
 	position: relative;
 	overflow: hidden;
 	aspect-ratio: 1;
 	border-radius: 24px;
-	background: var(--wp--preset--color--base);
+	background: color-mix(in srgb, var(--wp--preset--color--border) 75%, var(--wp--preset--color--base));
 }
 
 .camisama-tee__base {
@@ -152,33 +163,34 @@
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-	mix-blend-mode: multiply;
-	transform: scale(1.4);
+	transform: scale(var(--tee-scale));
 }
 
 .camisama-tee__print {
 	position: absolute;
-	top: 37%;
-	left: 50%;
-	width: 26%;
+	top: 28%;
+	left: 49.85%;
+	width: 23%;
 	height: auto;
 	transform: translateX(-50%);
 }
 
 .camisama-tee__print--text {
-	top: 42%;
-	width: 36%;
+	top: 31%;
+	width: max-content;
 	color: var(--wp--preset--color--base);
 	font-family: var(--wp--preset--font-family--display);
-	font-size: clamp(0.875rem, 1.5vw, 1.25rem);
+
+	/* Con la prenda: la frase cabe siempre en los 30 cm de la zona. */
+	font-size: 4.8cqi;
 	font-weight: 800;
 	line-height: 1.15;
 	text-align: center;
 }
 
 .camisama-tee__print--photo {
-	top: 35%;
-	width: 29%;
+	top: 24%;
+	width: 28%;
 	aspect-ratio: 1;
 	object-fit: cover;
 }
@@ -186,12 +198,15 @@
 /*
  * Hero vivo: tres ejemplos que se turnan sobre la prenda. El estado lo
  * ponen data-state y data-tee en la figura (assets/js/home.js); sin JS se
- * queda el primero. La zona reproduce el frente adulto de los presets del
- * personalizador (con la escala 1.4 de la maqueta).
+ * queda el primero. La zona es el frente de la plantilla del editor.
  */
 .camisama-live {
 	--live-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 	position: relative;
+}
+
+.camisama-live__stage {
+	--tee-scale: 0.92;
 }
 
 .camisama-live__base {
@@ -208,11 +223,11 @@
 
 .camisama-live__zone {
 	position: absolute;
-	top: 26.7%;
-	left: 33.2%;
+	top: var(--front-top);
+	left: var(--front-left);
 	box-sizing: border-box;
-	width: 33.7%;
-	height: 44.9%;
+	width: var(--front-width);
+	height: var(--front-height);
 	border: 1.5px dashed rgb(255 255 255 / 0.85);
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px rgb(22 22 26 / 0.35), inset 0 0 0 1px rgb(22 22 26 / 0.35);
@@ -269,7 +284,7 @@
 
 .camisama-live__chip {
 	position: absolute;
-	bottom: 5%;
+	bottom: 2.5%;
 	left: 50%;
 	display: flex;
 	align-items: center;
@@ -693,6 +708,10 @@
 	margin-top: 1.25rem;
 }
 
+.camisama-examples .camisama-tee {
+	container-type: inline-size;
+}
+
 .camisama-tee[data-tone="light"] .camisama-tee__print--text {
 	color: var(--wp--preset--color--contrast);
 }
@@ -886,6 +905,7 @@
 }
 
 .camisama-steps__tee {
+	--tee-scale: 0.84;
 	container-type: inline-size;
 }
 
@@ -935,7 +955,7 @@
 
 .camisama-steps__swatches {
 	position: absolute;
-	top: 7%;
+	top: 3%;
 	left: 50%;
 	display: flex;
 	gap: 0.4rem;
@@ -988,10 +1008,10 @@
 /* El diseño, dentro del frente adulto (igual que en el hero). */
 .camisama-steps__zone {
 	position: absolute;
-	top: 30%;
-	left: 33.2%;
+	top: calc(var(--front-top) + 3%);
+	left: var(--front-left);
 	display: grid;
-	width: 33.7%;
+	width: var(--front-width);
 	justify-items: center;
 	gap: 0.4em;
 	color: var(--wp--preset--color--base);
@@ -1017,7 +1037,7 @@
 
 .camisama-steps__order {
 	position: absolute;
-	bottom: 6%;
+	bottom: 2.5%;
 	left: 50%;
 	display: flex;
 	align-items: center;
@@ -1423,8 +1443,8 @@
 /* Sello de goma sobre el frente: borde y letra en rojo, un poco girado. */
 .camisama-stamp {
 	position: absolute;
-	top: 37%;
-	left: 50%;
+	top: 34%;
+	left: 49.85%;
 	display: grid;
 	box-sizing: border-box;
 	padding: 0.35em 0.6em 0.3em;
@@ -1629,10 +1649,13 @@
 		min-height: 26vh;
 	}
 
+	/* En una fila, con solo la talla elegida: en dos tapaban la prenda. */
 	.camisama-steps__order {
-		bottom: 4%;
-		flex-direction: column;
 		gap: 0.3rem;
+	}
+
+	.camisama-steps__sizes > span:not(.is-chosen) {
+		display: none;
 	}
 
 	/* Modelos en carrusel: se desliza con el dedo y asoma el siguiente. */
@@ -1736,10 +1759,6 @@
 
 	.camisama-examples figcaption p {
 		font-size: 0.875rem;
-	}
-
-	.camisama-tee__print--text {
-		font-size: clamp(0.5rem, 2.5vw, 0.875rem);
 	}
 
 	.camisama-tee {

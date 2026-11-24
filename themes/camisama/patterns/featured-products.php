@@ -34,7 +34,7 @@
 
 <!-- wp:post-title {"level":3,"isLink":true,"fontSize":"large","__woocommerceNamespace":"woocommerce/product-collection/product-title"} /-->
 
-<!-- wp:woocommerce/product-summary {"isDescendentOfQueryLoop":true,"summaryLength":13,"showLink":false} /-->
+<!-- wp:woocommerce/product-summary {"isDescendentOfQueryLoop":true,"summaryLength":100,"showLink":false} /-->
 
 <!-- wp:paragraph {"className":"camisama-home-note"} -->
 <p class="camisama-home-note"><?php esc_html_e( 'Prenda sin impresión', 'camisama' ); ?></p>
