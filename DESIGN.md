@@ -304,7 +304,7 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
   separadas por divisores discontinuos.
 
 ### Editor del personalizador (signature)
-- **Lienzo:** superficie blanca de 24px de radio donde se dibuja la prenda; encima, los contornos
+- **Lienzo:** papel, como la página, con la foto recortada de la prenda; encima, los contornos
   de zona con su etiqueta en píldora de tinta translúcida (sólida cuando la zona está activa).
 - **Paneles:** herramientas, selección, capas y resumen en tarjetas blancas con borde lino y
   radio 20px.

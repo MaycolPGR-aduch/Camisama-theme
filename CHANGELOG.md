@@ -10,6 +10,11 @@ conviene recordar.
 ## 2026-11-24
 
 ### Añadido
+- **Plantillas fotográficas en los 4 modelos** ([docs/plantillas-fotograficas.md](docs/plantillas-fotograficas.md)):
+  26 maquetas recortadas (13 colores, frente y espalda) en el editor, la tienda, la ficha, el carrito y la
+  confirmación. `bin/plantillas/preparar.py` las prepara y `bin/import-fotos-modelos.php` las pone en la
+  tienda local, con copia de lo anterior y opción de volver ("restaurar"). **Son imágenes generadas con
+  IA**, no fotos de las prendas del taller.
 - **Correo y teléfono revisados al salir del campo**, en el pago (`client/checkout/contact.js`):
   "maria@gmail" o un celular de 8 dígitos se avisan en el momento y dicen cómo se corrigen. Se
   aceptan celulares y fijos peruanos, con o sin +51, y teléfonos de otros países con "+".
@@ -23,12 +28,17 @@ conviene recordar.
 - Los avisos de WooCommerce, con el radio y el rojo de la tienda.
 
 ### Corregido
+- Filo blanco a los lados del lienzo del editor, y franjas blancas junto a las vistas previas de la
+  confirmación y de "Revisa antes de añadir": llevan el mismo papel que la imagen.
+- Mangas a la misma escala que el resto de la prenda (en el piloto, un tercio más pequeñas).
 - Los campos de "Sigue tu pedido" seguían con el aspecto de WooCommerce (su regla ganaba a la del
   tema), aunque el pulido del 19 los daba por cambiados.
 - Esquinas blancas cuadradas detrás de los desplegables del pago; icono del error encogido en los
   mensajes de dos líneas; etiqueta del campo con error, en el rojo de la marca.
 
 ### Decisiones
+- Niños en rojo y mostaza se tiñen desde la blanca, la única foto que hay.
+- Las zonas conservan identificador y centímetros: no cambian precios, impresión ni diseños guardados.
 - El formato del teléfono solo se exige en el formulario: el servidor sigue con la comprobación de
   WooCommerce (dígitos y signos).
 

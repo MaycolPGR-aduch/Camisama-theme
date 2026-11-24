@@ -1,0 +1,310 @@
+{
+	"clasica": [
+		{
+			"id": "front",
+			"label": "Frente",
+			"view": "front",
+			"rect": {
+				"x": 0.3425,
+				"y": 0.198,
+				"w": 0.312,
+				"h": 0.416
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "left-sleeve",
+			"label": "Manga izquierda",
+			"view": "front",
+			"rect": {
+				"x": 0.735,
+				"y": 0.298,
+				"w": 0.0936,
+				"h": 0.0936
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "right-sleeve",
+			"label": "Manga derecha",
+			"view": "front",
+			"rect": {
+				"x": 0.1684,
+				"y": 0.298,
+				"w": 0.0936,
+				"h": 0.0936
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "back",
+			"label": "Espalda",
+			"view": "back",
+			"rect": {
+				"x": 0.344,
+				"y": 0.19,
+				"w": 0.312,
+				"h": 0.416
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "nape",
+			"label": "Nuca",
+			"view": "back",
+			"rect": {
+				"x": 0.4584,
+				"y": 0.124,
+				"w": 0.0832,
+				"h": 0.052
+			},
+			"size_cm": {
+				"w": 8,
+				"h": 5
+			}
+		}
+	],
+	"oversize": [
+		{
+			"id": "front",
+			"label": "Frente",
+			"view": "front",
+			"rect": {
+				"x": 0.3635,
+				"y": 0.228,
+				"w": 0.273,
+				"h": 0.364
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "left-sleeve",
+			"label": "Manga izquierda",
+			"view": "front",
+			"rect": {
+				"x": 0.752,
+				"y": 0.37,
+				"w": 0.0819,
+				"h": 0.0819
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "right-sleeve",
+			"label": "Manga derecha",
+			"view": "front",
+			"rect": {
+				"x": 0.1661,
+				"y": 0.37,
+				"w": 0.0819,
+				"h": 0.0819
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "back",
+			"label": "Espalda",
+			"view": "back",
+			"rect": {
+				"x": 0.3635,
+				"y": 0.212,
+				"w": 0.273,
+				"h": 0.364
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "nape",
+			"label": "Nuca",
+			"view": "back",
+			"rect": {
+				"x": 0.4636,
+				"y": 0.15,
+				"w": 0.0728,
+				"h": 0.0455
+			},
+			"size_cm": {
+				"w": 8,
+				"h": 5
+			}
+		}
+	],
+	"manga-larga": [
+		{
+			"id": "front",
+			"label": "Frente",
+			"view": "front",
+			"rect": {
+				"x": 0.353,
+				"y": 0.2,
+				"w": 0.294,
+				"h": 0.392
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "left-sleeve",
+			"label": "Manga izquierda",
+			"view": "front",
+			"rect": {
+				"x": 0.722,
+				"y": 0.3,
+				"w": 0.0882,
+				"h": 0.0882
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "right-sleeve",
+			"label": "Manga derecha",
+			"view": "front",
+			"rect": {
+				"x": 0.1898,
+				"y": 0.3,
+				"w": 0.0882,
+				"h": 0.0882
+			},
+			"size_cm": {
+				"w": 9,
+				"h": 9
+			}
+		},
+		{
+			"id": "back",
+			"label": "Espalda",
+			"view": "back",
+			"rect": {
+				"x": 0.353,
+				"y": 0.187,
+				"w": 0.294,
+				"h": 0.392
+			},
+			"size_cm": {
+				"w": 30,
+				"h": 40
+			}
+		},
+		{
+			"id": "nape",
+			"label": "Nuca",
+			"view": "back",
+			"rect": {
+				"x": 0.4608,
+				"y": 0.122,
+				"w": 0.0784,
+				"h": 0.049
+			},
+			"size_cm": {
+				"w": 8,
+				"h": 5
+			}
+		}
+	],
+	"ninos": [
+		{
+			"id": "front",
+			"label": "Frente",
+			"view": "front",
+			"rect": {
+				"x": 0.3642,
+				"y": 0.273,
+				"w": 0.2706,
+				"h": 0.3444
+			},
+			"size_cm": {
+				"w": 22,
+				"h": 28
+			}
+		},
+		{
+			"id": "left-sleeve",
+			"label": "Manga izquierda",
+			"view": "front",
+			"rect": {
+				"x": 0.73,
+				"y": 0.311,
+				"w": 0.0861,
+				"h": 0.0861
+			},
+			"size_cm": {
+				"w": 7,
+				"h": 7
+			}
+		},
+		{
+			"id": "right-sleeve",
+			"label": "Manga derecha",
+			"view": "front",
+			"rect": {
+				"x": 0.1829,
+				"y": 0.311,
+				"w": 0.0861,
+				"h": 0.0861
+			},
+			"size_cm": {
+				"w": 7,
+				"h": 7
+			}
+		},
+		{
+			"id": "back",
+			"label": "Espalda",
+			"view": "back",
+			"rect": {
+				"x": 0.3642,
+				"y": 0.277,
+				"w": 0.2706,
+				"h": 0.3444
+			},
+			"size_cm": {
+				"w": 22,
+				"h": 28
+			}
+		},
+		{
+			"id": "nape",
+			"label": "Nuca",
+			"view": "back",
+			"rect": {
+				"x": 0.4626,
+				"y": 0.212,
+				"w": 0.0738,
+				"h": 0.0492
+			},
+			"size_cm": {
+				"w": 6,
+				"h": 4
+			}
+		}
+	]
+}

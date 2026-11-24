@@ -1,0 +1,698 @@
+{
+	"version": 1,
+	"physical_measurements_confirmed": false,
+	"models": {
+		"clasica": {
+			"sku": "CAM-CLASICA",
+			"zones": [
+				{
+					"id": "front",
+					"label": "Frente",
+					"view": "front",
+					"rect": {
+						"x": 0.3425,
+						"y": 0.198,
+						"w": 0.312,
+						"h": 0.416
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "left-sleeve",
+					"label": "Manga izquierda",
+					"view": "front",
+					"rect": {
+						"x": 0.735,
+						"y": 0.298,
+						"w": 0.0936,
+						"h": 0.0936
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "right-sleeve",
+					"label": "Manga derecha",
+					"view": "front",
+					"rect": {
+						"x": 0.1684,
+						"y": 0.298,
+						"w": 0.0936,
+						"h": 0.0936
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "back",
+					"label": "Espalda",
+					"view": "back",
+					"rect": {
+						"x": 0.344,
+						"y": 0.19,
+						"w": 0.312,
+						"h": 0.416
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "nape",
+					"label": "Nuca",
+					"view": "back",
+					"rect": {
+						"x": 0.4584,
+						"y": 0.124,
+						"w": 0.0832,
+						"h": 0.052
+					},
+					"size_cm": {
+						"w": 8,
+						"h": 5
+					}
+				}
+			],
+			"images": [
+				{
+					"color": "blanco",
+					"view": "front",
+					"mockup": {
+						"file": "clasica/blanco-front.webp",
+						"bytes": 27444,
+						"sha256": "6996a53124c7f4fdd028aaa63b21f1e43c715b4f8e7dc3844f3552806bed5f91"
+					},
+					"photo": {
+						"file": "clasica/blanco-front-foto.webp",
+						"bytes": 11528,
+						"sha256": "324486e683b243e59616f5fc64cb51cd3c6feb8e79cad62542b580ca2d0c2e50"
+					}
+				},
+				{
+					"color": "blanco",
+					"view": "back",
+					"mockup": {
+						"file": "clasica/blanco-back.webp",
+						"bytes": 23656,
+						"sha256": "790dd466d6eccdad257348de5005c9ffe813139fbb48023cd073a8011a9a2bf8"
+					},
+					"photo": {
+						"file": "clasica/blanco-back-foto.webp",
+						"bytes": 8484,
+						"sha256": "f49cad6c20e0248fb68a50838e0e81c96bf0de8135a53b904a296d93e353a7a7"
+					}
+				},
+				{
+					"color": "negro",
+					"view": "front",
+					"mockup": {
+						"file": "clasica/negro-front.webp",
+						"bytes": 23234,
+						"sha256": "baa783a92c885abad1411c4c7aa6fb319398e72c372417a7f4c80813ee42db60"
+					},
+					"photo": {
+						"file": "clasica/negro-front-foto.webp",
+						"bytes": 11658,
+						"sha256": "2411ce52763282d2fc6f45b7f0160a90c0cb0ed156ca37cbb80e3c8871b336a6"
+					}
+				},
+				{
+					"color": "negro",
+					"view": "back",
+					"mockup": {
+						"file": "clasica/negro-back.webp",
+						"bytes": 21604,
+						"sha256": "41fd503d687ae582418bcc3c55048ae5b044f65762bf5a957e0aeb806e3e921c"
+					},
+					"photo": {
+						"file": "clasica/negro-back-foto.webp",
+						"bytes": 10608,
+						"sha256": "102153ca02db6032d29ee0a6da21aed82100a4736323c79755aab3989cfd1755"
+					}
+				},
+				{
+					"color": "rojo",
+					"view": "front",
+					"mockup": {
+						"file": "clasica/rojo-front.webp",
+						"bytes": 35514,
+						"sha256": "fade6ff9c478623431e5746ac41059e0bc2b2dac1f2084c6a1f2094adde54626"
+					},
+					"photo": {
+						"file": "clasica/rojo-front-foto.webp",
+						"bytes": 20454,
+						"sha256": "da0d7fd95259b2460f2033c99adf045e8418fffabbca27ec6a27fd72c7485e0d"
+					}
+				},
+				{
+					"color": "rojo",
+					"view": "back",
+					"mockup": {
+						"file": "clasica/rojo-back.webp",
+						"bytes": 32622,
+						"sha256": "fb11c08e6e1a8be16fee312a4f0a58378a5dbd9d146397aa488921ecddc02156"
+					},
+					"photo": {
+						"file": "clasica/rojo-back-foto.webp",
+						"bytes": 19660,
+						"sha256": "4ebe9d7f283022632eaf7a73eeac78d578a0de6141c67a5a20a888c00eed383d"
+					}
+				},
+				{
+					"color": "azul-marino",
+					"view": "front",
+					"mockup": {
+						"file": "clasica/azul-marino-front.webp",
+						"bytes": 26764,
+						"sha256": "b5ee9254a6880f6c28e12caa2d2f1a61064c08d7e22a7a3a9ca484bcd12a5f3f"
+					},
+					"photo": {
+						"file": "clasica/azul-marino-front-foto.webp",
+						"bytes": 14282,
+						"sha256": "e3e21809d17361a6dcff55f47a467d1a36b5bdd32bd8a5d0c08f901f8c72ba10"
+					}
+				},
+				{
+					"color": "azul-marino",
+					"view": "back",
+					"mockup": {
+						"file": "clasica/azul-marino-back.webp",
+						"bytes": 27192,
+						"sha256": "9c940dcee4345f82d4cde447916ef8f7ada28347f50ada5fbb05949765469836"
+					},
+					"photo": {
+						"file": "clasica/azul-marino-back-foto.webp",
+						"bytes": 14694,
+						"sha256": "8e9972fd2097af8d5771286751aa3c919b2b1e02e78226cf9c2106be135540af"
+					}
+				}
+			]
+		},
+		"oversize": {
+			"sku": "CAM-OVERSIZE",
+			"zones": [
+				{
+					"id": "front",
+					"label": "Frente",
+					"view": "front",
+					"rect": {
+						"x": 0.3635,
+						"y": 0.228,
+						"w": 0.273,
+						"h": 0.364
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "left-sleeve",
+					"label": "Manga izquierda",
+					"view": "front",
+					"rect": {
+						"x": 0.752,
+						"y": 0.37,
+						"w": 0.0819,
+						"h": 0.0819
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "right-sleeve",
+					"label": "Manga derecha",
+					"view": "front",
+					"rect": {
+						"x": 0.1661,
+						"y": 0.37,
+						"w": 0.0819,
+						"h": 0.0819
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "back",
+					"label": "Espalda",
+					"view": "back",
+					"rect": {
+						"x": 0.3635,
+						"y": 0.212,
+						"w": 0.273,
+						"h": 0.364
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "nape",
+					"label": "Nuca",
+					"view": "back",
+					"rect": {
+						"x": 0.4636,
+						"y": 0.15,
+						"w": 0.0728,
+						"h": 0.0455
+					},
+					"size_cm": {
+						"w": 8,
+						"h": 5
+					}
+				}
+			],
+			"images": [
+				{
+					"color": "negro",
+					"view": "front",
+					"mockup": {
+						"file": "oversize/negro-front.webp",
+						"bytes": 23206,
+						"sha256": "7b0b2807cf7d50e78e385d416e712f27bf8f1c8bba461cf07d2f368d8f9518f9"
+					},
+					"photo": {
+						"file": "oversize/negro-front-foto.webp",
+						"bytes": 11572,
+						"sha256": "7dcdf07dc866771632228f0f88d28dd39ddac7104f3049b48b388b32291cdcfa"
+					}
+				},
+				{
+					"color": "negro",
+					"view": "back",
+					"mockup": {
+						"file": "oversize/negro-back.webp",
+						"bytes": 24382,
+						"sha256": "13a95c01c247157e091a0bef4931c8600f9cd792225c8fbefed94579c14d35db"
+					},
+					"photo": {
+						"file": "oversize/negro-back-foto.webp",
+						"bytes": 12362,
+						"sha256": "79f8b2841afbbcf28ed84a815b1aa2049643b38da3f3a2e58404acf4baa42b94"
+					}
+				},
+				{
+					"color": "blanco",
+					"view": "front",
+					"mockup": {
+						"file": "oversize/blanco-front.webp",
+						"bytes": 25288,
+						"sha256": "82692e4d88139752b266b25f96eb93722adef842991b8dcb80839e4f9411e327"
+					},
+					"photo": {
+						"file": "oversize/blanco-front-foto.webp",
+						"bytes": 9836,
+						"sha256": "ae10197b95efcc95bf6aee18077d01b8c57ae340bd33300494d5a5d37b3dee38"
+					}
+				},
+				{
+					"color": "blanco",
+					"view": "back",
+					"mockup": {
+						"file": "oversize/blanco-back.webp",
+						"bytes": 24286,
+						"sha256": "76483071d9525533f68454e43e712a8bf2e5c5f74558a28098f3a587a88650bb"
+					},
+					"photo": {
+						"file": "oversize/blanco-back-foto.webp",
+						"bytes": 9672,
+						"sha256": "9db0ae7639745bc17110a20e8b688d8376572744923388baeb4c66ec22d60589"
+					}
+				},
+				{
+					"color": "arena",
+					"view": "front",
+					"mockup": {
+						"file": "oversize/arena-front.webp",
+						"bytes": 28082,
+						"sha256": "f55533b36a8e7c33cfd53b08974052ab6affc7bcf6a6d126aef44e288e96a7ce"
+					},
+					"photo": {
+						"file": "oversize/arena-front-foto.webp",
+						"bytes": 13388,
+						"sha256": "83349152212a5ca6ab0491691d5eda41ac0315e01bf67960d8346bc0a60e15e6"
+					}
+				},
+				{
+					"color": "arena",
+					"view": "back",
+					"mockup": {
+						"file": "oversize/arena-back.webp",
+						"bytes": 25662,
+						"sha256": "cd58f60b1c6f99edc1130406bb20e50248ecc2c3cbc3eef7e117947d95a5038d"
+					},
+					"photo": {
+						"file": "oversize/arena-back-foto.webp",
+						"bytes": 11692,
+						"sha256": "1f721150b798370192f9027b864c5985421f2553d96258bf9f97972fd474e3f6"
+					}
+				}
+			]
+		},
+		"manga-larga": {
+			"sku": "CAM-MANGA-LARGA",
+			"zones": [
+				{
+					"id": "front",
+					"label": "Frente",
+					"view": "front",
+					"rect": {
+						"x": 0.353,
+						"y": 0.2,
+						"w": 0.294,
+						"h": 0.392
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "left-sleeve",
+					"label": "Manga izquierda",
+					"view": "front",
+					"rect": {
+						"x": 0.722,
+						"y": 0.3,
+						"w": 0.0882,
+						"h": 0.0882
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "right-sleeve",
+					"label": "Manga derecha",
+					"view": "front",
+					"rect": {
+						"x": 0.1898,
+						"y": 0.3,
+						"w": 0.0882,
+						"h": 0.0882
+					},
+					"size_cm": {
+						"w": 9,
+						"h": 9
+					}
+				},
+				{
+					"id": "back",
+					"label": "Espalda",
+					"view": "back",
+					"rect": {
+						"x": 0.353,
+						"y": 0.187,
+						"w": 0.294,
+						"h": 0.392
+					},
+					"size_cm": {
+						"w": 30,
+						"h": 40
+					}
+				},
+				{
+					"id": "nape",
+					"label": "Nuca",
+					"view": "back",
+					"rect": {
+						"x": 0.4608,
+						"y": 0.122,
+						"w": 0.0784,
+						"h": 0.049
+					},
+					"size_cm": {
+						"w": 8,
+						"h": 5
+					}
+				}
+			],
+			"images": [
+				{
+					"color": "blanco",
+					"view": "front",
+					"mockup": {
+						"file": "manga-larga/blanco-front.webp",
+						"bytes": 39080,
+						"sha256": "62f45b27eda2d8d8dbba3802845b3561f80a8f3801bd647b35bf5250f82004f1"
+					},
+					"photo": {
+						"file": "manga-larga/blanco-front-foto.webp",
+						"bytes": 16062,
+						"sha256": "0d5f133b87272c2f1869ce9294ea116b2ef058f9a7aa9e8354ae4ac763fab5f6"
+					}
+				},
+				{
+					"color": "blanco",
+					"view": "back",
+					"mockup": {
+						"file": "manga-larga/blanco-back.webp",
+						"bytes": 38222,
+						"sha256": "4b7c4764f63fa92ee768d1c1f8e86d92a5dfa338924a66571306a80156c465a0"
+					},
+					"photo": {
+						"file": "manga-larga/blanco-back-foto.webp",
+						"bytes": 15064,
+						"sha256": "a35e09170027cd6379635eddf200f018fed98b255188f6e6d8831fc7a89db400"
+					}
+				},
+				{
+					"color": "negro",
+					"view": "front",
+					"mockup": {
+						"file": "manga-larga/negro-front.webp",
+						"bytes": 36980,
+						"sha256": "ab99631a9b3325913b84aa1428b6b52a3b53623b63c51cc3b93cd4a68f0cfdc2"
+					},
+					"photo": {
+						"file": "manga-larga/negro-front-foto.webp",
+						"bytes": 19346,
+						"sha256": "6b414593d08194552cbe281b5a2491fba1b6575687186a70a97a71ee59958cd9"
+					}
+				},
+				{
+					"color": "negro",
+					"view": "back",
+					"mockup": {
+						"file": "manga-larga/negro-back.webp",
+						"bytes": 38414,
+						"sha256": "6e46a8969dbeb87f0ca13fcfc5bc014aac1cbc9eee9dd4e6579101717a4f7d36"
+					},
+					"photo": {
+						"file": "manga-larga/negro-back-foto.webp",
+						"bytes": 20196,
+						"sha256": "d8d3162b2450c4c2449087143b262bb9fd558f72825306e5736ea57365d864ad"
+					}
+				},
+				{
+					"color": "gris",
+					"view": "front",
+					"mockup": {
+						"file": "manga-larga/gris-front.webp",
+						"bytes": 144546,
+						"sha256": "4b907d7c07cd7fd7a3f656018c1425b8c165eb4243753601602fe9bd9962d183"
+					},
+					"photo": {
+						"file": "manga-larga/gris-front-foto.webp",
+						"bytes": 110404,
+						"sha256": "10938402e3d25ecc1e6ea416db068cdc421b379dbc102288c77d04ceee3fa729"
+					}
+				},
+				{
+					"color": "gris",
+					"view": "back",
+					"mockup": {
+						"file": "manga-larga/gris-back.webp",
+						"bytes": 185500,
+						"sha256": "91d62791b38c60ed2bacf00eeec86ed026e3bf50822c3ba066d0037a98d8800c"
+					},
+					"photo": {
+						"file": "manga-larga/gris-back-foto.webp",
+						"bytes": 151798,
+						"sha256": "0028dde54f919d68f5678f8d30520298f0fb429e00d825bcab023870f85ff724"
+					}
+				}
+			]
+		},
+		"ninos": {
+			"sku": "CAM-NINOS",
+			"zones": [
+				{
+					"id": "front",
+					"label": "Frente",
+					"view": "front",
+					"rect": {
+						"x": 0.3642,
+						"y": 0.273,
+						"w": 0.2706,
+						"h": 0.3444
+					},
+					"size_cm": {
+						"w": 22,
+						"h": 28
+					}
+				},
+				{
+					"id": "left-sleeve",
+					"label": "Manga izquierda",
+					"view": "front",
+					"rect": {
+						"x": 0.73,
+						"y": 0.311,
+						"w": 0.0861,
+						"h": 0.0861
+					},
+					"size_cm": {
+						"w": 7,
+						"h": 7
+					}
+				},
+				{
+					"id": "right-sleeve",
+					"label": "Manga derecha",
+					"view": "front",
+					"rect": {
+						"x": 0.1829,
+						"y": 0.311,
+						"w": 0.0861,
+						"h": 0.0861
+					},
+					"size_cm": {
+						"w": 7,
+						"h": 7
+					}
+				},
+				{
+					"id": "back",
+					"label": "Espalda",
+					"view": "back",
+					"rect": {
+						"x": 0.3642,
+						"y": 0.277,
+						"w": 0.2706,
+						"h": 0.3444
+					},
+					"size_cm": {
+						"w": 22,
+						"h": 28
+					}
+				},
+				{
+					"id": "nape",
+					"label": "Nuca",
+					"view": "back",
+					"rect": {
+						"x": 0.4626,
+						"y": 0.212,
+						"w": 0.0738,
+						"h": 0.0492
+					},
+					"size_cm": {
+						"w": 6,
+						"h": 4
+					}
+				}
+			],
+			"images": [
+				{
+					"color": "blanco",
+					"view": "front",
+					"mockup": {
+						"file": "ninos/blanco-front.webp",
+						"bytes": 22288,
+						"sha256": "42f7210c24b9ffcd04b6f3d9dff38e26c8ce701261b9a80c12538ddb09b0aff0"
+					},
+					"photo": {
+						"file": "ninos/blanco-front-foto.webp",
+						"bytes": 9554,
+						"sha256": "118a15f1d98cab3b041a6070262e6de78b4543210c63b8d63fb3a2e9e98de1f0"
+					}
+				},
+				{
+					"color": "blanco",
+					"view": "back",
+					"mockup": {
+						"file": "ninos/blanco-back.webp",
+						"bytes": 23620,
+						"sha256": "952b575b1fe8069104122894bb5739acf32c3d165447ccb5c4175eadfaa2079b"
+					},
+					"photo": {
+						"file": "ninos/blanco-back-foto.webp",
+						"bytes": 10218,
+						"sha256": "4538472695b92d93f1842f08ad35714f54c6a6438a84ea59a14ef3187e827355"
+					}
+				},
+				{
+					"color": "rojo",
+					"view": "front",
+					"mockup": {
+						"file": "ninos/rojo-front.webp",
+						"bytes": 19682,
+						"sha256": "d21bc0666f1c90e447a9fce422f8f338736ef3f27c1ad7ebcde33a5d4a39a0b2"
+					},
+					"photo": {
+						"file": "ninos/rojo-front-foto.webp",
+						"bytes": 12160,
+						"sha256": "fb5ab87e392fe1c6ed4b8fd065c93a776de6ff47216a337b95fb920de447fad3"
+					}
+				},
+				{
+					"color": "rojo",
+					"view": "back",
+					"mockup": {
+						"file": "ninos/rojo-back.webp",
+						"bytes": 20598,
+						"sha256": "e6352c27e46e9ada69429317656fd4aa8f16837d57cd3d8be1255de5d5b9c454"
+					},
+					"photo": {
+						"file": "ninos/rojo-back-foto.webp",
+						"bytes": 12320,
+						"sha256": "835b1d4b76d8dd6554fb53621e4f7c57e85a5c31d48180e1e403f21f862fcabb"
+					}
+				},
+				{
+					"color": "mostaza",
+					"view": "front",
+					"mockup": {
+						"file": "ninos/mostaza-front.webp",
+						"bytes": 27240,
+						"sha256": "c4de79e26c0cbf6e7ed4f931ee7029236d13ac4f0d73b820dac7c817e7c4088e"
+					},
+					"photo": {
+						"file": "ninos/mostaza-front-foto.webp",
+						"bytes": 16736,
+						"sha256": "9fafd2735ccd65260aba61b0f0fdf7584e710cf02fbd686cb01ce0ad4bc468da"
+					}
+				},
+				{
+					"color": "mostaza",
+					"view": "back",
+					"mockup": {
+						"file": "ninos/mostaza-back.webp",
+						"bytes": 29012,
+						"sha256": "9b718905131be4f225dd5eb83a8e365995cb48ee17c2ae56ed73c49d57ddaebd"
+					},
+					"photo": {
+						"file": "ninos/mostaza-back-foto.webp",
+						"bytes": 17654,
+						"sha256": "99d2a45a013a83e54995fdaea099415768adf40cae4f9d9cca08a0d0039a2f59"
+					}
+				}
+			]
+		}
+	}
+}

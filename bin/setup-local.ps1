@@ -227,6 +227,8 @@ Invoke-Wp option update woocommerce_bacs_settings '{"enabled":"yes","title":"Tra
 if (-not $SkipDemo) {
 	Write-Step 'Productos de demostración'
 	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-demo.php') --use-include --user=admin
+	Write-Step 'Plantillas fotográficas'
+	Invoke-Wp eval-file (Join-Path $repo 'bin\import-fotos-modelos.php') --use-include --user=admin
 	Write-Step 'Entrega (datos provisionales)'
 	Invoke-Wp eval-file (Join-Path $repo 'bin\seed-delivery.php') --use-include --user=admin
 	Write-Step 'Páginas de confianza (borradores para revisar)'

@@ -185,7 +185,9 @@ $warning: #8a5a00;
 		width: min(100%, calc(100svh - 6rem));
 		overflow: hidden;
 		border-radius: 24px;
-		background: $surface;
+		// El mismo papel que pinta el lienzo (PREVIEW_BACKGROUND): en blanco
+		// asomaba un filo a los lados con anchos fraccionarios.
+		background: $paper;
 		touch-action: manipulation;
 		user-select: none;
 
@@ -203,7 +205,7 @@ $warning: #8a5a00;
 		justify-content: center;
 		gap: 1rem;
 		padding: 2rem;
-		background: $surface;
+		background: $paper;
 		text-align: center;
 	}
 
@@ -1230,7 +1232,7 @@ $warning: #8a5a00;
 				padding: 0;
 				border: 0;
 				border-radius: 16px;
-				background: $surface;
+				background: $paper;
 				cursor: zoom-in;
 
 				&.is-enlarged {
@@ -1472,7 +1474,7 @@ $warning: #8a5a00;
 			max-height: 42vh;
 			max-height: 42dvh;
 			border-radius: 14px;
-			background: $surface;
+			background: $paper;
 			object-fit: contain;
 		}
 	}

@@ -67,8 +67,8 @@ exactamente lo que vio en pantalla.
 
 ## Evidence on Hand
 
-- 4 modelos de demostración con colores y tallas, y maquetas **generadas por código** (no hay fotos
-  reales de producto ni de personas usando las prendas).
+- 4 modelos de demostración con colores y tallas, y fotos de prenda **generadas con IA**
+  (docs/plantillas-fotograficas.md). No hay fotos reales de producto ni de personas usando las prendas.
 - 6 estampados SVG de demostración (Sol andino, Llama con manta, Cordillera, Ola, Rayo, Corazón).
 - **No existen** testimonios, reseñas, cifras de clientes, prensa ni plazos de entrega comprometidos:
   no deben inventarse en la tienda.
