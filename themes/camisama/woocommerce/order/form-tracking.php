@@ -16,8 +16,16 @@ global $post;
 
 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo se repite lo que escribió; el shortcode verifica el nonce.
 $camisama_order_id    = isset( $_REQUEST['orderid'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderid'] ) ) : '';
-$camisama_order_email = isset( $_REQUEST['order_email'] ) ? sanitize_email( wp_unslash( $_REQUEST['order_email'] ) ) : '';
+$camisama_order_email = isset( $_REQUEST['order_email'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order_email'] ) ) : '';
+$camisama_sent        = isset( $_REQUEST['orderid'], $_REQUEST['woocommerce-order-tracking-nonce'] );
 // phpcs:enable
+
+// Si se envió y se vuelve a pintar, algo falló: se marca el dato que falta o no vale, o los dos si
+// el pedido no aparece. El identificador del aviso lo pone Checkout\OrderTracking, en el plugin.
+$camisama_bad_id    = '' === ltrim( $camisama_order_id, '#' );
+$camisama_bad_email = ! is_email( $camisama_order_email );
+$camisama_both      = ! $camisama_bad_id && ! $camisama_bad_email;
+$camisama_error     = ' aria-invalid="true" aria-describedby="camisama-track-error"';
 ?>
 <form action="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" method="post" class="woocommerce-form woocommerce-form-track-order track_order camisama-track-form">
 
@@ -30,11 +38,11 @@ $camisama_order_email = isset( $_REQUEST['order_email'] ) ? sanitize_email( wp_u
 
 	<p class="form-row">
 		<label for="orderid"><?php esc_html_e( 'Número de pedido', 'camisama' ); ?></label>
-		<input class="input-text" type="text" inputmode="numeric" name="orderid" id="orderid" value="<?php echo esc_attr( $camisama_order_id ); ?>" placeholder="<?php esc_attr_e( 'Por ejemplo: 176', 'camisama' ); ?>" required />
+		<input class="input-text" type="text" inputmode="numeric" name="orderid" id="orderid" value="<?php echo esc_attr( $camisama_order_id ); ?>" placeholder="<?php esc_attr_e( 'Por ejemplo: 1234', 'camisama' ); ?>" required<?php echo $camisama_sent && ( $camisama_bad_id || $camisama_both ) ? $camisama_error : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Texto fijo. ?> />
 	</p>
 	<p class="form-row">
 		<label for="order_email"><?php esc_html_e( 'Correo con el que compraste', 'camisama' ); ?></label>
-		<input class="input-text" type="email" autocomplete="email" name="order_email" id="order_email" value="<?php echo esc_attr( $camisama_order_email ); ?>" placeholder="<?php esc_attr_e( 'nombre@ejemplo.com', 'camisama' ); ?>" required />
+		<input class="input-text" type="email" autocomplete="email" name="order_email" id="order_email" value="<?php echo esc_attr( $camisama_order_email ); ?>" placeholder="<?php esc_attr_e( 'nombre@ejemplo.com', 'camisama' ); ?>" required<?php echo $camisama_sent && ( $camisama_bad_email || $camisama_both ) ? $camisama_error : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Texto fijo. ?> />
 	</p>
 
 	<?php

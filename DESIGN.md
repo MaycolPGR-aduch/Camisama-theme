@@ -282,7 +282,7 @@ impresión (1px al 35% del color del texto), que recuerdan a una línea de corte
   del editor siguen con borde lino.)
 - **Carrito y pago (bloques de WooCommerce):** mismo campo, de 56px, con la etiqueta flotando
   dentro: 16px en vacío y 14px una vez escrito el dato. Errores en rojo sello (4,7:1 sobre papel)
-  con el borde del campo en rojo; la etiqueta sigue en tinta. Total del pedido en Bricolage 700 a
+  con el borde y la etiqueta del campo en rojo; el dato sigue en tinta. Total del pedido en Bricolage 700 a
   x-large; títulos de cada paso en Bricolage 700 a large.
 - **Checkbox:** 24px, borde de tinta de 1.5px, radio 4px; marcada se rellena de tinta con la marca
   en blanco. La fila entera se pulsa (44px).

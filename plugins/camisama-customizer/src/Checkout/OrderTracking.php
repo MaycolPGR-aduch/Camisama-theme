@@ -23,6 +23,11 @@ final class OrderTracking {
 	public const SLUG = 'sigue-tu-pedido';
 
 	/**
+	 * Identificador del aviso de error del formulario.
+	 */
+	public const ERROR_ID = 'camisama-track-error';
+
+	/**
 	 * Texto original de WooCommerce => texto de la tienda, solo mientras se pinta el seguimiento. Los
 	 * del formulario están en el tema (woocommerce/order/form-tracking.php); estos son los avisos y el
 	 * resultado.
@@ -88,18 +93,41 @@ final class OrderTracking {
 	}
 
 	/**
-	 * Termina de pintarse el formulario.
+	 * Termina de pintarse el formulario: se completa su aviso.
 	 *
 	 * @param mixed  $output HTML del shortcode.
 	 * @param string $tag    Shortcode.
 	 * @return mixed
 	 */
 	public function stop( $output, string $tag ) {
-		if ( 'woocommerce_order_tracking' === $tag ) {
-			$this->active = false;
+		if ( 'woocommerce_order_tracking' !== $tag ) {
+			return $output;
 		}
 
-		return $output;
+		$this->active = false;
+
+		return is_string( $output ) ? self::with_error_id( $output ) : $output;
+	}
+
+	/**
+	 * El aviso de error lleva un identificador: los campos del formulario lo señalan con
+	 * aria-describedby (woocommerce/order/form-tracking.php, en el tema).
+	 *
+	 * @param string $html HTML del shortcode.
+	 */
+	public static function with_error_id( string $html ): string {
+		return preg_replace( '/(<(?:div|ul)\b)(?=[^>]*role="alert")(?![^>]*\sid=)/', '$1 id="' . self::ERROR_ID . '"', $html, 1 ) ?? $html;
+	}
+
+	/**
+	 * "Escríbenos" lleva a la página de contacto. Solo en los textos de la tienda, ya escapados: nunca
+	 * sobre lo que escribe la persona.
+	 *
+	 * @param string $html Texto de la tienda.
+	 * @param string $url  Página de contacto (la crea bin/seed-legal.php).
+	 */
+	public static function with_contact( string $html, string $url ): string {
+		return preg_replace( '/\b(escríbenos|escribirnos)\b/u', '<a href="' . esc_url( $url ) . '">$1</a>', $html ) ?? $html;
 	}
 
 	/**
@@ -110,7 +138,13 @@ final class OrderTracking {
 	 * @return string
 	 */
 	public function text( string $translation, string $text ): string {
-		return $this->active && isset( self::TEXTS[ $text ] ) ? self::TEXTS[ $text ] : $translation;
+		if ( ! $this->active || ! isset( self::TEXTS[ $text ] ) ) {
+			return $translation;
+		}
+
+		$own = self::TEXTS[ $text ];
+
+		return str_contains( $own, 'escríbenos' ) ? self::with_contact( $own, home_url( '/contacto/' ) ) : $own;
 	}
 
 	/**
@@ -161,7 +195,7 @@ final class OrderTracking {
 			'<mark class="order-number">' . esc_html( $order->get_order_number() ) . '</mark>',
 			'<mark class="order-date">' . esc_html( wc_format_datetime( $order->get_date_created() ) ) . '</mark>',
 			'<mark class="order-status">' . esc_html( wc_get_order_status_name( $order->get_status() ) ) . '</mark>',
-			esc_html( $message )
+			self::with_contact( esc_html( $message ), home_url( '/contacto/' ) )
 		);
 	}
 

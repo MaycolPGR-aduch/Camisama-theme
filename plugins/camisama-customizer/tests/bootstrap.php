@@ -24,3 +24,15 @@ if ( ! function_exists( '__' ) ) {
 		return $text;
 	}
 }
+
+if ( ! function_exists( 'esc_url' ) ) {
+	/**
+	 * Sustituto del escape de direcciones de WordPress.
+	 *
+	 * @param string $url Dirección.
+	 * @return string
+	 */
+	function esc_url( string $url ): string { // phpcs:ignore
+		return htmlspecialchars( $url, ENT_QUOTES );
+	}
+}

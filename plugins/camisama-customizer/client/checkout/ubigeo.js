@@ -8,6 +8,7 @@
  */
 import { __ } from '@wordpress/i18n';
 
+import { watchMessages, wireContact } from './contact';
 import {
 	byDelivery,
 	districtsOf,
@@ -321,6 +322,14 @@ function wire() {
 		} );
 	} );
 }
+
+// Correo y teléfono: no esperan a la lista de distritos.
+watchMessages();
+wireContact();
+new window.MutationObserver( wireContact ).observe( document.body, {
+	subtree: true,
+	childList: true,
+} );
 
 window
 	.fetch( window.camisamaUbigeo.url )

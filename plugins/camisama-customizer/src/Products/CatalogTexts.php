@@ -37,6 +37,7 @@ final class CatalogTexts {
 		add_filter( 'woocommerce_get_price_html', array( $this, 'price_html' ), 10, 2 );
 		add_filter( 'get_the_archive_title', array( $this, 'archive_title' ) );
 		add_filter( 'woocommerce_get_breadcrumb', array( $this, 'breadcrumb' ) );
+		add_filter( 'render_block_woocommerce/product-summary', array( self::class, 'card_summary' ) );
 	}
 
 	/**
@@ -78,6 +79,34 @@ final class CatalogTexts {
 			esc_html__( 'Desde %s + impresión', 'camisama-customizer' ),
 			wc_price( $from )
 		);
+	}
+
+	/**
+	 * En las tarjetas de la tienda, solo la primera frase de la descripción corta: en qué se
+	 * diferencia el modelo (corte, tela, tallas). Cortarla por número de palabras la deja a medias.
+	 *
+	 * @param string $content HTML del bloque.
+	 */
+	public static function card_summary( string $content ): string {
+		if ( ! is_shop() && ! is_product_taxonomy() ) {
+			return $content;
+		}
+
+		return preg_replace_callback(
+			'#(<p\b[^>]*>)(.*?)(</p>)#s',
+			static fn ( array $part ): string => $part[1] . self::first_sentence( $part[2] ) . $part[3],
+			$content,
+			1
+		) ?? $content;
+	}
+
+	/**
+	 * Primera frase de un texto. El punto de "1.5" o "S/ 39.90" no la termina.
+	 *
+	 * @param string $text Texto.
+	 */
+	public static function first_sentence( string $text ): string {
+		return 1 === preg_match( '/^.*?[.!?…](?=\s|$)/us', trim( $text ), $found ) ? $found[0] : trim( $text );
 	}
 
 	/**

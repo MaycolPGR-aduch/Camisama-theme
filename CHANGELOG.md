@@ -7,6 +7,31 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-24
+
+### Añadido
+- **Correo y teléfono revisados al salir del campo**, en el pago (`client/checkout/contact.js`):
+  "maria@gmail" o un celular de 8 dígitos se avisan en el momento y dicen cómo se corrigen. Se
+  aceptan celulares y fijos peruanos, con o sin +51, y teléfonos de otros países con "+".
+- **En qué se diferencia cada modelo**, en las tarjetas de la tienda: la primera frase de su
+  descripción corta (corte, tela, tallas), con el precio y el botón alineados entre tarjetas.
+
+### Cambiado
+- En "Sigue tu pedido", "escríbenos" lleva a la página de contacto, los campos con error quedan
+  marcados y ligados al aviso, un correo mal escrito ya no se borra al enviar y el ejemplo del
+  número no coincide con un pedido real.
+- Los avisos de WooCommerce, con el radio y el rojo de la tienda.
+
+### Corregido
+- Los campos de "Sigue tu pedido" seguían con el aspecto de WooCommerce (su regla ganaba a la del
+  tema), aunque el pulido del 19 los daba por cambiados.
+- Esquinas blancas cuadradas detrás de los desplegables del pago; icono del error encogido en los
+  mensajes de dos líneas; etiqueta del campo con error, en el rojo de la marca.
+
+### Decisiones
+- El formato del teléfono solo se exige en el formulario: el servidor sigue con la comprobación de
+  WooCommerce (dígitos y signos).
+
 ## 2026-11-19
 
 ### Añadido

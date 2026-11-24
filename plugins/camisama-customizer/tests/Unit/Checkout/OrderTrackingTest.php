@@ -55,6 +55,27 @@ final class OrderTrackingTest extends TestCase {
 	}
 
 	/**
+	 * El aviso de error se puede señalar desde los campos, y solo el primero lleva el identificador.
+	 */
+	public function test_error_notice_gets_an_id(): void {
+		$html = OrderTracking::with_error_id( '<div class="aviso" role="alert"><p>Uno</p></div><div role="alert">Dos</div>' );
+
+		$this->assertSame( '<div id="' . OrderTracking::ERROR_ID . '" class="aviso" role="alert"><p>Uno</p></div><div role="alert">Dos</div>', $html );
+		$this->assertSame( '<p>Sin avisos</p>', OrderTracking::with_error_id( '<p>Sin avisos</p>' ) );
+	}
+
+	/**
+	 * "Escríbenos" es un enlace.
+	 */
+	public function test_write_us_is_a_link(): void {
+		$this->assertSame(
+			'si sigue sin aparecer, <a href="https://camisama.test/contacto/">escríbenos</a>.',
+			OrderTracking::with_contact( 'si sigue sin aparecer, escríbenos.', 'https://camisama.test/contacto/' )
+		);
+		$this->assertSame( 'Escribe tu correo.', OrderTracking::with_contact( 'Escribe tu correo.', 'https://camisama.test/contacto/' ) );
+	}
+
+	/**
 	 * Otros shortcodes no lo activan.
 	 */
 	public function test_ignores_other_shortcodes(): void {

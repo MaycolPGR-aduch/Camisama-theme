@@ -533,6 +533,25 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 }
 
 /*
+ * Tarjetas de la tienda: la descripción ocupa dos o tres líneas según el
+ * modelo. El precio y el botón van abajo, alineados entre tarjetas.
+ */
+.archive.woocommerce .wc-block-product-template > .wc-block-product {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.archive.woocommerce .wc-block-product-template > .wc-block-product > *,
+.archive.woocommerce .wp-block-woocommerce-product-summary p {
+	margin-block: 0;
+}
+
+.archive.woocommerce .wc-block-product-template > .wc-block-product > .wp-block-woocommerce-product-price {
+	margin-top: auto;
+}
+
+/*
  * Campos del carrito y del pago con el aspecto de la tienda: blancos, 12 px de
  * radio y 1,5 px de borde. El borde es más oscuro que el lino de las
  * tarjetas: sobre el papel un campo tiene que verse (3,3:1). Las etiquetas
@@ -584,6 +603,11 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	border-width: 1.5px;
 }
 
+/* Su caja blanca, con el mismo radio: asomaba en las esquinas. */
+.wc-blocks-components-select .wc-blocks-components-select__container {
+	border-radius: 12px;
+}
+
 .wc-blocks-components-select .wc-blocks-components-select__label {
 	left: 14px;
 	top: 7px;
@@ -609,6 +633,7 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 
 /* Errores en el rojo de la marca (4,7:1 sobre el papel). */
 .wc-block-components-validation-error,
+.wc-block-components-form .wc-block-components-text-input.has-error label,
 .has-error .wc-blocks-components-select .wc-blocks-components-select__label,
 .has-error .wc-blocks-components-select .wc-blocks-components-select__select {
 	color: var(--wp--preset--color--primary);
@@ -621,7 +646,12 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 }
 
 .wc-block-components-validation-error svg {
+	flex: none;
 	fill: currentcolor;
+}
+
+.wc-block-components-validation-error > p {
+	line-height: 1.35;
 }
 
 /*
@@ -663,6 +693,19 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	color: var(--wp--preset--color--secondary);
 	text-decoration: underline;
 	text-underline-offset: 0.2em;
+}
+
+/* Avisos con el radio y el rojo de la tienda. */
+.wc-block-components-notice-banner {
+	border-radius: 10px;
+}
+
+.wc-block-components-notice-banner.is-error {
+	border-color: var(--wp--preset--color--primary);
+}
+
+.wc-block-components-notice-banner.is-error > svg {
+	background-color: var(--wp--preset--color--primary);
 }
 
 /* Títulos de cada paso del pago en la voz de los titulares. */
@@ -733,8 +776,9 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	max-width: 32rem;
 }
 
-.camisama-track-form .form-row {
+.woocommerce form.camisama-track-form .form-row {
 	margin-block: 0 var(--wp--preset--spacing--40);
+	padding: 0;
 }
 
 .camisama-track-form label {
@@ -743,7 +787,7 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	font-weight: 600;
 }
 
-.camisama-track-form .input-text {
+.woocommerce form.camisama-track-form .form-row .input-text {
 	box-sizing: border-box;
 	width: 100%;
 	min-height: 48px;
@@ -756,8 +800,12 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	font-size: 1rem;
 }
 
-.camisama-track-form .input-text:hover {
+.woocommerce form.camisama-track-form .form-row .input-text:hover {
 	border-color: var(--wp--preset--color--contrast);
+}
+
+.woocommerce form.camisama-track-form .form-row .input-text[aria-invalid="true"] {
+	border-color: var(--wp--preset--color--primary);
 }
 
 .camisama-track-form .button {
