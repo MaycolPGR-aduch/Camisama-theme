@@ -42,6 +42,50 @@ final class DeliveryTest extends TestCase {
 	}
 
 	/**
+	 * El recojo no se elige solo; si ya estaba elegido, se respeta.
+	 */
+	public function test_pickup_is_never_the_default(): void {
+		$this->assertSame( '', Delivery::default_method( 'pickup_location:0', array(), false ) );
+		$this->assertSame( '', Delivery::default_method( 'pickup_location:0', array(), 'flat_rate:1' ) );
+		$this->assertSame( 'pickup_location:0', Delivery::default_method( 'pickup_location:0', array(), 'pickup_location:0' ) );
+		$this->assertSame( 'flat_rate:1', Delivery::default_method( 'flat_rate:1', array(), false ) );
+	}
+
+	/**
+	 * En Perú no se parte de la región de la tienda: sale del distrito.
+	 */
+	public function test_default_location_has_no_state(): void {
+		$this->assertSame(
+			'',
+			Delivery::default_location(
+				array(
+					'country' => 'PE',
+					'state'   => 'LMA',
+				)
+			)['state']
+		);
+		$this->assertSame(
+			'RM',
+			Delivery::default_location(
+				array(
+					'country' => 'CL',
+					'state'   => 'RM',
+				)
+			)['state']
+		);
+	}
+
+	/**
+	 * La calle solo hace falta con envío a domicilio.
+	 */
+	public function test_street_only_for_delivery(): void {
+		$this->assertTrue( Delivery::misses_street( array( 'flat_rate' ), ' ' ) );
+		$this->assertFalse( Delivery::misses_street( array( 'flat_rate' ), 'Av. Larco 123' ) );
+		$this->assertFalse( Delivery::misses_street( array( 'pickup_location' ), '' ) );
+		$this->assertFalse( Delivery::peru_fields( array() )['PE']['address_1']['required'] );
+	}
+
+	/**
 	 * Los demás países no se tocan.
 	 */
 	public function test_leaves_other_countries_alone(): void {

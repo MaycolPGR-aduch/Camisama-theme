@@ -20,7 +20,8 @@ final class Texts {
 	 * Texto original de WooCommerce => texto de la tienda.
 	 */
 	private const TEXTS = array(
-		'Please enter a valid %s'            => 'Revisa este dato: %s',
+		// Sale sobre todo con el campo vacío; correo y teléfono mal escritos tienen el suyo (contact.js).
+		'Please enter a valid %s'            => 'Falta este dato: %s',
 		'Please select a %s'                 => 'Elige una opción: %s',
 		'Please select a valid option'       => 'Elige una opción de la lista',
 		'Please enter a valid email address' => 'Revisa tu correo: debe ser como nombre@ejemplo.com',
@@ -34,6 +35,15 @@ final class Texts {
 		// Sin distrito no hay envío a domicilio todavía (Delivery::rates_in_zone): no es un error.
 		'No shipping options are available for this address. Please verify the address is correct or try a different address.' => 'Elige tu distrito para ver el costo del envío. Si estás fuera de Lima Metropolitana y el Callao, elige “Recojo en el taller”.',
 		'Shipping options are not available' => 'Elige tu distrito para ver el costo del envío',
+		'No available delivery option'       => 'Elige tu distrito',
+		'Billing address'                    => 'Datos de facturación',
+	);
+
+	/**
+	 * Textos que salen del navegador o del servidor: al pedir con envío y sin distrito.
+	 */
+	private const SHARED_TEXTS = array(
+		'Sorry, this order requires a shipping option.' => 'Elige tu distrito para calcular el envío, o pasa a “Recojo en el taller”.',
 	);
 
 	/**
@@ -42,6 +52,33 @@ final class Texts {
 	public function register(): void {
 		add_filter( 'load_script_translations', array( self::class, 'filter' ), 10, 4 );
 		add_filter( 'render_block_woocommerce/mini-cart-contents', array( self::class, 'close_label' ) );
+		add_filter( 'gettext_woocommerce', array( self::class, 'server_text' ), 10, 2 );
+	}
+
+	/**
+	 * Texto del servidor en la voz de la tienda.
+	 *
+	 * @param string $translation Texto traducido.
+	 * @param string $text        Texto original.
+	 */
+	public static function server_text( string $translation, string $text ): string {
+		return self::SHARED_TEXTS[ $text ] ?? $translation;
+	}
+
+	/**
+	 * Los textos de los scripts, con los que llevan datos de la tienda (tarifa más baja y plazo).
+	 *
+	 * @return array<string, string>
+	 */
+	private static function texts(): array {
+		return self::TEXTS + self::SHARED_TEXTS + array(
+			'Shipping will be calculated at checkout' => sprintf(
+				/* translators: 1: tarifa más baja, en soles, 2: plazo. */
+				__( 'Entrega desde S/ %1$s en Lima y Callao, o recojo gratis en el taller: la eliges al pagar. %2$s', 'camisama-customizer' ),
+				DeliveryRates::lowest() / 100,
+				PaymentTimes::promise()
+			),
+		);
 	}
 
 	/**
@@ -80,7 +117,7 @@ final class Texts {
 			return $json;
 		}
 
-		$found = array_intersect_key( self::TEXTS, $data['locale_data']['messages'] );
+		$found = array_intersect_key( self::texts(), $data['locale_data']['messages'] );
 		if ( array() === $found ) {
 			return $json;
 		}

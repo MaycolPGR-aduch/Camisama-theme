@@ -10,6 +10,14 @@ conviene recordar.
 ## 2026-11-24
 
 ### Añadido
+- **Crítica independiente de toda la web** (dos evaluadores con navegador propio): **25/40**. Informe en
+  `.impeccable/critique/`. Resueltos sus cinco problemas importantes:
+  - **Aviso de escalón al añadir**, junto a los demás avisos del editor y siempre a la vista: cuenta desde
+    lo que costaba la zona antes de añadir, y "Seguir en Mediano" encoge el conjunto. Las fotos nacen con
+    aire bajo el límite de su escalón (16 cm en vez de 20).
+  - **Un solo plazo en todas partes** (`PaymentTimes::promise()`, provisional): "Llega en 3 a 5 días
+    hábiles desde que confirmamos tu pago; si la recoges, está lista en 2 a 3", en la ficha, el carrito,
+    el pago y las preguntas de la portada.
 - **Plantillas fotográficas en los 4 modelos** ([docs/plantillas-fotograficas.md](docs/plantillas-fotograficas.md)):
   26 maquetas recortadas (13 colores, frente y espalda) en el editor, la tienda, la ficha, el carrito y la
   confirmación. `bin/plantillas/preparar.py` las prepara y `bin/import-fotos-modelos.php` las pone en la
@@ -32,6 +40,20 @@ conviene recordar.
 - Los avisos de WooCommerce, con el radio y el rojo de la tienda.
 
 ### Corregido
+- **El recojo venía elegido solo** ("Recojo GRATIS" en el carrito y el pago abierto en recojo): regresión
+  del 19 de noviembre, al quitar el envío sin distrito. Ahora el pago abre en envío y el carrito dice
+  "Entrega desde S/ 10 en Lima y Callao, o recojo gratis en el taller: la eliges al pagar".
+- **Segundo formulario al recargar el pago** tras pasar por recojo (de 8 a 15 campos): la facturación
+  guardaba la región de la tienda y el envío no. La región sale solo del distrito.
+- **Recojo con menos datos:** correo, nombre, apellidos y teléfono, sin dirección de facturación. La calle
+  es obligatoria solo con envío (en el formulario y en el servidor). El aviso "elige tu distrito" ya no
+  se queda al pasar a recojo.
+- **La ficha ya no salta al cargar:** CLS de 1,3 a 0,00 en el móvil y de 0,25 a 0,06 como mucho en
+  escritorio (límite 0,1). El servidor pinta la prenda y la entrada al editor en su sitio definitivo; la
+  galería de WooCommerce queda de respaldo si el editor no carga.
+- **Pasos de la portada legibles:** los que no están en curso iban al 35 % (1,66:1).
+- Los campos vacíos del pago dicen "Falta este dato: …"; el aviso interno de las páginas legales
+  ("Borrador para revisar…") solo lo ve quien gestiona la tienda.
 - Filo blanco a los lados del lienzo del editor, y franjas blancas junto a las vistas previas de la
   confirmación y de "Revisa antes de añadir": llevan el mismo papel que la imagen.
 - Mangas a la misma escala que el resto de la prenda (en el piloto, un tercio más pequeñas).

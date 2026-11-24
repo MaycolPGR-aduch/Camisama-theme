@@ -9,6 +9,7 @@
 import { __ } from '@wordpress/i18n';
 
 import { watchMessages, wireContact } from './contact';
+import { wireStreet } from './street';
 import {
 	byDelivery,
 	districtsOf,
@@ -323,10 +324,15 @@ function wire() {
 	} );
 }
 
-// Correo y teléfono: no esperan a la lista de distritos.
+// Correo, teléfono y calle: no esperan a la lista de distritos.
+function wireFields() {
+	wireContact();
+	wireStreet();
+}
 watchMessages();
-wireContact();
-new window.MutationObserver( wireContact ).observe( document.body, {
+wireFields();
+window.wp?.data?.subscribe( wireStreet );
+new window.MutationObserver( wireFields ).observe( document.body, {
 	subtree: true,
 	childList: true,
 } );

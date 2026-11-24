@@ -32,6 +32,7 @@ use Camisama\Customizer\Products\CardPrint;
 use Camisama\Customizer\Products\CatalogTexts;
 use Camisama\Customizer\Products\ColorSwatchField;
 use Camisama\Customizer\Products\CustomizerData;
+use Camisama\Customizer\Products\FlowPlaceholder;
 use Camisama\Customizer\Rest\CatalogController;
 use Camisama\Customizer\Production\ProductionStore;
 use Camisama\Customizer\Rest\ProductCustomizerController;
@@ -121,6 +122,7 @@ final class Plugin {
 		( new PaymentTimes() )->register();
 		( new CatalogTexts( $configs ) )->register();
 		( new CardPrint( $configs ) )->register();
+		( new FlowPlaceholder() )->register();
 		add_action( 'init', array( UploadStore::class, 'register_post_type' ) );
 		add_action(
 			UploadStore::CLEANUP_HOOK,

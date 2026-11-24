@@ -14,6 +14,10 @@ $camisama_assurances = array(
 	__( 'Desde una sola unidad', 'camisama' ),
 	__( 'Precios en soles, con IGV', 'camisama' ),
 );
+// El plazo es del plugin (Checkout\PaymentTimes): se escribe en un solo sitio.
+if ( class_exists( \Camisama\Customizer\Checkout\PaymentTimes::class ) ) {
+	$camisama_assurances[] = \Camisama\Customizer\Checkout\PaymentTimes::promise();
+}
 ?>
 <!-- wp:list {"className":"is-style-camisama-checks","fontSize":"small"} -->
 <ul class="wp-block-list is-style-camisama-checks has-small-font-size">

@@ -11,6 +11,7 @@ namespace Camisama\Customizer\Products;
 
 use Camisama\Customizer\Config\ProductConfigRepository;
 use Camisama\Customizer\Config\Zone;
+use Camisama\Customizer\Designs\DesignRepository;
 use Camisama\Customizer\Design\Fonts;
 use Camisama\Customizer\Pricing\PriceTableRepository;
 use Camisama\Customizer\Pricing\PriceTier;
@@ -38,6 +39,20 @@ final class CustomizerData {
 	 */
 	public static function create(): self {
 		return new self( new ProductConfigRepository(), new PriceTableRepository() );
+	}
+
+	/**
+	 * Los tres primeros estampados sin recargo.
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	private static function starters(): array {
+		$free = array_filter(
+			( new DesignRepository() )->query( null, 1, 12 )['items'],
+			static fn ( array $design ): bool => empty( $design['premium'] )
+		);
+
+		return array_slice( array_values( $free ), 0, 3 );
 	}
 
 	/**
@@ -103,6 +118,8 @@ final class CustomizerData {
 				'url'      => esc_url_raw( wc_get_cart_url() ),
 				'redirect' => 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ),
 			),
+			// Estampados para empezar con un toque en el móvil: los primeros sin recargo del catálogo.
+			'starters'     => self::starters(),
 			// Medidas de la prenda por talla para "¿Qué talla?" (paso de talla y pago).
 			'size_guide'   => SizeGuide::for_product( $product_id ),
 			'resolution'   => array(

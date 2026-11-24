@@ -708,6 +708,20 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	background-color: var(--wp--preset--color--primary);
 }
 
+/* Al recoger en el taller no hace falta dirección: solo nombre y teléfono. */
+.wc-block-checkout:has(#pickup-options) .wc-block-checkout__billing-fields .wc-block-components-address-form__address_1,
+.wc-block-checkout:has(#pickup-options) .wc-block-checkout__billing-fields .wc-block-components-address-form__address_2,
+.wc-block-checkout:has(#pickup-options) .wc-block-checkout__billing-fields .wc-block-components-address-form__address_2-toggle {
+	display: none;
+}
+
+/* Lo que acompaña a los totales, a 14 px como el resto. */
+.wc-block-components-totals-footer-item .wc-block-components-totals-footer-item-shipping,
+.wc-block-components-shipping-placeholder__value,
+.wc-block-components-totals-item__description {
+	font-size: var(--wp--preset--font-size--small);
+}
+
 /* Títulos de cada paso del pago en la voz de los titulares. */
 .wc-block-checkout .wc-block-components-checkout-step__title {
 	font-size: var(--wp--preset--font-size--large);

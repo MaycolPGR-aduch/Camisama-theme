@@ -11,10 +11,72 @@ $focus: var(--wp--preset--color--secondary, #26357f);
 $mustard: var(--wp--preset--color--accent, #f5b700);
 $warning: #8a5a00;
 
-.wp-block-camisama-customizer.is-ready {
+// Hasta que llega el editor, la prenda en el sitio de su lienzo y la ficha ya
+// con su forma: nada salta al montarse. html.camisama-flow la pone render.php
+// antes de pintar; la galería queda para quien no tiene JavaScript o si falla.
+html.camisama-flow .wp-block-camisama-customizer__fallback,
+html:not(.camisama-flow) .wp-block-camisama-customizer__preview,
+html:not(.camisama-flow) .camisama-customizer__entry[data-placeholder],
+.wp-block-camisama-customizer.is-ready > .wp-block-camisama-customizer__preview {
+	display: none;
+}
 
-	.wp-block-camisama-customizer__fallback {
-		display: none;
+.wp-block-camisama-customizer__preview {
+	overflow: hidden;
+	aspect-ratio: 1;
+	border-radius: 24px;
+	background: $paper;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+}
+
+// Quien vuelve con un diseño a medias no ve los estampados de inicio.
+html.camisama-has-draft .camisama-customizer__entry[data-placeholder] .camisama-customizer__starters {
+	display: none;
+}
+
+@media (min-width: 782px) {
+
+	// Las herramientas son más altas que la prenda de muestra: lo que va
+	// debajo no entra en pantalla para luego bajar.
+	html.camisama-flow .wp-block-camisama-customizer {
+		display: flow-root;
+		min-height: min(100vh, 64rem);
+	}
+
+	// Alto de la fila "Frente / Espalda" y ancho del lienzo.
+	.wp-block-camisama-customizer__preview {
+		width: min(100%, 55vh);
+		margin: 4rem auto 0;
+	}
+
+	// Talla, guía y resumen del precio los pinta el editor, en dos veces: su
+	// alto se reserva y el resumen nace ya abajo, junto al botón.
+	html.camisama-flow .variations_form:not(.has-camisama-summary)::before {
+		display: block;
+		height: 18.625rem;
+		content: "";
+	}
+
+	.camisama-customizer__purchase:not(:has(.camisama-customizer__sizes)) {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		box-sizing: border-box;
+		min-height: 18.625rem;
+	}
+}
+
+@media (min-width: 1100px) {
+
+	.wp-block-camisama-customizer__preview {
+		width: min(54%, 100vh - 6rem);
+		margin-inline: 0;
 	}
 }
 
@@ -1424,11 +1486,11 @@ $warning: #8a5a00;
 // !important: la plantilla fija el reparto en línea (bloque de columnas).
 @media (min-width: 1100px) {
 
-	.wp-block-column:has(> .wp-block-camisama-customizer.is-ready) {
+	html.camisama-flow .wp-block-column:has(> .wp-block-camisama-customizer) {
 		flex-basis: 68% !important;
 	}
 
-	.wp-block-column:has(> .wp-block-camisama-customizer.is-ready) + .is-product-buy {
+	html.camisama-flow .wp-block-column:has(> .wp-block-camisama-customizer) + .is-product-buy {
 		flex-basis: 32% !important;
 	}
 }
@@ -1536,6 +1598,7 @@ $warning: #8a5a00;
 // Con el editor montado, la talla va en botones (SizeOptions) y el color en
 // la paleta del editor: los desplegables de WooCommerce y su "Limpiar"
 // sobran. Siguen funcionando ocultos; el editor los maneja.
+html.camisama-flow .wp-block-column:has(> .wp-block-camisama-customizer) + .is-product-buy table.variations,
 .variations_form.has-camisama-summary table.variations {
 	display: none;
 }
@@ -1571,6 +1634,8 @@ $warning: #8a5a00;
 // Con el resumen en el formulario, sobran el precio de la variante y el
 // rango junto al título: solo cuentan la prenda lisa y contradicen el
 // total. Sin editor (no cargó), siguen visibles.
+html.camisama-flow .wp-block-column:has(> .wp-block-camisama-customizer) + .is-product-buy > .wp-block-woocommerce-product-price,
+html.camisama-flow .wp-block-column:has(> .wp-block-camisama-customizer) + .is-product-buy .woocommerce-variation-price,
 .variations_form.has-camisama-summary .woocommerce-variation-price,
 .wp-block-woocommerce-product-price:has(~ .wp-block-add-to-cart-form .has-camisama-summary) {
 	display: none;

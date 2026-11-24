@@ -8,6 +8,7 @@
 import {
 	createPortal,
 	useEffect,
+	useLayoutEffect,
 	useMemo,
 	useReducer,
 	useRef,
@@ -30,6 +31,7 @@ import {
 	designElement,
 	fitNewDesign,
 	fitToZone,
+	fitZoneTo,
 	imageQuality,
 	imageElement,
 	placeFree,
@@ -40,7 +42,6 @@ import {
 import { isImageVisible, isReadable, mostReadable } from './contrast';
 import { imageTones } from './tones';
 import AddedDialog from './AddedDialog';
-import { fetchDesigns } from './api';
 import { inertOutside } from './inert';
 import { loadDraft, saveDraft } from './draft';
 import { formatMoney } from './format';
@@ -293,7 +294,6 @@ export default function App( { data } ) {
 	const [ confirmation, setConfirmation ] = useState( null );
 	const sentPreviews = useRef( null );
 	// Estampados para empezar con un toque en la ficha del móvil.
-	const [ starters, setStarters ] = useState( [] );
 	const [ tab, setTab ] = useState( 'designs' );
 	const [ variationPrice, setVariationPrice ] = useState( null );
 	// Tonos de cada imagen del diseño (src → luminancias), para avisar si no se verá en la prenda.
@@ -431,29 +431,6 @@ export default function App( { data } ) {
 		};
 	}, [ elements, tones ] );
 
-	// Estampados para empezar en la ficha del móvil: los primeros sin recargo del catálogo.
-	useEffect( () => {
-		if ( ! mobile || ! entryNode ) {
-			return;
-		}
-		let cancelled = false;
-		fetchDesigns( data.api, null, 1 )
-			.then( ( result ) => {
-				if ( ! cancelled ) {
-					setStarters(
-						result.items
-							.filter( ( design ) => ! design.premium )
-							.slice( 0, 3 )
-					);
-				}
-			} )
-			// Sin ellos, la ficha sigue con "Personalizar".
-			.catch( () => {} );
-		return () => {
-			cancelled = true;
-		};
-	}, [ mobile, entryNode, data.api ] );
-
 	// La talla se elige a conciencia: se quita la que WooCommerce marca por defecto (así el precio
 	// es el mismo, con su "desde", en la ficha, el pie y el resumen). En escritorio va en botones
 	// en la columna de compra, con sus desplegables ocultos (style.scss); si al pulsar "Añadir al
@@ -483,8 +460,9 @@ export default function App( { data } ) {
 		} );
 	}, [ mobile, purchaseNode ] );
 
-	// Hueco del paso 1 junto al formulario: view.js lo dejó con "Preparando el editor…".
-	useEffect( () => {
+	// Hueco del paso 1 junto al formulario: el servidor lo dejó con "Preparando el editor…"
+	// (Products\FlowPlaceholder). Antes de pintar, para que no quede vacío un instante.
+	useLayoutEffect( () => {
 		let node = document.querySelector(
 			'.camisama-customizer__entry[data-placeholder]'
 		);
@@ -721,6 +699,9 @@ export default function App( { data } ) {
 			options
 		);
 
+	// Lo que costaba la zona al seleccionar el elemento (o antes de añadirlo): si sube, se avisa.
+	const tierStart = useRef( { id: null, amount: 0 } );
+
 	// Lo nuevo (también lo duplicado) va al hueco libre más cercano: no encima de lo anterior. Un
 	// texto que se está escribiendo nace con una letra: su hueco se busca para reserveChars.
 	const add = ( element, { reserveChars = 0 } = {} ) => {
@@ -730,6 +711,13 @@ export default function App( { data } ) {
 			zone,
 			reserveChars
 		);
+		// Si la zona ya costaba algo, el aviso de escalón cuenta desde ahí.
+		const before = priced.quote?.zones.find(
+			( item ) => item.zone === zone.id
+		);
+		if ( before ) {
+			tierStart.current = { id: fitted.id, amount: before.amount };
+		}
 		commit( ( list ) => [ ...list, fitted ] );
 		setSelectedId( fitted.id );
 		setMessage(
@@ -1275,8 +1263,23 @@ export default function App( { data } ) {
 					longest: charged.longest_cm,
 					current: tiers[ index ],
 					next: tiers[ index + 1 ] ?? null,
+					tiers,
 				};
 	} )();
+	if ( selectedTier && tierStart.current.id !== selected.id ) {
+		tierStart.current = {
+			id: selected.id,
+			amount: selectedTier.current.amount,
+		};
+	}
+	const raisedFrom =
+		selectedTier &&
+		tierStart.current.id === selected.id &&
+		selectedTier.current.amount > tierStart.current.amount
+			? ( selectedTier.tiers.find(
+					( item ) => item.amount === tierStart.current.amount
+				) ?? null )
+			: null;
 
 	// Mismo total y misma regla de "desde" en la ficha, el pie del modo diseño y el resumen.
 	const totalLabel =
@@ -1309,6 +1312,7 @@ export default function App( { data } ) {
 		Boolean( submitError ) ||
 		Boolean( editKey ) ||
 		( restoredNotice && ! history.past.length ) ||
+		Boolean( raisedFrom ) ||
 		( hiddenTexts.length > 0 && Boolean( garment ) ) ||
 		( hiddenImages.length > 0 && Boolean( garment ) );
 	const notices = (
@@ -1342,6 +1346,44 @@ export default function App( { data } ) {
 					</p>
 					<button type="button" onClick={ startOver }>
 						{ __( 'Empezar de cero', 'camisama-customizer' ) }
+					</button>
+				</div>
+			) }
+			{ /* Al pasar a un escalón más caro (al añadir, ajustar o escribir), se dice y se puede volver. */ }
+			{ raisedFrom && (
+				<div className="camisama-customizer__contrast" role="status">
+					<p>
+						{ sprintf(
+							/* translators: 1: zona, 2: escalón nuevo, 3: diferencia de precio. */
+							__(
+								'%1$s pasó a %2$s: + %3$s más.',
+								'camisama-customizer'
+							),
+							selectedTier.zone,
+							selectedTier.current.label,
+							formatMoney(
+								selectedTier.current.amount - raisedFrom.amount,
+								data.currency
+							)
+						) }
+					</p>
+					<button
+						type="button"
+						onClick={ () =>
+							commit( ( list ) =>
+								fitZoneTo(
+									list,
+									selected.zone,
+									raisedFrom.max_cm
+								)
+							)
+						}
+					>
+						{ sprintf(
+							/* translators: %s: escalón anterior, p. ej. Mediano. */
+							__( 'Seguir en %s', 'camisama-customizer' ),
+							raisedFrom.label
+						) }
 					</button>
 				</div>
 			) }
@@ -1856,7 +1898,7 @@ export default function App( { data } ) {
 								: formatMoney( garmentPrice, data.currency )
 						}
 						hasDesign={ elements.length > 0 }
-						starters={ starters }
+						starters={ data.starters ?? [] }
 						onStart={ ( design ) => {
 							add( designElement( activeZone, design ) );
 							openDesign();

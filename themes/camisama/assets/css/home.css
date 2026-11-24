@@ -909,14 +909,22 @@
 	container-type: inline-size;
 }
 
+/*
+ * El paso actual se distingue por su número (más grande, en rojo) y su título;
+ * los otros, en grafito y no apagados: apagados al 35 % no se podían leer.
+ */
 .camisama-steps.is-enhanced .camisama-steps__list li {
 	min-height: 34vh;
-	opacity: 0.35;
-	transition: opacity 0.4s ease;
 }
 
-.camisama-steps.is-enhanced .camisama-steps__list li.is-current {
-	opacity: 1;
+.camisama-steps.is-enhanced .camisama-steps__list li::before,
+.camisama-steps.is-enhanced .camisama-steps__list h3 {
+	transition: color 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.camisama-steps.is-enhanced .camisama-steps__list li:not(.is-current)::before,
+.camisama-steps.is-enhanced .camisama-steps__list li:not(.is-current) h3 {
+	color: var(--wp--preset--color--muted);
 }
 
 .camisama-steps.is-enhanced .camisama-steps__list li:last-child {
@@ -1092,7 +1100,8 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-	.camisama-steps.is-enhanced .camisama-steps__list li,
+	.camisama-steps.is-enhanced .camisama-steps__list li::before,
+	.camisama-steps.is-enhanced .camisama-steps__list h3,
 	.camisama-steps__list li::before,
 	.camisama-steps__swatches,
 	.camisama-steps__zone,

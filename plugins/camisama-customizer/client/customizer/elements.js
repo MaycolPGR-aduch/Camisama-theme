@@ -109,6 +109,72 @@ export function initialSize( zone, aspect ) {
 	};
 }
 
+// Parte del límite de su escalón que ocupa una foto nueva: deja sitio para añadir algo más (una
+// frase) sin saltar al escalón siguiente.
+const PHOTO_SHARE = 0.8;
+
+/**
+ * Tamaño inicial de una foto: el de cualquier contenido, con aire bajo el límite de su escalón.
+ *
+ * @param {Object} zone   Zona (size_cm y, si los hay, sus escalones en tiers).
+ * @param {number} aspect Ancho / alto de la foto.
+ * @return {{width_cm: number, height_cm: number}} Tamaño en cm.
+ */
+export function initialPhotoSize( zone, aspect ) {
+	const size = initialSize( zone, aspect );
+	const longest = Math.max( size.width_cm, size.height_cm );
+	const limit = tierFor( zone.tiers ?? [], longest )?.max_cm ?? Infinity;
+	const factor = Math.min( 1, ( limit * PHOTO_SHARE ) / longest );
+
+	return {
+		width_cm: round( size.width_cm * factor ),
+		height_cm: round( size.height_cm * factor ),
+	};
+}
+
+/**
+ * Encoge lo que hay en una zona, como un conjunto, para que su lado mayor quepa en un límite.
+ *
+ * @param {Object[]} list   Elementos del diseño.
+ * @param {string}   zoneId Zona.
+ * @param {number}   maxCm  Límite del lado mayor, en cm.
+ * @return {Object[]} Elementos del diseño (los mismos si ya cabía).
+ */
+export function fitZoneTo( list, zoneId, maxCm ) {
+	const boxes = list
+		.filter( ( item ) => item.zone === zoneId )
+		.map( elementBounds );
+	if ( ! boxes.length ) {
+		return list;
+	}
+	const left = Math.min( ...boxes.map( ( box ) => box.left ) );
+	const right = Math.max( ...boxes.map( ( box ) => box.right ) );
+	const top = Math.min( ...boxes.map( ( box ) => box.top ) );
+	const bottom = Math.max( ...boxes.map( ( box ) => box.bottom ) );
+	// Con un poco de aire: el texto se vuelve a medir al dibujarlo y puede variar unas décimas.
+	const factor = ( maxCm - 0.3 ) / Math.max( right - left, bottom - top );
+	if ( factor >= 1 ) {
+		return list;
+	}
+	const cx = ( left + right ) / 2;
+	const cy = ( top + bottom ) / 2;
+
+	return list.map( ( item ) =>
+		item.zone === zoneId
+			? {
+					...item,
+					cx: round( cx + ( item.cx - cx ) * factor ),
+					cy: round( cy + ( item.cy - cy ) * factor ),
+					width_cm: round( item.width_cm * factor ),
+					height_cm: round( item.height_cm * factor ),
+					...( item.font_size_cm && {
+						font_size_cm: round( item.font_size_cm * factor ),
+					} ),
+				}
+			: item
+	);
+}
+
 /**
  * Primera medida real de un estampado nuevo. Su archivo da una proporción aproximada (la del
  * viewBox, con márgenes), así que la regla de tierFit se aplica otra vez con lo que se dibuja: lo
@@ -183,7 +249,7 @@ export function imageElement( zone, upload ) {
 		cx: zone.size_cm.w / 2,
 		cy: zone.size_cm.h / 2,
 		angle: 0,
-		...initialSize( zone, upload.width / upload.height ),
+		...initialPhotoSize( zone, upload.width / upload.height ),
 	};
 }
 

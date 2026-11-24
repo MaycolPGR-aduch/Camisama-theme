@@ -146,6 +146,14 @@ local, 45 pruebas de JS y lint limpio.
         "escríbenos" como enlace en "Sigue tu pedido" y en qué se diferencia cada modelo en las
         tarjetas de la tienda.
   - [ ] La página de contacto, a la que llevan esos enlaces, aún no tiene correo ni WhatsApp.
+- [x] **Crítica de toda la web** (25/40, 2026-11-24), problemas importantes: aviso de escalón al añadir,
+      entrega y pago sin contradicciones, un solo plazo, ficha sin saltos y pasos de portada legibles.
+  - [ ] Sus P2: emojis (WordPress los cambia por imágenes externas y la lista se corrompe), texto que no
+        vuelve a crecer y "Listo" a la vista al escribir en el móvil; enlaces de la portada al editor con
+        la foto, la frase o el estampado elegido, y colores en tarjetas y ficha; prenda grande y líneas
+        claras en carrito y pago.
+  - [ ] Menores: "Mi cuenta" con el estilo de la tienda, carrusel de estampados con teclado, nombre
+        accesible de "Personalizar", descripciones para buscadores, imágenes de la portada más pequeñas.
 - [ ] **Registro en "Mi cuenta"**: hoy solo se entra con una cuenta ya creada; decidir si se ofrece.
 - [ ] **Plazos reales de la transferencia**: hoy son provisionales (48 horas para pagar, 2 a 3 días
       hábiles de preparación, 1 a 2 de envío). Se cambian en
@@ -166,8 +174,8 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] **Datos reales de la entrega**: dirección y horario del taller. Hoy el recojo dice "Taller
       Camisama · Lima" y promete escribir con ellos; se ponen en `bin/seed-delivery.php` (o en
       WooCommerce > Ajustes > Envío). Los plazos provisionales están en `Checkout\PaymentTimes`.
-- [ ] **Recojo con menos datos**: con el recojo aún se pide una dirección de facturación (campo propio
-      de WooCommerce, no admite reglas). Valorar si basta con nombre, correo y teléfono.
+- [x] **Recojo con menos datos**: correo, nombre, apellidos y teléfono (`Checkout\Delivery` y
+      `client/checkout/street.js`).
 
 ### Fase 5: funciones del personalizador
 

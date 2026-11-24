@@ -88,6 +88,11 @@
 		}
 		const now = checkout.prefersCollection();
 		if ( collecting !== null && now !== collecting ) {
+			// Los avisos de la otra forma de entrega ("elige tu distrito") ya no vienen al caso.
+			const notices = data.select( 'core/notices' );
+			[ 'wc/checkout', 'wc/checkout/shipping-methods' ].forEach( ( context ) =>
+				notices.getNotices( context ).forEach( ( notice ) => data.dispatch( 'core/notices' ).removeNotice( notice.id, context ) )
+			);
 			if ( now ) {
 				sameBefore = checkout.getUseShippingAsBilling();
 			} else if ( sameBefore ) {

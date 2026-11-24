@@ -9,6 +9,7 @@
 
 ?>
 <?php
+$camisama_times     = class_exists( \Camisama\Customizer\Checkout\PaymentTimes::class ) ? ' ' . \Camisama\Customizer\Checkout\PaymentTimes::promise() : '';
 $camisama_questions = array(
 	array( __( '¿Puedo pedir una sola camiseta?', 'camisama' ), __( 'Sí. Puedes personalizar desde una unidad. Elige el modelo, el color y las zonas que quieras estampar.', 'camisama' ) ),
 	array( __( '¿Tengo que saber diseñar?', 'camisama' ), __( 'No necesitas preparar un archivo de diseño. Puedes empezar con un estampado del catálogo, escribir un texto o subir una imagen. Verás una vista previa sobre la prenda.', 'camisama' ) ),
@@ -16,7 +17,7 @@ $camisama_questions = array(
 	array( __( '¿Cómo elijo mi talla?', 'camisama' ), __( 'En la ficha de cada modelo encontrarás “¿Qué talla?” con ancho y largo de referencia. Compáralos con una camiseta que ya te quede bien antes de elegir.', 'camisama' ) ),
 	array( __( '¿Qué es la impresión DTF?', 'camisama' ), __( 'Es una técnica que transfiere tu diseño a la tela mediante calor. Permite imprimir estampados, letras y fotos a todo color, también sobre prendas oscuras.', 'camisama' ) ),
 	array( __( '¿Puedo revisar mi diseño antes de comprar?', 'camisama' ), __( 'Sí. Puedes ver frente y espalda, revisar el total y editar el diseño desde el carrito antes de finalizar la compra.', 'camisama' ) ),
-	array( __( '¿Dónde entregan y cuándo llegará?', 'camisama' ), __( 'La entrega está prevista para Lima Metropolitana y el Callao, con opción de recojo en taller. Revisa las opciones y el costo que aparezcan al finalizar la compra. Confirma el plazo y los datos de recojo con nosotros antes de pedir.', 'camisama' ) ),
+	array( __( '¿Dónde entregan y cuándo llegará?', 'camisama' ), __( 'Entregamos en Lima Metropolitana y el Callao, o puedes recogerla en el taller. Al pagar eliges tu distrito y ves el costo del envío.', 'camisama' ) . $camisama_times ),
 );
 ?>
 <!-- wp:html -->

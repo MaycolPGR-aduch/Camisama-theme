@@ -11,8 +11,9 @@ namespace Camisama\Customizer\Checkout;
 
 /**
  * PLAZOS PROVISIONALES: hay que cambiarlos por los reales del taller antes de abrir al público. Se
- * cambian solo aquí: de estos valores salen el texto de "Cómo pagas" en el pago, las instrucciones de
- * la confirmación y del correo del pedido, y la fecha límite de "Sigue tu pedido".
+ * cambian solo aquí: de estos valores salen el plazo de la ficha, el carrito, el pago y las preguntas
+ * de la portada, las instrucciones de la confirmación y del correo del pedido, y la fecha límite de
+ * "Sigue tu pedido".
  *
  * Los textos de la transferencia se escriben encima de los guardados en WooCommerce → Ajustes →
  * Pagos → Transferencia bancaria (que siguen sirviendo para el título y los datos de la cuenta).
@@ -25,14 +26,38 @@ final class PaymentTimes {
 	public const PAY_WITHIN_HOURS = 48;
 
 	/**
-	 * Tiempo de preparación de la prenda con el pago confirmado.
+	 * Días hábiles de preparación de la prenda con el pago confirmado.
 	 */
-	public const PREPARE = '2 a 3 días hábiles';
+	private const PREPARE_MIN = 2;
+	private const PREPARE_MAX = 3;
 
 	/**
-	 * Tiempo del envío a domicilio en Lima Metropolitana y el Callao, una vez lista la prenda.
+	 * Días hábiles del envío a domicilio en Lima Metropolitana y el Callao, una vez lista la prenda.
 	 */
-	public const DELIVERY = '1 a 2 días hábiles';
+	private const DELIVERY_MIN = 1;
+	private const DELIVERY_MAX = 2;
+
+	/**
+	 * Tiempo de preparación.
+	 */
+	public const PREPARE = self::PREPARE_MIN . ' a ' . self::PREPARE_MAX . ' días hábiles';
+
+	/**
+	 * Tiempo total con envío, desde que se confirma el pago.
+	 */
+	public const TOTAL = ( self::PREPARE_MIN + self::DELIVERY_MIN ) . ' a ' . ( self::PREPARE_MAX + self::DELIVERY_MAX ) . ' días hábiles';
+
+	/**
+	 * Cuándo llega, dicho igual en todas partes.
+	 */
+	public static function promise(): string {
+		return sprintf(
+			/* translators: 1: tiempo con envío, 2: tiempo de preparación. */
+			__( 'Llega en %1$s desde que confirmamos tu pago; si la recoges, está lista en %2$s.', 'camisama-customizer' ),
+			self::TOTAL,
+			self::PREPARE
+		);
+	}
 
 	/**
 	 * Engancha el filtro de WordPress.
@@ -53,11 +78,10 @@ final class PaymentTimes {
 		}
 
 		$settings['description'] = sprintf(
-			/* translators: 1: horas para pagar, 2: tiempo de preparación, 3: tiempo de envío. */
-			__( 'Al hacer el pedido te enviamos por correo los datos de la cuenta. Tienes %1$d horas para transferir. Con el pago confirmado, preparamos tu prenda en %2$s; si es con envío, llega en %3$s más.', 'camisama-customizer' ),
+			/* translators: 1: horas para pagar, 2: cuándo llega. */
+			__( 'Al hacer el pedido te enviamos por correo los datos de la cuenta. Tienes %1$d horas para transferir. %2$s', 'camisama-customizer' ),
 			self::PAY_WITHIN_HOURS,
-			self::PREPARE,
-			self::DELIVERY
+			self::promise()
 		);
 		$settings['instructions'] = sprintf(
 			/* translators: 1: horas para pagar, 2: tiempo de preparación. */

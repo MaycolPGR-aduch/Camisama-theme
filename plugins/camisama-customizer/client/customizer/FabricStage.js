@@ -425,6 +425,7 @@ export default function FabricStage( {
 	return (
 		<div
 			className="camisama-customizer__stage"
+			style={ { aspectRatio: aspect } }
 			ref={ wrapRef }
 			role="group"
 			aria-label={ label }

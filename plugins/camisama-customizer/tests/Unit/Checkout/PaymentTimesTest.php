@@ -32,8 +32,17 @@ final class PaymentTimesTest extends TestCase {
 		$this->assertSame( 'Transferencia bancaria', $settings['title'] );
 		$this->assertSame( 'yes', $settings['enabled'] );
 		$this->assertStringContainsString( PaymentTimes::PAY_WITHIN_HOURS . ' horas', $settings['description'] );
-		$this->assertStringContainsString( PaymentTimes::PREPARE, $settings['description'] );
+		$this->assertStringContainsString( PaymentTimes::promise(), $settings['description'] );
 		$this->assertStringContainsString( PaymentTimes::PAY_WITHIN_HOURS . ' horas', $settings['instructions'] );
+	}
+
+	/**
+	 * El plazo con envío es la preparación más el envío.
+	 */
+	public function test_total_adds_preparation_and_delivery(): void {
+		$this->assertSame( '3 a 5 días hábiles', PaymentTimes::TOTAL );
+		$this->assertStringContainsString( PaymentTimes::TOTAL, PaymentTimes::promise() );
+		$this->assertStringContainsString( PaymentTimes::PREPARE, PaymentTimes::promise() );
 	}
 
 	/**

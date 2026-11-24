@@ -2,8 +2,10 @@ import {
 	designElement,
 	fitNewDesign,
 	fitToZone,
+	fitZoneTo,
 	imageElement,
 	imageQuality,
+	initialPhotoSize,
 	initialSize,
 	placeFree,
 	tierFit,
@@ -158,6 +160,67 @@ describe( 'elementos', () => {
 			width_cm: 18,
 			height_cm: 9,
 		} );
+	} );
+
+	it( 'una foto nueva deja sitio para una frase en su mismo escalón', () => {
+		const tiers = [ 10, 20, 30, 40 ].map( ( max ) => ( { max_cm: max } ) );
+		// Vertical: en vez de 10 × 20 (al borde de "Mediano"), 8 × 16.
+		expect( initialPhotoSize( { ...front, tiers }, 0.5 ) ).toEqual( {
+			width_cm: 8,
+			height_cm: 16,
+		} );
+		// Sin escalones, el tamaño de siempre.
+		expect( initialPhotoSize( front, 2 ) ).toEqual( {
+			width_cm: 18,
+			height_cm: 9,
+		} );
+	} );
+
+	it( 'encoge el conjunto de una zona para seguir en un escalón', () => {
+		const list = [
+			{
+				id: 'a',
+				zone: 'front',
+				cx: 15,
+				cy: 15,
+				width_cm: 10,
+				height_cm: 20,
+				angle: 0,
+			},
+			{
+				id: 'b',
+				zone: 'front',
+				cx: 15,
+				cy: 28,
+				width_cm: 8,
+				height_cm: 4,
+				font_size_cm: 4,
+				angle: 0,
+			},
+			{
+				id: 'c',
+				zone: 'back',
+				cx: 15,
+				cy: 15,
+				width_cm: 30,
+				height_cm: 40,
+				angle: 0,
+			},
+		];
+		const fitted = fitZoneTo( list, 'front', 20 );
+		const boxes = fitted.slice( 0, 2 ).map( elementBounds );
+		const height =
+			Math.max( ...boxes.map( ( box ) => box.bottom ) ) -
+			Math.min( ...boxes.map( ( box ) => box.top ) );
+
+		expect( height ).toBeLessThanOrEqual( 20 );
+		expect( height ).toBeGreaterThan( 19 );
+		expect( fitted[ 1 ].font_size_cm ).toBeLessThan( 4 );
+		// Se conserva el orden y lo de otras zonas no se toca.
+		expect( fitted[ 0 ].cy ).toBeLessThan( fitted[ 1 ].cy );
+		expect( fitted[ 2 ] ).toBe( list[ 2 ] );
+		// Si ya cabe, no se toca nada.
+		expect( fitZoneTo( list, 'front', 30 ) ).toBe( list );
 	} );
 
 	it( 'un estampado nuevo queda centrado con su recargo', () => {

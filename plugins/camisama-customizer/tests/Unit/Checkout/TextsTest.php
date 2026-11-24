@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 namespace Camisama\Customizer\Tests\Unit\Checkout;
 
+use Camisama\Customizer\Checkout\DeliveryRates;
+use Camisama\Customizer\Checkout\PaymentTimes;
 use Camisama\Customizer\Checkout\Texts;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +27,7 @@ final class TextsTest extends TestCase {
 
 		$messages = json_decode( Texts::rewrite( $json ), true )['locale_data']['messages'];
 
-		$this->assertSame( array( 'Revisa este dato: %s' ), $messages['Please enter a valid %s'] );
+		$this->assertSame( array( 'Falta este dato: %s' ), $messages['Please enter a valid %s'] );
 		$this->assertSame( array( 'Añadir cupones' ), $messages['Add coupons'] );
 	}
 
@@ -40,6 +42,17 @@ final class TextsTest extends TestCase {
 		$this->assertSame( array( 'Costo del envío' ), $messages['Shipping options'] );
 		$this->assertSame( array( 'Dónde lo recoges' ), $messages['Pickup locations'] );
 		$this->assertSame( array( 'Cómo pagas' ), $messages['Payment options'] );
+	}
+
+	/**
+	 * El carrito dice desde cuánto es la entrega y cuándo llega, sin dar por elegido el recojo.
+	 */
+	public function test_cart_says_delivery_and_time(): void {
+		$json = '{"locale_data":{"messages":{"Shipping will be calculated at checkout":["El envío se calculará"]}}}';
+		$text = json_decode( Texts::rewrite( $json ), true )['locale_data']['messages']['Shipping will be calculated at checkout'][0];
+
+		$this->assertStringContainsString( 'desde S/ ' . DeliveryRates::lowest() / 100, $text );
+		$this->assertStringContainsString( PaymentTimes::promise(), $text );
 	}
 
 	/**

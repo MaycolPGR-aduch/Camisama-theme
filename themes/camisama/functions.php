@@ -126,3 +126,17 @@ function camisama_product_category_url( string $slug ): string {
 
 	return is_wp_error( $link ) ? camisama_wc_page_url( 'shop' ) : $link;
 }
+
+/**
+ * El aviso "Borrador para revisar…" de las páginas legales es para quien gestiona la tienda: los
+ * clientes no lo ven.
+ *
+ * @param string               $content HTML del bloque.
+ * @param array<string, mixed> $block   Bloque.
+ */
+function camisama_draft_note( string $content, array $block ): string {
+	$is_note = str_contains( (string) ( $block['attrs']['className'] ?? '' ), 'camisama-draft-note' );
+
+	return $is_note && ! current_user_can( 'edit_pages' ) ? '' : $content;
+}
+add_filter( 'render_block_core/paragraph', 'camisama_draft_note', 10, 2 );

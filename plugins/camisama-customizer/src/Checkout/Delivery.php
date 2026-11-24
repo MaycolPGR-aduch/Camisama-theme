@@ -49,6 +49,67 @@ final class Delivery {
 		add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( self::class, 'apply_to_order' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_filter( 'woocommerce_package_rates', array( self::class, 'rates_in_zone' ), 10, 2 );
+		add_filter( 'woocommerce_shipping_chosen_method', array( self::class, 'default_method' ), 10, 3 );
+		add_filter( 'woocommerce_customer_default_location_array', array( self::class, 'default_location' ) );
+		add_action( 'woocommerce_checkout_validate_order_before_payment', array( self::class, 'require_street' ), 10, 2 );
+	}
+
+	/**
+	 * El recojo solo se elige a mano. Sin distrito es la única tarifa (rates_in_zone), y al añadir desde
+	 * la ficha WooCommerce la tomaba por defecto y la recordaba: el carrito decía "Recojo GRATIS" y el
+	 * pago se abría en recojo sin que nadie lo hubiera elegido.
+	 *
+	 * @param mixed $default_id Tarifa por defecto.
+	 * @param mixed $rates      Tarifas del paquete.
+	 * @param mixed $chosen     Tarifa que ya estaba elegida, si la había.
+	 */
+	public static function default_method( $default_id, $rates, $chosen ): string {
+		$default_id = (string) $default_id;
+
+		return str_starts_with( $default_id, 'pickup_location' ) && $default_id !== (string) $chosen ? '' : $default_id;
+	}
+
+	/**
+	 * La región sale del distrito. Con la de la tienda puesta de partida, la facturación la guardaba y el
+	 * envío no, y al recargar el pago dejaban de ser "la misma dirección": salía un segundo formulario.
+	 *
+	 * @param mixed $location País y región de partida.
+	 * @return mixed
+	 */
+	public static function default_location( $location ) {
+		if ( is_array( $location ) && 'PE' === ( $location['country'] ?? '' ) ) {
+			$location['state'] = '';
+		}
+
+		return $location;
+	}
+
+	/**
+	 * La calle no es obligatoria para WooCommerce (peru_fields), porque al recoger no hace falta; con
+	 * envío, sí. El formulario ya lo pide (client/checkout/street.js); esto es para el servidor.
+	 *
+	 * @param mixed $order  Pedido.
+	 * @param mixed $errors Errores de validación.
+	 */
+	public static function require_street( $order, $errors ): void {
+		if ( ! $order instanceof \WC_Order || ! $errors instanceof \WP_Error ) {
+			return;
+		}
+
+		$methods = array_map( static fn ( \WC_Order_Item_Shipping $item ): string => $item->get_method_id(), array_values( $order->get_shipping_methods() ) );
+		if ( self::misses_street( $methods, (string) $order->get_shipping_address_1() ) ) {
+			$errors->add( 'camisama_missing_street', __( 'Falta la dirección a la que te llevamos el pedido.', 'camisama-customizer' ) );
+		}
+	}
+
+	/**
+	 * Si un pedido con envío a domicilio no trae calle.
+	 *
+	 * @param list<string> $methods Métodos de envío del pedido.
+	 * @param string       $street  Dirección de entrega.
+	 */
+	public static function misses_street( array $methods, string $street ): bool {
+		return '' === trim( $street ) && array() !== array_diff( $methods, array( 'pickup_location' ) );
 	}
 
 	/**
@@ -144,6 +205,11 @@ final class Delivery {
 	public static function peru_fields( array $locale ): array {
 		$locale['PE'] = array(
 			self::FIELD => array( 'index' => 45 ),
+			// Obligatoria solo con envío: require_street y client/checkout/street.js.
+			'address_1' => array(
+				'required'      => false,
+				'optionalLabel' => __( 'Dirección', 'camisama-customizer' ),
+			),
 			'address_2' => array( 'label' => __( 'Referencia', 'camisama-customizer' ) ),
 			'city'      => array(
 				'hidden'   => true,
