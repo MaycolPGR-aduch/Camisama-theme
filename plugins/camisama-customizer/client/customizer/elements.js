@@ -170,8 +170,52 @@ export function fitZoneTo( list, zoneId, maxCm ) {
 					...( item.font_size_cm && {
 						font_size_cm: round( item.font_size_cm * factor ),
 					} ),
+					...( item.font_want_cm && {
+						font_want_cm: round( item.font_want_cm * factor ),
+					} ),
 				}
 			: item
+	);
+}
+
+/**
+ * Letra de un texto tras medirlo: crece de vuelta hacia la que eligió el cliente (font_want_cm)
+ * si la frase se acortó y ya cabe. Al alargarla, fitToZone la había encogido para que entrara.
+ *
+ * @param {Object} element Texto ya encajado en su zona.
+ * @param {Object} zone    Zona (size_cm).
+ * @param {number} inset   Aire en cada borde, en cm.
+ * @return {Object} El texto, con la letra recuperada si hacía falta (el mismo objeto si no).
+ */
+export function regrowText( element, zone, inset = 0 ) {
+	const want = element.font_want_cm;
+	if ( ! want || element.font_size_cm >= want - 0.005 ) {
+		return element;
+	}
+	const bounds = elementBounds( element );
+	const room = Math.min(
+		( zone.size_cm.w - 2 * inset ) / ( bounds.right - bounds.left ),
+		( zone.size_cm.h - 2 * inset ) / ( bounds.bottom - bounds.top )
+	);
+	// Si cabe entera, vuelve justo a la elegida; si no, crece lo que quepa, pero no por migajas
+	// (cada cambio se vuelve a medir y podría oscilar).
+	const factor = Math.min( want / element.font_size_cm, room );
+	if ( room < want / element.font_size_cm && factor < 1.02 ) {
+		return element;
+	}
+
+	return fitToZone(
+		{
+			...element,
+			font_size_cm:
+				factor === want / element.font_size_cm
+					? want
+					: round( element.font_size_cm * factor ),
+			width_cm: round( element.width_cm * factor ),
+			height_cm: round( element.height_cm * factor ),
+		},
+		zone,
+		inset
 	);
 }
 

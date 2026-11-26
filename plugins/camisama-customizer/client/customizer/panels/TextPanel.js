@@ -216,6 +216,9 @@ export default function TextPanel( {
 										font_size_cm:
 											selected.font_size_cm *
 											SPLIT_GROWTH,
+										font_want_cm:
+											selected.font_size_cm *
+											SPLIT_GROWTH,
 										width_cm: selected.width_cm * 0.9,
 										height_cm: selected.height_cm * 3.6,
 									} )

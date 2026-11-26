@@ -48,7 +48,6 @@ export default function SelectionPanel( {
 	layer,
 	onLayer,
 	onRemove,
-	onDone,
 } ) {
 	const isText = element.kind === 'text';
 	const maxSize = isText
@@ -63,19 +62,9 @@ export default function SelectionPanel( {
 			className="camisama-customizer__selection"
 			aria-label={ __( 'Elemento seleccionado', 'camisama-customizer' ) }
 		>
-			{ /* "Listo" solo en el modo diseño del móvil: suelta el elemento y vuelve a las herramientas. */ }
 			<div className="camisama-customizer__selection-head">
 				{ /* Enfocable por programa: ahí vuelve el foco tras añadir un elemento en el móvil. */ }
 				<h3 tabIndex={ -1 }>{ elementLabel( element ) }</h3>
-				{ onDone && (
-					<button
-						type="button"
-						className="camisama-customizer__done"
-						onClick={ onDone }
-					>
-						{ __( 'Listo', 'camisama-customizer' ) }
-					</button>
-				) }
 			</div>
 
 			<div className="camisama-customizer__field">

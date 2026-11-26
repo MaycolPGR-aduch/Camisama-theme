@@ -1004,7 +1004,7 @@ html.camisama-has-draft .camisama-customizer__entry[data-placeholder] .camisama-
 
 			// Elemento seleccionado: la hoja muestra solo sus ajustes; si es un
 			// texto, también el panel para cambiarlo (sin las pestañas).
-			&.has-selection .camisama-customizer__sheet > :not(.camisama-customizer__handle, .camisama-customizer__notices, .camisama-customizer__selection, .camisama-customizer__tools),
+			&.has-selection .camisama-customizer__sheet > :not(.camisama-customizer__handle, .camisama-customizer__done, .camisama-customizer__notices, .camisama-customizer__selection, .camisama-customizer__tools),
 			&.has-selection:not(.is-text-selected) .camisama-customizer__tools,
 			&.is-text-selected .camisama-customizer__tabs {
 				display: none;
@@ -1042,8 +1042,20 @@ html.camisama-has-draft .camisama-customizer__entry[data-placeholder] .camisama-
 
 			gap: 0.5rem;
 
-			> .camisama-customizer__handle {
+			> .camisama-customizer__handle,
+			> .camisama-customizer__done--sheet {
 				order: -4;
+			}
+
+			// En la fila del asa, a la derecha, y fija con ella al desplazar la hoja.
+			> .camisama-customizer__done--sheet {
+				position: sticky;
+				top: 2px;
+				z-index: 2;
+				justify-self: end;
+				min-height: 40px;
+				padding-block: 0;
+				margin-top: calc(-42px - 0.5rem);
 			}
 
 			> .camisama-customizer__notices {

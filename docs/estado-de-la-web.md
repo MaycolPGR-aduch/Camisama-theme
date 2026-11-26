@@ -149,8 +149,9 @@ local, 45 pruebas de JS y lint limpio.
 - [x] **Crítica de toda la web** (25/40, 2026-11-24), problemas importantes: aviso de escalón al añadir,
       entrega y pago sin contradicciones, un solo plazo, ficha sin saltos y pasos de portada legibles.
   - [x] Emojis: sin el cargador de WordPress en la tienda.
-  - [ ] Sus P2: texto que no
-        vuelve a crecer y "Listo" a la vista al escribir en el móvil; enlaces de la portada al editor con
+  - [x] Editor: el texto que se acorta vuelve a la letra elegida, y "Listo" queda fijo junto al asa
+        de la hoja del móvil mientras se escribe.
+  - [ ] Sus P2: enlaces de la portada al editor con
         la foto, la frase o el estampado elegido, y colores en tarjetas y ficha; prenda grande y líneas
         claras en carrito y pago.
   - [ ] Menores: "Mi cuenta" con el estilo de la tienda, carrusel de estampados con teclado, nombre

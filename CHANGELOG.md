@@ -18,6 +18,13 @@ conviene recordar.
   [bin/produccion/LEEME.md](bin/produccion/LEEME.md)): deja la tienda configurada y en
   "Próximamente". Probado en un WordPress nuevo fuera de `.test`, dos veces seguidas.
 
+### Corregido
+- **Editor:** un texto que se alargaba y se encogía para caber ya no se queda pequeño al acortarlo:
+  vuelve a la letra elegida (la de inicio, la del control de tamaño o la de "Partir en dos líneas"),
+  o a la mayor que quepa. Vale también para los diseños que se editan desde el carrito.
+- **Editor en el móvil:** "Listo" está fijo a la derecha del asa de la hoja; antes se perdía de vista
+  al escribir un texto largo.
+
 ### Cambiado
 - La ficha que edita un diseño del carrito (`?camisama_edit=`) pide no guardarse en ninguna caché.
 - Sin el cargador de emojis de WordPress en la tienda: rompía la lista del editor y pedía imágenes a

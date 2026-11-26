@@ -8,6 +8,7 @@ import {
 	initialPhotoSize,
 	initialSize,
 	placeFree,
+	regrowText,
 	tierFit,
 } from './elements';
 import { elementBounds } from './pricing';
@@ -221,6 +222,32 @@ describe( 'elementos', () => {
 		expect( fitted[ 2 ] ).toBe( list[ 2 ] );
 		// Si ya cabe, no se toca nada.
 		expect( fitZoneTo( list, 'front', 30 ) ).toBe( list );
+	} );
+
+	it( 'un texto que se acorta recupera la letra que se eligió', () => {
+		const text = {
+			zone: 'front',
+			cx: 15,
+			cy: 10,
+			width_cm: 10,
+			height_cm: 1.2,
+			font_size_cm: 1,
+			font_want_cm: 4,
+			angle: 0,
+		};
+		// 10 cm a 1 cm de letra: a 4 cm serían 40, no caben 30; crece lo que cabe (29,4).
+		const grown = regrowText( text, front, 0.3 );
+		expect( grown.font_size_cm ).toBeCloseTo( 2.94, 1 );
+		expect( grown.width_cm ).toBeLessThanOrEqual( 29.4 );
+		// Corto: vuelve a la letra elegida, no más.
+		expect(
+			regrowText( { ...text, width_cm: 2 }, front, 0.3 ).font_size_cm
+		).toBe( 4 );
+		// Sin tamaño elegido, o ya en él, no se toca.
+		const plain = { ...text, font_want_cm: undefined };
+		expect( regrowText( plain, front ) ).toBe( plain );
+		const full = { ...text, font_size_cm: 4 };
+		expect( regrowText( full, front ) ).toBe( full );
 	} );
 
 	it( 'un estampado nuevo queda centrado con su recargo', () => {

@@ -33,6 +33,7 @@ import {
 	fitToZone,
 	fitZoneTo,
 	imageQuality,
+	regrowText,
 	imageElement,
 	placeFree,
 	newId,
@@ -706,11 +707,16 @@ export default function App( { data } ) {
 	// texto que se está escribiendo nace con una letra: su hueco se busca para reserveChars.
 	const add = ( element, { reserveChars = 0 } = {} ) => {
 		const zone = zoneById( element.zone );
-		const fitted = placeFrom(
+		const placed = placeFrom(
 			fitToZone( element, zone ),
 			zone,
 			reserveChars
 		);
+		// La letra con la que nace un texto es la que vuelve a tener si luego se acorta.
+		const fitted =
+			placed.kind === 'text'
+				? { ...placed, font_want_cm: placed.font_size_cm }
+				: placed;
 		// Si la zona ya costaba algo, el aviso de escalón cuenta desde ahí.
 		const before = priced.quote?.zones.find(
 			( item ) => item.zone === zone.id
@@ -791,10 +797,24 @@ export default function App( { data } ) {
 		}
 		const zone = zoneById( element.zone );
 		const isText = element.kind === 'text';
-		const fitted = fitNewDesign(
-			fitToZone( { ...element, ...size }, zone, isText ? TEXT_INSET : 0 ),
-			zone
+		const inZone = fitToZone(
+			{ ...element, ...size },
+			zone,
+			isText ? TEXT_INSET : 0
 		);
+		const fitted = isText
+			? regrowText(
+					// Los textos que vuelven del carrito no traen la letra elegida (no se envía):
+					// es la que tenían al abrirlos.
+					{
+						...inZone,
+						font_want_cm:
+							element.font_want_cm ?? element.font_size_cm,
+					},
+					zone,
+					TEXT_INSET
+				)
+			: fitNewDesign( inZone, zone );
 		const grew = size.width_cm > element.width_cm + 0.05;
 		return isText && grew && element.id === selectedId
 			? placeFree( fitted, zone, list, { keepSize: true } )
@@ -837,6 +857,7 @@ export default function App( { data } ) {
 				element.id,
 				{
 					font_size_cm: value,
+					font_want_cm: value,
 					width_cm: element.width_cm * factor,
 					height_cm: element.height_cm * factor,
 				},
@@ -1637,6 +1658,17 @@ export default function App( { data } ) {
 				{ mobile && designing && (
 					<SheetHandle step={ sheet } onChange={ setSheet } />
 				) }
+				{ /* "Listo" junto al asa, fija arriba: al escribir, la hoja se desplaza y en el panel
+				del elemento quedaba fuera de la vista. */ }
+				{ editingElement && (
+					<button
+						type="button"
+						className="camisama-customizer__done camisama-customizer__done--sheet"
+						onClick={ () => setSelectedId( null ) }
+					>
+						{ __( 'Listo', 'camisama-customizer' ) }
+					</button>
+				) }
 				{ mobile && designing && hasNotices && (
 					<div className="camisama-customizer__notices">
 						{ notices }
@@ -1739,11 +1771,6 @@ export default function App( { data } ) {
 							moveLayer( selected.id, direction )
 						}
 						onRemove={ () => remove( selected.id ) }
-						onDone={
-							editingElement
-								? () => setSelectedId( null )
-								: undefined
-						}
 					/>
 				) }
 
