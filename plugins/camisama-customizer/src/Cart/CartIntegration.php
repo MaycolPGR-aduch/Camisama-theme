@@ -212,20 +212,26 @@ final class CartIntegration {
 			'key'   => __( 'Personalización', 'camisama-customizer' ),
 			'value' => self::summary( $quote ),
 		);
-		// Prenda + impresión = el precio de la línea (si no, la impresión parece un recargo aparte).
-		$garment = $cart_item['data'] instanceof \WC_Product ? wc_get_product( $cart_item['data']->get_id() ) : null;
-		if ( $garment ) {
-			$cents       = (int) round( (float) wc_get_price_to_display( $garment ) * 100 );
-			$item_data[] = array(
-				'key'     => __( 'Prenda', 'camisama-customizer' ),
-				'value'   => self::money( $cents ),
-				'display' => self::money( $cents ),
+		// Prenda + impresión = el precio de la línea (si no, la impresión parece un recargo aparte). En
+		// un solo renglón: el precio de la línea ya está a la vista.
+		$garment  = $cart_item['data'] instanceof \WC_Product ? wc_get_product( $cart_item['data']->get_id() ) : null;
+		$printing = self::money( $quote['total'] );
+		$price    = $garment
+			? sprintf(
+				/* translators: 1: precio de la prenda, 2: precio de la impresión. */
+				__( 'prenda %1$s + impresión %2$s', 'camisama-customizer' ),
+				self::money( (int) round( (float) wc_get_price_to_display( $garment ) * 100 ) ),
+				$printing
+			)
+			: sprintf(
+				/* translators: %s: precio de la impresión. */
+				__( 'impresión %s', 'camisama-customizer' ),
+				$printing
 			);
-		}
 		$item_data[] = array(
-			'key'     => __( 'Impresión y estampados', 'camisama-customizer' ),
-			'value'   => self::money( $quote['total'] ),
-			'display' => self::money( $quote['total'] ),
+			'key'     => __( 'Precio', 'camisama-customizer' ),
+			'value'   => $price,
+			'display' => $price,
 		);
 
 		return $item_data;

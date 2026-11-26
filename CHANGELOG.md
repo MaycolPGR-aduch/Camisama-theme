@@ -22,6 +22,12 @@ conviene recordar.
 - **Editor:** un texto que se alargaba y se encogía para caber ya no se queda pequeño al acortarlo:
   vuelve a la letra elegida (la de inicio, la del control de tamaño o la de "Partir en dos líneas"),
   o a la mayor que quepa. Vale también para los diseños que se editan desde el carrito.
+- **Carrito, carrito lateral y resumen del pago, más claros:**
+  - la prenda en grande: 112 px en el móvil (antes 80) y en el resumen del pago (antes 88);
+  - color y talla en un renglón justo bajo el nombre, para distinguir dos prendas del mismo modelo;
+  - el precio de la línea una sola vez (el precio por unidad solo con más de una, con "c/u"), y el
+    desglose en un renglón: "prenda S/ 39.90 + impresión S/ 14.00";
+  - "Editar diseño" como enlace propio, al final, sin la etiqueta "Diseño:".
 - **Editor en el móvil:** "Listo" está fijo a la derecha del asa de la hoja; antes se perdía de vista
   al escribir un texto largo.
 

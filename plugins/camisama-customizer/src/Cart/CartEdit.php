@@ -79,7 +79,7 @@ final class CartEdit {
 		}
 
 		$link        = sprintf(
-			'<a href="%s">%s</a>',
+			'<a class="camisama-edit-design" href="%s">%s</a>',
 			esc_url( add_query_arg( self::QUERY, $key, $product->get_permalink() ) ),
 			esc_html__( 'Editar diseño', 'camisama-customizer' )
 		);

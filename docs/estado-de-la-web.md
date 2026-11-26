@@ -151,9 +151,10 @@ local, 45 pruebas de JS y lint limpio.
   - [x] Emojis: sin el cargador de WordPress en la tienda.
   - [x] Editor: el texto que se acorta vuelve a la letra elegida, y "Listo" queda fijo junto al asa
         de la hoja del móvil mientras se escribe.
+  - [x] Carrito y pago: prenda en grande, color y talla bajo el nombre, el precio sin repetir y
+        "Editar diseño" como enlace propio.
   - [ ] Sus P2: enlaces de la portada al editor con
-        la foto, la frase o el estampado elegido, y colores en tarjetas y ficha; prenda grande y líneas
-        claras en carrito y pago.
+        la foto, la frase o el estampado elegido, y colores en tarjetas y ficha.
   - [ ] Menores: "Mi cuenta" con el estilo de la tienda, carrusel de estampados con teclado, nombre
         accesible de "Personalizar", descripciones para buscadores, imágenes de la portada más pequeñas.
 - [ ] **Registro en "Mi cuenta"**: hoy solo se entra con una cuenta ya creada; decidir si se ofrece.

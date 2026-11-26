@@ -275,7 +275,70 @@ h3 {
 }
 
 /*
- * Carrito: miniatura mayor. Es donde se comprueba el diseño antes de pagar.
+ * Orden de la línea: color y talla justo bajo el nombre y en un renglón (es lo
+ * que distingue dos prendas del mismo modelo), luego la personalización, su
+ * precio y "Editar diseño". WooCommerce pone la variación al final.
+ */
+.wc-block-components-product-metadata {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+}
+
+.wc-block-components-product-metadata > .wc-block-components-product-details {
+	margin: 0;
+}
+
+.wc-block-components-product-metadata > .wc-block-components-product-details:last-child:not(:only-child) {
+	order: -1;
+	margin-bottom: 0.25rem;
+	color: var(--wp--preset--color--contrast);
+	font-weight: 600;
+}
+
+.wc-block-components-product-metadata > .wc-block-components-product-details:last-child:not(:only-child) > span {
+	display: inline;
+}
+
+.wc-block-components-product-metadata > .wc-block-components-product-details:last-child:not(:only-child) > span > [aria-hidden="true"]:not([hidden]) {
+	display: inline;
+}
+
+.wc-block-components-product-metadata .wc-block-components-product-details__precio {
+	color: var(--wp--preset--color--muted);
+}
+
+/*
+ * "Editar diseño" (Cart/CartEdit.php) es una acción, no un dato: sin la
+ * etiqueta "Diseño:".
+ */
+.wc-block-components-product-metadata span:has(> .wc-block-components-product-details__value > .camisama-edit-design) {
+	margin-top: 0.375rem;
+}
+
+.wc-block-components-product-metadata span:has(> .wc-block-components-product-details__value > .camisama-edit-design) > .wc-block-components-product-details__name {
+	display: none;
+}
+
+.wc-block-components-product-metadata .camisama-edit-design {
+	font-weight: 600;
+}
+
+/*
+ * El precio por unidad solo cuando hay más de una: con una es el mismo que el
+ * total de la línea. En el resumen del pago, el total de la línea basta.
+ */
+.wc-block-cart-items__row:has(.wc-block-components-quantity-selector__button--minus:disabled) .wc-block-cart-item__prices,
+.wc-block-components-order-summary-item .wc-block-cart-item__prices {
+	display: none;
+}
+
+.wc-block-cart-item__prices .wc-block-components-product-price::after {
+	content: " c/u";
+}
+
+/*
+ * Carrito: prenda en grande. Es donde se comprueba el diseño antes de pagar.
  * table-layout fijo en la tabla: el ancho va en la cabecera de la columna.
  */
 .wc-block-cart .wc-block-cart-items .wc-block-cart-items__header-image {
@@ -299,7 +362,9 @@ h3 {
  * propia tapaba la papelera y no se podía pulsar.
  */
 .wc-block-cart.is-mobile table.wc-block-cart-items .wc-block-cart-items__row {
-	grid-template-columns: 5rem minmax(0, 1fr);
+
+	/* A 320 px, 7rem no dejaba sitio a la cantidad y la papelera. */
+	grid-template-columns: min(7rem, 32%) minmax(0, 1fr);
 	gap: 0 0.75rem;
 }
 
@@ -904,10 +969,42 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 	min-height: 48px;
 }
 
+/*
+ * Resumen del pago: la prenda, no un sello. El total de la línea va arriba a la
+ * derecha, junto al nombre: como columna propia dejaba los datos en un hilo.
+ */
+.wc-block-components-order-summary .wc-block-components-order-summary-item {
+	display: grid;
+	grid-template-columns: min(7rem, 32%) minmax(0, 1fr);
+	column-gap: 1rem;
+	align-items: start;
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item + .wc-block-components-order-summary-item {
+	margin-top: var(--wp--preset--spacing--40);
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item__description,
+.wc-block-components-order-summary .wc-block-components-order-summary-item__total-price {
+	grid-row: 1;
+	grid-column: 2;
+	padding: 0;
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item__total-price {
+	justify-self: end;
+	margin: 0;
+}
+
+.wc-block-components-order-summary .wc-block-components-order-summary-item__description .wc-block-components-product-name {
+	padding-inline-end: 5.5rem;
+}
+
 .wc-block-components-order-summary .wc-block-components-order-summary-item__image,
 .wc-block-components-order-summary .wc-block-components-order-summary-item__image > img {
-	width: 5.5rem;
-	max-width: 5.5rem;
+	width: 100%;
+	max-width: none;
+	height: auto;
 }
 
 .wc-block-components-order-summary .wc-block-components-order-summary-item__image > img {
