@@ -32,6 +32,23 @@ final class CartEdit {
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'permalink' ), 10, 3 );
 		add_filter( 'woocommerce_get_item_data', array( $this, 'edit_link' ), 20, 2 );
 		add_action( 'woocommerce_add_to_cart', array( $this, 'replace' ), 10, 3 );
+		add_action( 'template_redirect', array( self::class, 'no_cache' ) );
+	}
+
+	/**
+	 * La ficha con ?camisama_edit= lleva un diseño del carrito de quien navega: nunca a la caché de
+	 * página (WordPress, LiteSpeed y cualquier proxy), aunque el servidor la guardara por su URL.
+	 */
+	public static function no_cache(): void {
+		if ( ! isset( $_GET[ self::QUERY ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Solo decide la caché.
+			return;
+		}
+
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Constante estándar de las cachés de página.
+		}
+		nocache_headers();
+		header( 'X-LiteSpeed-Cache-Control: no-cache' );
 	}
 
 	/**

@@ -31,3 +31,6 @@ Thumbs.db
 # Impeccable: estado local del servidor del detector y ajustes personales
 /.impeccable/live/
 /.impeccable/config.local.json
+
+# Paquetes para el servidor (bin/paquete.py)
+/dist/

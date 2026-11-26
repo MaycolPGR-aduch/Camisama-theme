@@ -6,6 +6,8 @@
  *   php vendor/wp-cli/wp-cli/php/boot-fs.php eval-file bin/import-fotos-modelos.php --use-include --user=admin
  *   ... eval-file bin/import-fotos-modelos.php restaurar --use-include --user=admin
  *
+ * Fuera del sitio local (.test) hay que añadir "confirmar": lo hace bin/produccion/configurar.sh.
+ *
  * Cambia las maquetas y las zonas del personalizador y las imágenes del producto y sus variaciones.
  * Antes guarda una copia de lo que había; "restaurar" la devuelve. No toca precios, tallas, colores ni
  * pedidos. Se puede ejecutar varias veces: reutiliza los adjuntos y solo importa los que cambian.
@@ -23,8 +25,11 @@ use Camisama\Customizer\Config\ProductConfigRepository;
 if ( ! defined( 'WP_CLI' ) || ! class_exists( 'WooCommerce' ) ) {
 	return;
 }
-if ( ! str_ends_with( (string) wp_parse_url( home_url(), PHP_URL_HOST ), '.test' ) || ! current_user_can( 'manage_woocommerce' ) ) {
-	WP_CLI::error( 'Solo se permite en un sitio local .test con un administrador.' );
+if ( ! current_user_can( 'manage_woocommerce' ) ) {
+	WP_CLI::error( 'Ejecútalo con un administrador (--user=…).' );
+}
+if ( ! str_ends_with( (string) wp_parse_url( home_url(), PHP_URL_HOST ), '.test' ) && ! in_array( 'confirmar', $args, true ) ) {
+	WP_CLI::error( 'Esto no es el sitio local: si es lo que quieres, añade "confirmar".' );
 }
 
 require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -119,7 +124,7 @@ $camisama_manifest = json_decode( (string) file_get_contents( $camisama_root . '
 $camisama_backup   = get_option( CAMISAMA_PHOTOS_BACKUP, array() );
 $camisama_configs  = new ProductConfigRepository();
 
-if ( 'restaurar' === ( $args[0] ?? '' ) ) {
+if ( in_array( 'restaurar', $args, true ) ) {
 	if ( array() === $camisama_backup ) {
 		WP_CLI::error( 'No hay ninguna copia que restaurar.' );
 	}

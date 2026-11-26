@@ -140,3 +140,13 @@ function camisama_draft_note( string $content, array $block ): string {
 	return $is_note && ! current_user_can( 'edit_pages' ) ? '' : $content;
 }
 add_filter( 'render_block_core/paragraph', 'camisama_draft_note', 10, 2 );
+
+/*
+ * Sin el cargador de emojis de WordPress en la tienda: sustituye los emojis por imágenes de otro
+ * servidor (s.w.org), también dentro del editor, donde rompía la lista de elementos. Los
+ * navegadores actuales ya los dibujan.
+ */
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_enqueue_scripts', 'wp_enqueue_emoji_styles' );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+add_filter( 'emoji_svg_url', '__return_false' );

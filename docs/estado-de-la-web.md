@@ -148,7 +148,8 @@ local, 45 pruebas de JS y lint limpio.
   - [ ] La página de contacto, a la que llevan esos enlaces, aún no tiene correo ni WhatsApp.
 - [x] **Crítica de toda la web** (25/40, 2026-11-24), problemas importantes: aviso de escalón al añadir,
       entrega y pago sin contradicciones, un solo plazo, ficha sin saltos y pasos de portada legibles.
-  - [ ] Sus P2: emojis (WordPress los cambia por imágenes externas y la lista se corrompe), texto que no
+  - [x] Emojis: sin el cargador de WordPress en la tienda.
+  - [ ] Sus P2: texto que no
         vuelve a crecer y "Listo" a la vista al escribir en el móvil; enlaces de la portada al editor con
         la foto, la frase o el estampado elegido, y colores en tarjetas y ficha; prenda grande y líneas
         claras en carrito y pago.
@@ -187,6 +188,9 @@ local, 45 pruebas de JS y lint limpio.
 - [ ] Pruebas de extremo a extremo (e2e) del flujo de compra.
 
 ### Producción (antes de abrir al público)
+
+Plan completo en [subida-hostinger.md](subida-hostinger.md).
+
 
 - [ ] **Pasarela de pago peruana** (hoy solo transferencia de prueba).
 - [ ] **IGV y comprobantes SUNAT** (boletas y facturas electrónicas).

@@ -7,6 +7,23 @@ de git (`git log`).
 Cada entrada separa lo **añadido**, lo **cambiado**, lo **corregido** y las **decisiones** que
 conviene recordar.
 
+## 2026-11-26
+
+### Añadido
+- **Plan de subida a Hostinger** ([docs/subida-hostinger.md](docs/subida-hostinger.md)): Cloud
+  Startup, instalación limpia, staging, lo que es del negocio y cómo publicar sin perder pedidos.
+- **Paquetes para el servidor** (`bin/paquete.py` y la acción *Paquetes* de GitHub): plugin compilado,
+  tema y carga (scripts, estampados y fotos).
+- **Instalación en el servidor** con un solo script (`bin/produccion/configurar.sh`, instrucciones en
+  [bin/produccion/LEEME.md](bin/produccion/LEEME.md)): deja la tienda configurada y en
+  "Próximamente". Probado en un WordPress nuevo fuera de `.test`, dos veces seguidas.
+
+### Cambiado
+- La ficha que edita un diseño del carrito (`?camisama_edit=`) pide no guardarse en ninguna caché.
+- Sin el cargador de emojis de WordPress en la tienda: rompía la lista del editor y pedía imágenes a
+  otro servidor.
+- `bin/import-fotos-modelos.php` funciona fuera de local si se añade "confirmar".
+
 ## 2026-11-24
 
 ### Añadido
